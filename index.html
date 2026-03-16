@@ -1,439 +1,783 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Hover Effects & Lists</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SciTech Learning Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: rgba(99,179,237,0.15);
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --accent3: #34d399;
+    --accent4: #fb923c;
+    --text: #f0f4ff;
+    --text-muted: #8899bb;
+    --pill-bg: rgba(56,189,248,0.1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Space Grotesk',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            padding: 40px 20px;
-            color: #333;
-            
-            /* BACKGROUND IMAGE STYLES */
-            background-image: url('/mnt/kimi/upload/118911-hd-wallpaper-nature-picture.jpg');
-            background-size: cover;          /* Makes image cover entire screen */
-            background-position: center;     /* Centers the image */
-            background-attachment: fixed;    /* Creates parallax effect */
-            background-repeat: no-repeat;    /* Prevents image from repeating */
-        }
+  /* NAV */
+  nav { position:sticky; top:0; z-index:100; background:rgba(10,14,26,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; gap:2rem; height:64px; }
+  .nav-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; color:var(--text); display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-logo span { color:var(--accent); }
+  .nav-links { display:flex; gap:1.5rem; flex:1; }
+  .nav-links button { background:none; border:none; color:var(--text-muted); font-family:'Space Grotesk',sans-serif; font-size:0.9rem; cursor:pointer; padding:6px 12px; border-radius:6px; transition:all .2s; }
+  .nav-links button:hover, .nav-links button.active { color:var(--accent); background:var(--pill-bg); }
+  .nav-search { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:6px 12px; width:220px; }
+  .nav-search input { background:none; border:none; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:0.85rem; outline:none; width:100%; }
+  .nav-search input::placeholder { color:var(--text-muted); }
 
-        /* Optional: Add a dark overlay to make text more readable */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);  /* Dark overlay - adjust opacity (0.3) as needed */
-            z-index: -1;
-        }
+  /* HERO */
+  .hero { padding:4rem 2rem 3rem; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-60%; left:50%; transform:translateX(-50%); width:800px; height:800px; background:radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%); pointer-events:none; }
+  .hero-badge { display:inline-flex; align-items:center; gap:6px; background:var(--pill-bg); border:1px solid rgba(56,189,248,0.3); color:var(--accent); font-size:0.78rem; padding:5px 14px; border-radius:20px; margin-bottom:1.5rem; }
+  .hero h1 { font-family:'Syne',sans-serif; font-size:clamp(2.2rem,5vw,3.5rem); font-weight:800; line-height:1.1; margin-bottom:1rem; }
+  .hero h1 em { font-style:normal; color:var(--accent); }
+  .hero p { color:var(--text-muted); font-size:1.05rem; max-width:560px; margin:0 auto 2rem; line-height:1.7; }
+  .hero-stats { display:flex; justify-content:center; gap:3rem; }
+  .stat { text-align:center; }
+  .stat-num { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:700; color:var(--text); }
+  .stat-label { font-size:0.78rem; color:var(--text-muted); margin-top:2px; }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.85);  /* Slightly more opaque for readability */
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);  /* Stronger shadow for depth */
-            backdrop-filter: blur(10px);
-        }
+  /* SUBJECT TABS */
+  .subjects { padding:0 2rem 2rem; }
+  .section-label { font-size:0.72rem; font-weight:600; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; }
+  .subject-tabs { display:flex; gap:10px; flex-wrap:wrap; }
+  .subject-tab { display:flex; align-items:center; gap:8px; padding:10px 18px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; transition:all .2s; font-size:0.88rem; font-weight:500; color:var(--text-muted); }
+  .subject-tab:hover { border-color:var(--accent); color:var(--text); }
+  .subject-tab.active { background:var(--pill-bg); border-color:var(--accent); color:var(--accent); }
+  .subject-tab .icon { font-size:1.1rem; }
 
-        h1 {
-            text-align: center;
-            color: #2c5e2e;  /* Changed to match nature theme */
-            margin-bottom: 10px;
-            font-size: 2.5em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
-        }
+  /* RESOURCE FILTER */
+  .filter-bar { padding:0 2rem 1.5rem; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .filter-btn { display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:20px; border:1px solid var(--border); background:none; color:var(--text-muted); font-family:'Space Grotesk',sans-serif; font-size:0.82rem; cursor:pointer; transition:all .2s; }
+  .filter-btn:hover { border-color:var(--accent); color:var(--text); }
+  .filter-btn.active { color:#fff; border-color:transparent; }
+  .filter-btn.f-all.active { background:#334155; }
+  .filter-btn.f-pdf.active { background:#7c3aed; border-color:#7c3aed; }
+  .filter-btn.f-video.active { background:#dc2626; border-color:#dc2626; }
+  .filter-btn.f-notes.active { background:#0e7490; border-color:#0e7490; }
+  .filter-btn.f-ppt.active { background:#b45309; border-color:#b45309; }
+  .filter-label { font-size:0.78rem; color:var(--text-muted); margin-left:auto; }
 
-        .subtitle {
-            text-align: center;
-            color: #444;
-            margin-bottom: 40px;
-            font-style: italic;
-            font-weight: 500;
-        }
+  /* LESSON GRID */
+  .lessons-grid { padding:0 2rem 3rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1.25rem; }
+  .lesson-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:all .25s; cursor:pointer; }
+  .lesson-card:hover { border-color:var(--accent); transform:translateY(-3px); }
+  .card-header { padding:1.2rem 1.2rem 0.8rem; display:flex; justify-content:space-between; align-items:flex-start; }
+  .card-unit { font-size:0.7rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; }
+  .card-num { font-size:0.72rem; color:var(--text-muted); background:var(--surface2); padding:3px 8px; border-radius:4px; }
+  .card-title { padding:0 1.2rem 0.8rem; font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:600; line-height:1.35; color:var(--text); }
+  .card-desc { padding:0 1.2rem 1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.6; }
+  .card-resources { padding:0.8rem 1.2rem; border-top:1px solid var(--border); display:flex; gap:6px; flex-wrap:wrap; }
+  .resource-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:6px; font-size:0.75rem; font-weight:500; cursor:pointer; transition:all .2s; }
+  .resource-pill:hover { opacity:0.8; transform:scale(1.03); }
+  .pill-pdf { background:rgba(124,58,237,0.15); color:#a78bfa; border:1px solid rgba(124,58,237,0.3); }
+  .pill-video { background:rgba(220,38,38,0.15); color:#f87171; border:1px solid rgba(220,38,38,0.3); }
+  .pill-notes { background:rgba(14,116,144,0.15); color:#67e8f9; border:1px solid rgba(14,116,144,0.3); }
+  .pill-ppt { background:rgba(180,83,9,0.15); color:#fbbf24; border:1px solid rgba(180,83,9,0.3); }
+  .card-footer { padding:0.6rem 1.2rem; display:flex; align-items:center; justify-content:space-between; }
+  .progress-bar { flex:1; height:3px; background:var(--surface2); border-radius:2px; overflow:hidden; margin-right:10px; }
+  .progress-fill { height:100%; background:linear-gradient(90deg, var(--accent), var(--accent2)); border-radius:2px; transition:width .5s; }
+  .card-progress-label { font-size:0.72rem; color:var(--text-muted); }
 
-        /* Section styling */
-        .section {
-            margin-bottom: 40px;
-            padding: 25px;
-            background: rgba(248, 249, 250, 0.9);  /* Slightly transparent */
-            border-radius: 15px;
-            border-left: 5px solid #4a7c59;  /* Nature green */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(4px); }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:18px; width:100%; max-width:860px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; animation:slideUp .25s ease; }
+  @keyframes slideUp { from { transform:translateY(24px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  .modal-header { padding:1.5rem 1.5rem 1rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; }
+  .modal-meta { display:flex; gap:8px; margin-bottom:6px; }
+  .modal-title { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; }
+  .modal-close { background:var(--surface2); border:none; color:var(--text-muted); font-size:1.2rem; width:34px; height:34px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modal-close:hover { color:var(--text); }
+  .modal-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 1.5rem; overflow-x:auto; }
+  .modal-tab { padding:12px 16px; font-size:0.85rem; font-weight:500; color:var(--text-muted); border:none; background:none; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; font-family:'Space Grotesk',sans-serif; display:flex; align-items:center; gap:6px; }
+  .modal-tab:hover { color:var(--text); }
+  .modal-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .modal-body { flex:1; overflow-y:auto; padding:1.5rem; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
 
-        .section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
+  /* Resource list inside modal */
+  .resource-item { display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface2); border-radius:10px; margin-bottom:10px; transition:all .2s; }
+  .resource-item:hover { border-left:3px solid var(--accent); padding-left:11px; }
+  .resource-icon { width:38px; height:38px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  .icon-pdf { background:rgba(124,58,237,0.2); }
+  .icon-video { background:rgba(220,38,38,0.2); }
+  .icon-notes { background:rgba(14,116,144,0.2); }
+  .icon-ppt { background:rgba(180,83,9,0.2); }
+  .resource-info { flex:1; }
+  .resource-name { font-size:0.9rem; font-weight:500; margin-bottom:2px; }
+  .resource-meta { font-size:0.75rem; color:var(--text-muted); }
+  .resource-btn { padding:6px 14px; border-radius:7px; font-family:'Space Grotesk',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; border:1px solid var(--accent); background:var(--pill-bg); color:var(--accent); transition:all .2s; text-decoration:none; display:inline-block; }
+  .resource-btn:hover { background:var(--accent); color:var(--bg); }
 
-        h2 {
-            color: #2c5e2e;  /* Nature green */
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+  /* YouTube embed area */
+  .yt-embed-wrapper { position:relative; padding-bottom:56.25%; height:0; border-radius:10px; overflow:hidden; background:#000; }
+  .yt-embed-wrapper iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+  .yt-playlist { display:flex; flex-direction:column; gap:8px; margin-top:1rem; }
+  .yt-item { display:flex; gap:12px; align-items:center; padding:10px; background:var(--surface2); border-radius:9px; cursor:pointer; transition:all .2s; border:1px solid transparent; }
+  .yt-item:hover, .yt-item.playing { border-color:rgba(220,38,38,0.4); background:rgba(220,38,38,0.05); }
+  .yt-thumb { width:80px; height:45px; border-radius:5px; background:#1a1a2e; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem; overflow:hidden; }
+  .yt-thumb img { width:100%; height:100%; object-fit:cover; }
+  .yt-info { flex:1; }
+  .yt-title { font-size:0.85rem; font-weight:500; margin-bottom:3px; }
+  .yt-dur { font-size:0.73rem; color:var(--text-muted); }
+  .playing-badge { font-size:0.7rem; color:#f87171; background:rgba(220,38,38,0.15); padding:2px 7px; border-radius:4px; }
 
-        h2::before {
-            content: '🌿';  /* Changed to nature icon */
-        }
+  /* Notes panel */
+  .notes-editor { width:100%; min-height:180px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:0.9rem; padding:14px; outline:none; resize:vertical; line-height:1.7; }
+  .notes-actions { display:flex; gap:8px; margin-top:10px; align-items:center; }
+  .btn-primary { padding:8px 18px; background:var(--accent); color:var(--bg); border:none; border-radius:8px; font-family:'Space Grotesk',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; }
+  .btn-ghost { padding:8px 16px; background:none; border:1px solid var(--border); color:var(--text-muted); border-radius:8px; font-family:'Space Grotesk',sans-serif; font-size:0.85rem; cursor:pointer; }
+  .btn-ghost:hover { color:var(--text); border-color:var(--text-muted); }
+  .notes-saved { display:none; font-size:0.8rem; color:var(--accent3); margin-left:8px; }
 
-        /* Hover Effect 1: Text Glow */
-        .glow-text {
-            font-size: 1.2em;
-            line-height: 1.6;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 8px;
-        }
+  /* PDF viewer placeholder */
+  .pdf-viewer-area { background:var(--surface2); border-radius:10px; padding:1.5rem; text-align:center; min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; }
 
-        .glow-text:hover {
-            color: #4a7c59;
-            text-shadow: 0 0 10px rgba(74, 124, 89, 0.5);
-            background: rgba(74, 124, 89, 0.1);
-            transform: scale(1.02);
-        }
+  /* Add resource form */
+  .add-form { background:var(--surface2); border-radius:12px; padding:1.5rem; }
+  .add-form h3 { font-size:1rem; font-weight:600; margin-bottom:1.2rem; color:var(--text); }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+  .form-group { display:flex; flex-direction:column; gap:6px; }
+  .form-group label { font-size:0.78rem; color:var(--text-muted); font-weight:500; }
+  .form-group input, .form-group select, .form-group textarea { background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:0.87rem; padding:9px 12px; outline:none; transition:border .2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); }
+  .form-group select option { background:var(--surface); }
+  .form-group textarea { resize:vertical; min-height:80px; }
 
-        /* Hover Effect 2: Underline Animation */
-        .underline-text {
-            position: relative;
-            display: inline-block;
-            font-size: 1.2em;
-            cursor: pointer;
-            padding: 5px 0;
-        }
+  /* Admin section */
+  .admin-section { padding:2rem; border-top:1px solid var(--border); }
+  .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+  .admin-header h2 { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:700; }
+  .add-lesson-btn { display:flex; align-items:center; gap:8px; padding:9px 18px; background:var(--accent); color:var(--bg); border:none; border-radius:9px; font-family:'Space Grotesk',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .add-lesson-btn:hover { opacity:0.9; transform:scale(1.02); }
 
-        .underline-text::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 3px;
-            bottom: 0;
-            left: 0;
-            background: linear-gradient(90deg, #4a7c59, #8fbc8f);
-            transition: width 0.3s ease;
-        }
+  /* Toast */
+  .toast { position:fixed; bottom:2rem; right:2rem; background:var(--surface); border:1px solid var(--accent3); border-radius:10px; padding:12px 20px; color:var(--accent3); font-size:0.88rem; font-weight:500; z-index:9999; opacity:0; transform:translateY(12px); transition:all .3s; pointer-events:none; display:flex; align-items:center; gap:8px; }
+  .toast.show { opacity:1; transform:translateY(0); }
 
-        .underline-text:hover::after {
-            width: 100%;
-        }
+  /* Loading state */
+  .empty-state { text-align:center; padding:3rem; color:var(--text-muted); }
+  .empty-state .icon { font-size:2.5rem; margin-bottom:1rem; }
 
-        /* Hover Effect 3: Color Shift */
-        .color-shift {
-            font-size: 1.2em;
-            padding: 15px;
-            background: #fff;
-            border-radius: 10px;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:5px; height:5px; }
+  ::-webkit-scrollbar-track { background:var(--surface); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 
-        .color-shift:hover {
-            background: linear-gradient(135deg, #4a7c59, #8fbc8f);
-            color: white;
-            border-color: #4a7c59;
-            transform: translateX(10px);
-            box-shadow: 0 5px 20px rgba(74, 124, 89, 0.4);
-        }
-
-        /* Interactive List Styles */
-        .interactive-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .interactive-list li {
-            background: rgba(255, 255, 255, 0.95);
-            margin: 10px 0;
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #4a7c59;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .interactive-list li::before {
-            content: '→';
-            position: absolute;
-            left: -30px;
-            transition: all 0.3s ease;
-            color: #4a7c59;
-            font-weight: bold;
-        }
-
-        .interactive-list li:hover {
-            transform: translateX(20px);
-            border-left-width: 8px;
-            box-shadow: 0 8px 25px rgba(74, 124, 89, 0.3);
-            background: linear-gradient(90deg, rgba(248, 249, 250, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
-        }
-
-        .interactive-list li:hover::before {
-            left: 15px;
-        }
-
-        .list-item-title {
-            font-weight: bold;
-            color: #4a7c59;
-            font-size: 1.1em;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .list-item-desc {
-            color: #555;
-            font-size: 0.95em;
-            line-height: 1.4;
-        }
-
-        /* Card Grid Hover Effects */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .hover-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .hover-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #4a7c59 0%, #8fbc8f 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 0;
-        }
-
-        .hover-card:hover {
-            transform: translateY(-10px) rotate(2deg);
-            box-shadow: 0 20px 40px rgba(74, 124, 89, 0.3);
-        }
-
-        .hover-card:hover::before {
-            opacity: 1;
-        }
-
-        .hover-card > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hover-card:hover h3,
-        .hover-card:hover p {
-            color: white;
-        }
-
-        .card-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .hover-card:hover .card-icon {
-            transform: scale(1.2) rotate(-10deg);
-        }
-
-        /* Animated Button */
-        .magic-button {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #4a7c59 0%, #2c5e2e 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .magic-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-        }
-
-        .magic-button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .magic-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(74, 124, 89, 0.5);
-        }
-
-        /* Floating animation for decoration */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            body {
-                padding: 20px 10px;
-            }
-            .container {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  @media(max-width:600px) {
+    nav { padding:0 1rem; }
+    .nav-search { display:none; }
+    .hero { padding:3rem 1rem 2rem; }
+    .hero-stats { gap:1.5rem; }
+    .subjects, .filter-bar, .lessons-grid, .admin-section { padding-left:1rem; padding-right:1rem; }
+    .lessons-grid { grid-template-columns:1fr; }
+    .form-row { grid-template-columns:1fr; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="floating">Nature Inspired Design</h1>
-        <p class="subtitle">Hover over elements to discover interactive effects 🌿</p>
 
-        <!-- Section 1: Text Hover Effects -->
-        <div class="section">
-            <h2>Text Hover Effects</h2>
-            
-            <p class="glow-text">
-                ✨ <strong>Glow Effect:</strong> Hover over this text to see it glow with a subtle shadow and scale effect. Perfect for highlighting important content.
-            </p>
-            
-            <p style="margin-top: 20px;">
-                <span class="underline-text">
-                    📍 Underline Animation: Watch the gradient underline slide in from left to right
-                </span>
-            </p>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>⚗</span> Sci<span>Tech</span></a>
+  <div class="nav-links">
+    <button class="active" onclick="showSection('home')">Home</button>
+    <button onclick="showSection('lessons')">Lessons</button>
+    <button onclick="showSection('admin')">Manage</button>
+  </div>
+  <div class="nav-search">
+    <span style="color:var(--text-muted); font-size:0.9rem;">🔍</span>
+    <input type="text" placeholder="Search lessons..." id="globalSearch" oninput="filterLessons()">
+  </div>
+</nav>
 
-            <div class="color-shift" style="margin-top: 20px;">
-                🎨 Color Shift: This box changes color, moves right, and gets a shadow on hover
-            </div>
-        </div>
+<!-- HERO -->
+<div class="hero" id="sec-home">
+  <div class="hero-badge">🔬 Science &amp; Technology Learning Portal</div>
+  <h1>Learn. Explore.<br><em>Discover Science.</em></h1>
+  <p>Access PDFs, video lectures, lesson notes, and presentations — all organized by subject and topic in one place.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num" id="stat-lessons">0</div><div class="stat-label">Lessons</div></div>
+    <div class="stat"><div class="stat-num" id="stat-resources">0</div><div class="stat-label">Resources</div></div>
+    <div class="stat"><div class="stat-num" id="stat-subjects">5</div><div class="stat-label">Subjects</div></div>
+  </div>
+</div>
 
-        <!-- Section 2: Interactive List -->
-        <div class="section">
-            <h2>Interactive Item List</h2>
-            <ul class="interactive-list">
-                <li>
-                    <span class="list-item-title">🌲 Forest Feature</span>
-                    <span class="list-item-desc">Experience smooth animations with CSS transitions. Hover to see the arrow appear and the card shift.</span>
-                </li>
-                <li>
-                    <span class="list-item-title">🏔️ Mountain View</span>
-                    <span class="list-item-desc">Each list item has its own hover state with enhanced shadows and border effects for better UX.</span>
-                </li>
-                <li>
-                    <span class="list-item-title">🌊 Lake Reflection</span>
-                    <span class="list-item-desc">The arrow indicator slides in from the left, giving users clear visual feedback on interaction.</span>
-                </li>
-                <li>
-                    <span class="list-item-title">☀️ Sunrise Glow</span>
-                    <span class="list-item-desc">Responsive design ensures these effects work beautifully on both desktop and mobile devices.</span>
-                </li>
-            </ul>
-        </div>
+<!-- SUBJECTS -->
+<div class="subjects" id="sec-lessons">
+  <div class="section-label">Browse by Subject</div>
+  <div class="subject-tabs">
+    <div class="subject-tab active" onclick="filterBySubject('all',this)"><span class="icon">🌐</span> All Subjects</div>
+    <div class="subject-tab" onclick="filterBySubject('physics',this)"><span class="icon">⚡</span> Physics</div>
+    <div class="subject-tab" onclick="filterBySubject('chemistry',this)"><span class="icon">⚗</span> Chemistry</div>
+    <div class="subject-tab" onclick="filterBySubject('biology',this)"><span class="icon">🧬</span> Biology</div>
+    <div class="subject-tab" onclick="filterBySubject('math',this)"><span class="icon">📐</span> Mathematics</div>
+    <div class="subject-tab" onclick="filterBySubject('technology',this)"><span class="icon">💻</span> Technology</div>
+  </div>
+</div>
 
-        <!-- Section 3: Card Grid -->
-        <div class="section">
-            <h2>Hover Cards Grid</h2>
-            <div class="card-grid">
-                <div class="hover-card">
-                    <div class="card-icon">🌿</div>
-                    <h3>Nature</h3>
-                    <p>Organic gradients and smooth transitions</p>
-                </div>
-                <div class="hover-card">
-                    <div class="card-icon">⚡</div>
-                    <h3>Energy</h3>
-                    <p>Fast performance with CSS animations</p>
-                </div>
-                <div class="hover-card">
-                    <div class="card-icon">📱</div>
-                    <h3>Responsive</h3>
-                    <p>Works perfectly on all devices</p>
-                </div>
-            </div>
-        </div>
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn f-all active" onclick="filterByType('all',this)">📋 All Types</button>
+  <button class="filter-btn f-pdf" onclick="filterByType('pdf',this)">📄 PDF</button>
+  <button class="filter-btn f-video" onclick="filterByType('video',this)">▶️ Video</button>
+  <button class="filter-btn f-notes" onclick="filterByType('notes',this)">📝 Notes</button>
+  <button class="filter-btn f-ppt" onclick="filterByType('ppt',this)">📊 PPT</button>
+  <span class="filter-label" id="count-label">Loading…</span>
+</div>
 
-        <!-- Call to Action -->
-        <div style="text-align: center; margin-top: 30px;">
-            <button class="magic-button" onclick="showAlert()">
-                Explore Nature! 🌲
-            </button>
-        </div>
+<!-- LESSON GRID -->
+<div class="lessons-grid" id="lessonsGrid"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="lessonModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="flex:1">
+        <div class="modal-meta" id="modalMeta"></div>
+        <div class="modal-title" id="modalTitle">Lesson</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
+    <div class="modal-tabs" id="modalTabs"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
-    <script>
-        // Add interactive sound effect simulation (visual feedback)
-        document.querySelectorAll('.interactive-list li, .hover-card, .magic-button').forEach(item => {
-            item.addEventListener('mouseenter', function() {
-                this.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-            });
-        });
+<!-- ADD LESSON MODAL -->
+<div class="modal-overlay" id="addModal" onclick="closeAddOutside(event)">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title">Add New Lesson</div>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="add-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Lesson Title *</label>
+            <input type="text" id="f-title" placeholder="e.g. Newton's Laws of Motion">
+          </div>
+          <div class="form-group">
+            <label>Subject *</label>
+            <select id="f-subject">
+              <option value="">Select subject</option>
+              <option value="physics">⚡ Physics</option>
+              <option value="chemistry">⚗ Chemistry</option>
+              <option value="biology">🧬 Biology</option>
+              <option value="math">📐 Mathematics</option>
+              <option value="technology">💻 Technology</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Unit / Chapter</label>
+            <input type="text" id="f-unit" placeholder="e.g. Unit 2: Forces">
+          </div>
+          <div class="form-group">
+            <label>Grade / Level</label>
+            <input type="text" id="f-grade" placeholder="e.g. Grade 10">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Description</label>
+          <textarea id="f-desc" placeholder="Brief summary of this lesson..."></textarea>
+        </div>
+        <hr style="border-color:var(--border); margin-bottom:1rem">
+        <div class="add-form" style="background:var(--bg); padding:0; margin-bottom:0">
+          <h3 style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem">Resources (add at least one)</h3>
+          <div id="resources-list"></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:1rem">
+            <button class="btn-ghost" onclick="addResourceField('pdf')">+ PDF</button>
+            <button class="btn-ghost" onclick="addResourceField('video')">+ YouTube Video</button>
+            <button class="btn-ghost" onclick="addResourceField('notes')">+ Notes</button>
+            <button class="btn-ghost" onclick="addResourceField('ppt')">+ PPT Link</button>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:flex-end">
+          <button class="btn-ghost" onclick="closeAddModal()">Cancel</button>
+          <button class="btn-primary" onclick="saveLesson()">Save Lesson</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        // Click interaction for button
-        function showAlert() {
-            const button = document.querySelector('.magic-button');
-            button.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                button.style.transform = '';
-                alert('🌿 Embrace the beauty of nature and code!');
-            }, 150);
-        }
+<!-- ADMIN SECTION -->
+<div class="admin-section" id="sec-admin" style="display:none">
+  <div class="admin-header">
+    <h2>Manage Content</h2>
+    <button class="add-lesson-btn" onclick="openAddModal()">+ Add Lesson</button>
+  </div>
+  <div id="adminGrid" class="lessons-grid" style="padding:0"></div>
+</div>
 
-        // Add random floating animation delays for visual interest
-        document.querySelectorAll('.hover-card').forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
-        });
-    </script>
+<!-- TOAST -->
+<div class="toast" id="toast">✓ <span id="toast-msg">Saved</span></div>
+
+<script>
+// DATA STORE
+let lessons = JSON.parse(localStorage.getItem('scitech_lessons') || 'null');
+if (!lessons) {
+  lessons = [
+    {
+      id:1, title:"Newton's Laws of Motion", subject:"physics", unit:"Unit 3: Forces & Motion", grade:"Grade 10",
+      desc:"Understand the three fundamental laws that describe the relationship between forces and the motion of objects.",
+      progress:65, resources:[
+        {type:"pdf", name:"Newton's Laws — Full Chapter PDF", url:"#", size:"2.4 MB"},
+        {type:"pdf", name:"Practice Problems Set A", url:"#", size:"1.1 MB"},
+        {type:"video", name:"Introduction to Newton's 1st Law", ytid:"ZM8ECpBuQYE", duration:"12:34"},
+        {type:"video", name:"Newton's 2nd & 3rd Laws Explained", ytid:"ou9YMWlJgkE", duration:"18:22"},
+        {type:"notes", name:"Class Notes — Laws of Motion", content:"Newton's 1st Law (Inertia): An object at rest stays at rest...\n\nNewton's 2nd Law: F = ma\n- F = Force (Newtons)\n- m = mass (kg)\n- a = acceleration (m/s²)\n\nNewton's 3rd Law: For every action, there is an equal and opposite reaction."},
+        {type:"ppt", name:"Lecture Slides — Forces & Motion", url:"#", slides:"28 slides"}
+      ]
+    },
+    {
+      id:2, title:"Periodic Table & Chemical Elements", subject:"chemistry", unit:"Unit 1: Atomic Structure", grade:"Grade 9",
+      desc:"Explore the organization of elements, periodic trends, and chemical properties across the periodic table.",
+      progress:40, resources:[
+        {type:"pdf", name:"Periodic Table Handbook", url:"#", size:"5.2 MB"},
+        {type:"video", name:"The Periodic Table — A Visual Guide", ytid:"0RRVV4Diomg", duration:"14:55"},
+        {type:"video", name:"Understanding Atomic Number & Mass", ytid:"W3SbnbI0ocA", duration:"9:12"},
+        {type:"notes", name:"Study Notes — Element Groups", content:"Main groups of the periodic table:\n\n• Alkali metals (Group 1): Highly reactive, 1 valence electron\n• Alkaline earth metals (Group 2): 2 valence electrons\n• Transition metals: Groups 3–12\n• Halogens (Group 17): Very reactive non-metals\n• Noble gases (Group 18): Stable, full valence shell"},
+        {type:"ppt", name:"Presentation — Periodic Trends", url:"#", slides:"34 slides"}
+      ]
+    },
+    {
+      id:3, title:"Cell Structure & Function", subject:"biology", unit:"Unit 2: Cell Biology", grade:"Grade 10",
+      desc:"Dive deep into the structure of plant and animal cells, organelles and their functions.",
+      progress:80, resources:[
+        {type:"pdf", name:"Cell Biology — Comprehensive Guide", url:"#", size:"3.8 MB"},
+        {type:"pdf", name:"Cell Diagrams & Labeling Worksheet", url:"#", size:"0.9 MB"},
+        {type:"video", name:"Inside the Cell — 3D Animation", ytid:"URUJD5NEXC8", duration:"11:47"},
+        {type:"notes", name:"Organelle Reference Sheet", content:"Key Organelles:\n\n🔵 Nucleus — Control center; contains DNA\n🟢 Mitochondria — 'Powerhouse of the cell'; produces ATP\n🟡 Ribosome — Protein synthesis\n🔴 Endoplasmic Reticulum (ER) — Protein & lipid transport\n🟠 Golgi Apparatus — Packaging & shipping of proteins\n🔵 Chloroplast (plants) — Photosynthesis"},
+        {type:"ppt", name:"Cell Structure Slides", url:"#", slides:"42 slides"}
+      ]
+    },
+    {
+      id:4, title:"Quadratic Equations", subject:"math", unit:"Unit 4: Algebra", grade:"Grade 9",
+      desc:"Master solving quadratic equations using factoring, completing the square, and the quadratic formula.",
+      progress:55, resources:[
+        {type:"pdf", name:"Quadratic Equations — Theory & Examples", url:"#", size:"1.7 MB"},
+        {type:"video", name:"Solving Quadratics — Full Lesson", ytid:"i7idZfS8t8w", duration:"22:10"},
+        {type:"notes", name:"Formula Reference Card", content:"Quadratic Formula: x = (-b ± √(b²-4ac)) / 2a\n\nStandard form: ax² + bx + c = 0\n\nDiscriminant (b²-4ac):\n  > 0 → two real solutions\n  = 0 → one real solution\n  < 0 → no real solutions\n\nFactoring tip: Look for two numbers that multiply to 'ac' and add to 'b'"},
+        {type:"ppt", name:"Quadratic Equations Slides", url:"#", slides:"22 slides"}
+      ]
+    },
+    {
+      id:5, title:"Introduction to Programming", subject:"technology", unit:"Unit 1: Computational Thinking", grade:"Grade 11",
+      desc:"Learn fundamental programming concepts including variables, loops, conditionals and functions using Python.",
+      progress:30, resources:[
+        {type:"pdf", name:"Python Beginner's Handbook", url:"#", size:"4.1 MB"},
+        {type:"video", name:"Python for Beginners — Full Course", ytid:"kqtD5dpn9C8", duration:"1:01:30"},
+        {type:"video", name:"Understanding Loops & Conditions", ytid:"DZwmZ8Usvnk", duration:"16:45"},
+        {type:"notes", name:"Python Quick Reference", content:"Variables:\nname = 'Alice'\nage = 16\n\nIf-else:\nif age >= 18:\n    print('Adult')\nelse:\n    print('Minor')\n\nFor loop:\nfor i in range(5):\n    print(i)\n\nFunction:\ndef greet(name):\n    return f'Hello, {name}!'"},
+        {type:"ppt", name:"Intro to Programming Slides", url:"#", slides:"38 slides"}
+      ]
+    },
+    {
+      id:6, title:"Electricity & Circuits", subject:"physics", unit:"Unit 5: Electromagnetism", grade:"Grade 11",
+      desc:"Understand electric current, voltage, resistance and how to analyze simple and complex circuits.",
+      progress:20, resources:[
+        {type:"pdf", name:"Electricity Fundamentals PDF", url:"#", size:"3.3 MB"},
+        {type:"video", name:"Ohm's Law — Visual Explanation", ytid:"8jB6hDUqN0Y", duration:"13:20"},
+        {type:"notes", name:"Circuit Laws Cheat Sheet", content:"Ohm's Law: V = IR\n\nKirchhoff's Laws:\n• KCL: Sum of currents at a node = 0\n• KVL: Sum of voltages in a loop = 0\n\nSeries circuit: R_total = R1 + R2 + ...\nParallel circuit: 1/R_total = 1/R1 + 1/R2 + ..."},
+        {type:"ppt", name:"Circuits & Electricity Slides", url:"#", slides:"31 slides"}
+      ]
+    }
+  ];
+  localStorage.setItem('scitech_lessons', JSON.stringify(lessons));
+}
+
+let currentSubject = 'all', currentType = 'all', currentLesson = null, currentYtId = null;
+
+// RENDER
+function updateStats() {
+  document.getElementById('stat-lessons').textContent = lessons.length;
+  const total = lessons.reduce((s,l)=>s+(l.resources||[]).length,0);
+  document.getElementById('stat-resources').textContent = total;
+}
+
+function getSubjectColor(s) {
+  return {physics:'#38bdf8',chemistry:'#a78bfa',biology:'#34d399',math:'#fb923c',technology:'#f472b6'}[s]||'#94a3b8';
+}
+function getSubjectIcon(s) {
+  return {physics:'⚡',chemistry:'⚗',biology:'🧬',math:'📐',technology:'💻'}[s]||'📘';
+}
+function capitalize(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function renderLessons(target, list) {
+  const grid = document.getElementById(target);
+  if (!list.length) { grid.innerHTML='<div class="empty-state"><div class="icon">🔭</div><p>No lessons found for this filter.</p></div>'; return; }
+  grid.innerHTML = list.map(l => {
+    const res = l.resources||[];
+    const types = [...new Set(res.map(r=>r.type))];
+    const pills = types.map(t => {
+      const labels={pdf:'📄 PDF',video:'▶ Video',notes:'📝 Notes',ppt:'📊 PPT'};
+      return `<span class="resource-pill pill-${t}" onclick="event.stopPropagation();openModal(${l.id},'${t}')">${labels[t]||t} <span style="opacity:.6">${res.filter(r=>r.type===t).length}</span></span>`;
+    }).join('');
+    const color = getSubjectColor(l.subject);
+    return `
+    <div class="lesson-card" onclick="openModal(${l.id},'overview')" style="border-top:3px solid ${color}">
+      <div class="card-header">
+        <span class="card-unit">${getSubjectIcon(l.subject)} ${l.unit||capitalize(l.subject)}</span>
+        <span class="card-num">${l.grade||''}</span>
+      </div>
+      <div class="card-title">${l.title}</div>
+      <div class="card-desc">${l.desc||''}</div>
+      <div class="card-resources">${pills}</div>
+      <div class="card-footer">
+        <div class="progress-bar"><div class="progress-fill" style="width:${l.progress||0}%"></div></div>
+        <span class="card-progress-label">${l.progress||0}%</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterLessons() {
+  const q = document.getElementById('globalSearch').value.toLowerCase();
+  let list = lessons.filter(l => {
+    const matchSubj = currentSubject==='all'||l.subject===currentSubject;
+    const matchType = currentType==='all'||(l.resources||[]).some(r=>r.type===currentType);
+    const matchQ = !q||l.title.toLowerCase().includes(q)||l.subject.toLowerCase().includes(q);
+    return matchSubj&&matchType&&matchQ;
+  });
+  renderLessons('lessonsGrid', list);
+  document.getElementById('count-label').textContent = `${list.length} lesson${list.length!==1?'s':''}`;
+}
+
+function filterBySubject(s, el) {
+  currentSubject = s;
+  document.querySelectorAll('.subject-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  filterLessons();
+}
+
+function filterByType(t, el) {
+  currentType = t;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  filterLessons();
+}
+
+// MODAL
+function openModal(id, tab) {
+  currentLesson = lessons.find(l=>l.id===id);
+  if (!currentLesson) return;
+  const l = currentLesson;
+  const color = getSubjectColor(l.subject);
+  document.getElementById('modalMeta').innerHTML = `
+    <span style="font-size:.75rem;background:${color}22;color:${color};padding:3px 10px;border-radius:5px;font-weight:600">${getSubjectIcon(l.subject)} ${capitalize(l.subject)}</span>
+    <span style="font-size:.75rem;color:var(--text-muted)">${l.grade||''}</span>`;
+  document.getElementById('modalTitle').textContent = l.title;
+  const res = l.resources||[];
+  const types = [...new Set(res.map(r=>r.type))];
+  const tabDefs = [
+    {key:'overview',label:'📋 Overview'},
+    ...(res.some(r=>r.type==='pdf')?[{key:'pdf',label:'📄 PDFs'}]:[]),
+    ...(res.some(r=>r.type==='video')?[{key:'video',label:'▶ Videos'}]:[]),
+    ...(res.some(r=>r.type==='notes')?[{key:'notes',label:'📝 Notes'}]:[]),
+    ...(res.some(r=>r.type==='ppt')?[{key:'ppt',label:'📊 PPT'}]:[]),
+  ];
+  document.getElementById('modalTabs').innerHTML = tabDefs.map(t =>
+    `<button class="modal-tab${tab===t.key?' active':''}" onclick="switchTab('${t.key}',this)">${t.label}</button>`
+  ).join('');
+  renderTabContent(tab);
+  document.getElementById('lessonModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function switchTab(key, el) {
+  document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderTabContent(key);
+}
+
+function renderTabContent(key) {
+  const l = currentLesson; const res = l.resources||[];
+  let html = '';
+  if (key==='overview') {
+    const counts = {pdf:0,video:0,notes:0,ppt:0};
+    res.forEach(r=>{ if(counts[r.type]!==undefined) counts[r.type]++; });
+    html = `
+    <p style="color:var(--text-muted);line-height:1.75;margin-bottom:1.5rem">${l.desc||''}</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem">
+      ${Object.entries(counts).map(([t,n])=>n?`<div style="background:var(--surface2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.3rem">${{pdf:'📄',video:'▶️',notes:'📝',ppt:'📊'}[t]}</div><div style="font-size:1.3rem;font-weight:600;margin:4px 0">${n}</div><div style="font-size:.75rem;color:var(--text-muted)">${capitalize(t)}</div></div>`:'').join('')}
+    </div>
+    <div style="background:var(--surface2);border-radius:10px;padding:1rem;display:flex;align-items:center;gap:12px">
+      <span style="font-size:0.85rem;color:var(--text-muted)">Progress</span>
+      <div class="progress-bar" style="flex:1;height:6px"><div class="progress-fill" style="width:${l.progress||0}%"></div></div>
+      <input type="range" min="0" max="100" value="${l.progress||0}" style="display:none" id="prog-range">
+      <span style="font-size:0.85rem;font-weight:600;color:var(--accent)">${l.progress||0}%</span>
+      <button class="btn-ghost" style="font-size:0.78rem;padding:5px 12px" onclick="editProgress(${l.id})">Update</button>
+    </div>`;
+  } else if (key==='pdf') {
+    const pdfs = res.filter(r=>r.type==='pdf');
+    html = pdfs.map(p=>`
+    <div class="resource-item">
+      <div class="resource-icon icon-pdf">📄</div>
+      <div class="resource-info"><div class="resource-name">${p.name}</div><div class="resource-meta">${p.size||'PDF Document'}</div></div>
+      <a class="resource-btn" href="${p.url||'#'}" target="_blank">Open</a>
+    </div>`).join('')+`
+    <div class="pdf-viewer-area" style="margin-top:1rem">
+      <span style="font-size:2rem">📄</span>
+      <p style="color:var(--text-muted);font-size:0.9rem">Click "Open" on any PDF above to view it,<br>or paste a PDF URL below to embed it.</p>
+      <div style="display:flex;gap:8px;width:100%;max-width:400px">
+        <input type="text" id="pdf-url" placeholder="https://example.com/file.pdf" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
+        <button class="btn-primary" onclick="embedPDF()">Embed</button>
+      </div>
+      <div id="pdf-frame" style="width:100%;min-height:400px;display:none"></div>
+    </div>`;
+  } else if (key==='video') {
+    const vids = res.filter(r=>r.type==='video');
+    if (!currentYtId) currentYtId = vids[0]?.ytid||null;
+    html = `
+    ${currentYtId?`<div class="yt-embed-wrapper"><iframe src="https://www.youtube.com/embed/${currentYtId}?autoplay=0&rel=0" allowfullscreen></iframe></div>`:''}
+    <div class="yt-playlist">
+      ${vids.map((v,i)=>`
+      <div class="yt-item${(currentYtId||'')===(v.ytid||'')?' playing':''}" onclick="playVideo('${v.ytid||''}',this)">
+        <div class="yt-thumb"><img src="https://img.youtube.com/vi/${v.ytid||''}/mqdefault.jpg" alt="" onerror="this.style.display='none';this.parentNode.innerHTML='▶'"></div>
+        <div class="yt-info"><div class="yt-title">${v.name}</div><div class="yt-dur">${v.duration||''}</div></div>
+        ${(currentYtId||'')===(v.ytid||'')?'<span class="playing-badge">▶ Playing</span>':''}
+      </div>`).join('')}
+    </div>
+    <div style="margin-top:1rem;padding:12px;background:var(--surface2);border-radius:10px">
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px">Add a YouTube video by URL:</p>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="yt-url" placeholder="https://www.youtube.com/watch?v=..." style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
+        <input type="text" id="yt-title" placeholder="Video title" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
+        <button class="btn-primary" onclick="addYoutubeVideo()">Add</button>
+      </div>
+    </div>`;
+  } else if (key==='notes') {
+    const notes = res.filter(r=>r.type==='notes');
+    html = notes.map((n,i)=>`
+    <div style="margin-bottom:1.5rem">
+      <div style="font-size:0.88rem;font-weight:600;margin-bottom:8px;color:var(--text)">${n.name}</div>
+      <textarea class="notes-editor" id="note-${i}" rows="10">${n.content||''}</textarea>
+      <div class="notes-actions">
+        <button class="btn-primary" onclick="saveNote(${l.id},${i})">Save Notes</button>
+        <button class="btn-ghost" onclick="copyNote(${i})">Copy</button>
+        <span class="notes-saved" id="saved-${i}">✓ Saved!</span>
+      </div>
+    </div>`).join('');
+    if (!notes.length) html = `<div class="empty-state"><div class="icon">📝</div><p>No notes yet. Add notes from Manage section.</p></div>`;
+  } else if (key==='ppt') {
+    const ppts = res.filter(r=>r.type==='ppt');
+    html = ppts.map(p=>`
+    <div class="resource-item">
+      <div class="resource-icon icon-ppt">📊</div>
+      <div class="resource-info"><div class="resource-name">${p.name}</div><div class="resource-meta">${p.slides||'Presentation'}</div></div>
+      <a class="resource-btn" href="${p.url||'#'}" target="_blank">Open</a>
+    </div>`).join('')+`
+    <div style="margin-top:1rem;padding:12px;background:var(--surface2);border-radius:10px">
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:8px">Or embed Google Slides / OneDrive PPT URL:</p>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="ppt-url" placeholder="https://docs.google.com/presentation/..." style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
+        <button class="btn-primary" onclick="embedPPT()">Embed</button>
+      </div>
+      <div id="ppt-frame" style="width:100%;min-height:400px;display:none;margin-top:10px"></div>
+    </div>`;
+  }
+  document.getElementById('modalBody').innerHTML = html;
+}
+
+function embedPDF() {
+  const url = document.getElementById('pdf-url').value.trim();
+  if (!url) return;
+  const frame = document.getElementById('pdf-frame');
+  frame.style.display='block';
+  frame.innerHTML = `<iframe src="${url}" style="width:100%;height:500px;border:none;border-radius:8px"></iframe>`;
+}
+
+function embedPPT() {
+  const url = document.getElementById('ppt-url').value.trim();
+  if (!url) return;
+  const frame = document.getElementById('ppt-frame');
+  frame.style.display='block';
+  const embedUrl = url.includes('docs.google.com') ? url.replace('/pub','/embed').replace('/edit','/embed') : url;
+  frame.innerHTML = `<iframe src="${embedUrl}" style="width:100%;height:500px;border:none;border-radius:8px" allowfullscreen></iframe>`;
+}
+
+function playVideo(ytid, el) {
+  currentYtId = ytid;
+  renderTabContent('video');
+}
+
+function addYoutubeVideo() {
+  const url = document.getElementById('yt-url').value.trim();
+  const title = document.getElementById('yt-title').value.trim()||'Untitled Video';
+  if (!url) return;
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  const ytid = match?match[1]:url;
+  const l = lessons.find(x=>x.id===currentLesson.id);
+  l.resources.push({type:'video',name:title,ytid,duration:''});
+  currentLesson = l;
+  saveLessons();
+  showToast('Video added!');
+  renderTabContent('video');
+}
+
+function saveNote(lessonId, noteIdx) {
+  const content = document.getElementById(`note-${noteIdx}`).value;
+  const l = lessons.find(x=>x.id===lessonId);
+  const notes = l.resources.filter(r=>r.type==='notes');
+  notes[noteIdx].content = content;
+  currentLesson = l;
+  saveLessons();
+  const el = document.getElementById(`saved-${noteIdx}`);
+  el.style.display='inline'; setTimeout(()=>{ el.style.display='none'; },2000);
+}
+
+function copyNote(i) {
+  navigator.clipboard.writeText(document.getElementById(`note-${i}`).value).then(()=>showToast('Copied!'));
+}
+
+function editProgress(id) {
+  const val = prompt('Set progress % (0-100):', lessons.find(l=>l.id===id).progress||0);
+  if (val===null) return;
+  const p = Math.min(100,Math.max(0,parseInt(val)||0));
+  lessons.find(l=>l.id===id).progress = p;
+  currentLesson = lessons.find(l=>l.id===id);
+  saveLessons();
+  renderTabContent('overview');
+  filterLessons();
+  showToast('Progress updated!');
+}
+
+function closeModal() {
+  document.getElementById('lessonModal').classList.remove('open');
+  document.body.style.overflow='';
+  currentYtId=null;
+}
+function closeModalOutside(e) { if(e.target===document.getElementById('lessonModal')) closeModal(); }
+
+// ADD MODAL
+function openAddModal() {
+  document.getElementById('f-title').value='';
+  document.getElementById('f-subject').value='';
+  document.getElementById('f-unit').value='';
+  document.getElementById('f-grade').value='';
+  document.getElementById('f-desc').value='';
+  document.getElementById('resources-list').innerHTML='';
+  document.getElementById('addModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); document.body.style.overflow=''; }
+function closeAddOutside(e) { if(e.target===document.getElementById('addModal')) closeAddModal(); }
+
+let resCounter=0;
+function addResourceField(type) {
+  const id=resCounter++;
+  const labels={pdf:'PDF Link/URL',video:'YouTube URL',notes:'Notes Content',ppt:'PPT Link'};
+  const row=document.createElement('div');
+  row.style='background:var(--bg);border-radius:8px;padding:10px;margin-bottom:8px;position:relative';
+  row.id='res-'+id;
+  row.innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <span style="font-size:.78rem;font-weight:600;color:var(--text-muted)">${{pdf:'📄 PDF',video:'▶ Video',notes:'📝 Notes',ppt:'📊 PPT'}[type]}</span>
+    <button onclick="document.getElementById('res-${id}').remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
+  </div>
+  <input type="hidden" value="${type}" id="res-type-${id}">
+  <input type="text" placeholder="Name / Title" id="res-name-${id}" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:8px 11px;outline:none;width:100%;margin-bottom:6px">
+  ${type==='notes'
+    ?`<textarea placeholder="Notes content..." id="res-content-${id}" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:8px 11px;outline:none;width:100%;min-height:80px;resize:vertical"></textarea>`
+    :`<input type="text" placeholder="${labels[type]}" id="res-url-${id}" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:8px 11px;outline:none;width:100%">`
+  }`;
+  document.getElementById('resources-list').appendChild(row);
+}
+
+function saveLesson() {
+  const title = document.getElementById('f-title').value.trim();
+  const subject = document.getElementById('f-subject').value;
+  if (!title||!subject) { showToast('Please fill in title and subject.'); return; }
+  const resources=[];
+  document.querySelectorAll('[id^="res-type-"]').forEach(el=>{
+    const id=el.id.replace('res-type-','');
+    const type=el.value;
+    const name=document.getElementById('res-name-'+id)?.value.trim()||'Untitled';
+    if (type==='notes') {
+      resources.push({type,name,content:document.getElementById('res-content-'+id)?.value||''});
+    } else {
+      const url=document.getElementById('res-url-'+id)?.value.trim()||'#';
+      const ytmatch=url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      if(type==='video'&&ytmatch) resources.push({type,name,ytid:ytmatch[1],duration:''});
+      else resources.push({type,name,url,size:type==='pdf'?'PDF':type==='ppt'?'Presentation':''});
+    }
+  });
+  const newLesson = {
+    id: Date.now(), title, subject,
+    unit: document.getElementById('f-unit').value.trim(),
+    grade: document.getElementById('f-grade').value.trim(),
+    desc: document.getElementById('f-desc').value.trim(),
+    progress:0, resources
+  };
+  lessons.unshift(newLesson);
+  saveLessons();
+  closeAddModal();
+  filterLessons();
+  renderAdmin();
+  updateStats();
+  showToast('Lesson saved!');
+}
+
+function saveLessons() { localStorage.setItem('scitech_lessons', JSON.stringify(lessons)); }
+
+function deleteLesson(id) {
+  if (!confirm('Delete this lesson?')) return;
+  lessons = lessons.filter(l=>l.id!==id);
+  saveLessons(); filterLessons(); renderAdmin(); updateStats(); showToast('Deleted.');
+}
+
+function renderAdmin() {
+  const grid = document.getElementById('adminGrid');
+  grid.innerHTML = lessons.map(l=>`
+  <div class="lesson-card" style="border-top:3px solid ${getSubjectColor(l.subject)}">
+    <div class="card-header">
+      <span class="card-unit">${getSubjectIcon(l.subject)} ${l.unit||capitalize(l.subject)}</span>
+      <span class="card-num">${l.grade||''}</span>
+    </div>
+    <div class="card-title">${l.title}</div>
+    <div class="card-desc">${(l.resources||[]).length} resources</div>
+    <div class="card-resources" style="gap:8px">
+      <button class="resource-btn" onclick="openModal(${l.id},'overview')" style="font-size:.78rem">View</button>
+      <button onclick="deleteLesson(${l.id})" style="padding:6px 14px;border-radius:7px;font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(239,68,68,.4);background:rgba(239,68,68,.1);color:#f87171">Delete</button>
+    </div>
+  </div>`).join('');
+}
+
+function showSection(s) {
+  document.getElementById('sec-home').style.display = s==='home'?'':'none';
+  document.getElementById('sec-lessons').style.display = s==='home'||s==='lessons'?'':'none';
+  document.querySelector('.filter-bar').style.display = s==='home'||s==='lessons'?'':'none';
+  document.getElementById('lessonsGrid').style.display = s==='home'||s==='lessons'?'':'none';
+  document.getElementById('sec-admin').style.display = s==='admin'?'':'none';
+  if(s==='admin') renderAdmin();
+  document.querySelectorAll('.nav-links button').forEach((b,i)=>{
+    b.classList.toggle('active',['home','lessons','admin'][i]===s);
+  });
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// INIT
+updateStats();
+filterLessons();
+</script>
 </body>
 </html>
