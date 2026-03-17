@@ -9,67 +9,70 @@
 :root{
   --bg:#f5f3ee;--surface:#fff;--surface2:#f0ede6;
   --ink:#1a1612;--ink2:#5a5248;--ink3:#9a9088;
-  --border:rgba(26,22,18,.1);--shadow:0 2px 20px rgba(26,22,18,.08);--radius:12px;
+  --border:rgba(26,22,18,.1);--shadow:0 4px 24px rgba(26,22,18,.09);--radius:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
 
-/* LOADING SCREEN */
-#loadScreen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity .4s;}
-#loadScreen.hidden{opacity:0;pointer-events:none;}
-.load-logo{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:var(--ink);}
-.load-logo span{color:#f39c12;}
-.load-bar{width:220px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
-.load-fill{height:100%;width:0;background:#f39c12;border-radius:2px;transition:width .4s;}
-.load-msg{font-size:.82rem;color:var(--ink3);}
+/* SAVE STATUS BAR */
+#statusBar{position:fixed;top:60px;left:0;right:0;z-index:300;height:3px;background:transparent;transition:background .3s;}
+#statusBar.saving{background:#f39c12;}
+#statusBar.saved{background:#27ae60;animation:fadeBar 1.5s forwards .5s;}
+#statusBar.error{background:#e74c3c;}
+@keyframes fadeBar{to{opacity:0;}}
 
-/* SAVE INDICATOR */
-#saveIndicator{position:fixed;top:70px;right:1.2rem;z-index:500;font-size:.78rem;font-weight:600;padding:6px 14px;border-radius:7px;opacity:0;transition:opacity .3s;pointer-events:none;}
-#saveIndicator.saving{background:#fef3c7;color:#92400e;opacity:1;}
-#saveIndicator.saved{background:#dcfce7;color:#166534;opacity:1;}
-#saveIndicator.error{background:#fee2e2;color:#991b1b;opacity:1;}
+/* SAVE BADGE */
+#saveBadge{position:fixed;bottom:1.5rem;left:1.5rem;z-index:500;font-size:.78rem;font-weight:600;padding:8px 14px;border-radius:8px;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;display:flex;align-items:center;gap:6px;}
+#saveBadge.show{opacity:1;transform:none;}
+#saveBadge.saving{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;}
+#saveBadge.saved{background:#dcfce7;color:#166534;border:1px solid #86efac;}
+#saveBadge.error{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
 
-header{background:var(--ink);color:#fff;padding:0 2.5rem;position:sticky;top:0;z-index:200;height:60px;display:flex;align-items:center;gap:2rem;box-shadow:0 2px 16px rgba(0,0,0,.25);}
-.logo{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:900;color:#fff;text-decoration:none;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+header{background:var(--ink);color:#fff;padding:0 2.5rem;position:sticky;top:0;z-index:200;height:60px;display:flex;align-items:center;gap:1.5rem;box-shadow:0 2px 16px rgba(0,0,0,.3);}
+.logo{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:900;color:#fff;text-decoration:none;display:flex;align-items:center;gap:8px;white-space:nowrap;}
 .logo em{color:#f39c12;font-style:normal;}
-.header-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 12px;flex:1;max-width:320px;}
+.header-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 12px;flex:1;max-width:300px;}
 .header-search input{background:none;border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none;width:100%;}
 .header-search input::placeholder{color:rgba(255,255,255,.4);}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-.btn-add{background:#f39c12;color:var(--ink);border:none;border-radius:7px;padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;}
-.btn-add:hover{opacity:.85;}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.hbtn{display:flex;align-items:center;gap:5px;border:none;border-radius:7px;padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:opacity .2s;}
+.hbtn:hover{opacity:.85;}
+.hbtn-add{background:#f39c12;color:var(--ink);}
+.hbtn-export{background:rgba(255,255,255,.12);color:#fff;}
+.hbtn-import{background:rgba(255,255,255,.12);color:#fff;}
 
-.hero-band{background:linear-gradient(135deg,#1a1612 60%,#2c2318 100%);padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
-.hero-band::before{content:'';position:absolute;right:-80px;top:-80px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(243,156,18,.12),transparent 70%);}
-.hero-band h1{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:.6rem;}
+.hero-band{background:linear-gradient(135deg,#1a1612 55%,#2c2318 100%);padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.hero-band::before{content:'';position:absolute;right:-80px;top:-80px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(243,156,18,.1),transparent 70%);}
+.hero-band h1{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:.5rem;}
 .hero-band h1 span{color:#f39c12;}
-.hero-band p{color:rgba(255,255,255,.5);font-size:.95rem;max-width:500px;line-height:1.65;margin-bottom:1.8rem;}
+.hero-band p{color:rgba(255,255,255,.45);font-size:.9rem;max-width:520px;line-height:1.65;margin-bottom:1.6rem;}
 .hero-stats{display:flex;gap:2rem;flex-wrap:wrap;}
 .hstat-n{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:700;color:#f39c12;}
-.hstat-l{font-size:.72rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;}
+.hstat-l{font-size:.7rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;}
 
-/* CLOUD BADGE */
-.cloud-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(39,174,96,.15);border:1px solid rgba(39,174,96,.3);color:#6ee7b7;font-size:.72rem;padding:4px 12px;border-radius:12px;margin-top:.8rem;}
+/* INFO NOTICE */
+.info-notice{background:rgba(39,174,96,.12);border:1px solid rgba(39,174,96,.25);border-radius:8px;padding:.75rem 1rem;margin-top:1rem;display:flex;align-items:center;gap:10px;max-width:600px;}
+.info-notice span{font-size:.8rem;color:#6ee7b7;line-height:1.5;}
 
-.filter-row{padding:1.2rem 2.5rem;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;position:sticky;top:60px;z-index:150;}
-.subj-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:none;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .18s;}
+.filter-row{padding:1.1rem 2.5rem;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;position:sticky;top:60px;z-index:150;}
+.subj-btn{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:none;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .18s;}
 .subj-btn[data-s="all"].active{background:var(--ink);color:#fff;border-color:var(--ink);}
 .subj-btn[data-s="physics"].active{background:#2980b9;color:#fff;border-color:#2980b9;}
 .subj-btn[data-s="chemistry"].active{background:#c0392b;color:#fff;border-color:#c0392b;}
 .subj-btn[data-s="biology"].active{background:#27ae60;color:#fff;border-color:#27ae60;}
 .subj-btn[data-s="math"].active{background:#8e44ad;color:#fff;border-color:#8e44ad;}
 .subj-btn[data-s="technology"].active{background:#d35400;color:#fff;border-color:#d35400;}
-.filter-count{margin-left:auto;font-size:.78rem;color:var(--ink3);}
+.filter-count{margin-left:auto;font-size:.76rem;color:var(--ink3);}
 
-.type-filter{padding:.8rem 2.5rem;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:.5rem;flex-wrap:wrap;}
+.type-filter{padding:.7rem 2.5rem;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:.5rem;flex-wrap:wrap;}
 .type-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .18s;}
 .type-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
 
 .lessons-wrap{padding:2rem 2.5rem 4rem;}
-.section-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink3);margin-bottom:1.2rem;display:flex;align-items:center;gap:10px;}
+.section-title{font-family:'Fraunces',serif;font-size:.95rem;font-weight:700;color:var(--ink3);margin-bottom:1.2rem;display:flex;align-items:center;gap:10px;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.1rem;}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:1.1rem;}
 
 .lesson-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .22s,box-shadow .22s;}
 .lesson-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
@@ -77,17 +80,17 @@ header{background:var(--ink);color:#fff;padding:0 2.5rem;position:sticky;top:0;z
 .card-inner{padding:1.1rem 1.2rem .9rem;}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;}
 .lesson-number{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;line-height:1;color:rgba(26,22,18,.07);}
-.subj-badge{font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:12px;text-transform:uppercase;letter-spacing:.05em;}
-.card-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:.4rem;}
-.card-desc{font-size:.78rem;color:var(--ink2);line-height:1.55;margin-bottom:.9rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.card-pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.8rem;}
-.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;font-size:.72rem;font-weight:500;cursor:pointer;transition:opacity .15s;}
+.subj-badge{font-size:.67rem;font-weight:600;padding:3px 9px;border-radius:12px;text-transform:uppercase;letter-spacing:.05em;}
+.card-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:.35rem;}
+.card-desc{font-size:.77rem;color:var(--ink2);line-height:1.55;margin-bottom:.85rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.75rem;}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:.71rem;font-weight:500;cursor:pointer;transition:opacity .15s;}
 .pill:hover{opacity:.7;}
 .pill-pdf{background:#ede9f8;color:#6d28d9;}
 .pill-video{background:#fee2e2;color:#b91c1c;}
 .pill-notes{background:#dcfce7;color:#15803d;}
 .pill-ppt{background:#fef3c7;color:#92400e;}
-.card-progress{display:flex;align-items:center;gap:8px;padding-top:.7rem;border-top:1px solid var(--border);}
+.card-progress{display:flex;align-items:center;gap:8px;padding-top:.65rem;border-top:1px solid var(--border);}
 .prog-track{flex:1;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;}
 .prog-fill{height:100%;border-radius:2px;}
 .prog-label{font-size:.7rem;color:var(--ink3);}
@@ -95,94 +98,104 @@ header{background:var(--ink);color:#fff;padding:0 2.5rem;position:sticky;top:0;z
 /* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(26,22,18,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px);}
 .overlay.open{display:flex;}
-.modal{background:var(--surface);border-radius:18px;width:100%;max-width:900px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;animation:pop .22s ease;}
+.modal{background:var(--surface);border-radius:18px;width:100%;max-width:920px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;animation:pop .2s ease;}
 @keyframes pop{from{transform:scale(.96);opacity:0;}to{transform:scale(1);opacity:1;}}
-.modal-head{padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);}
+.modal-head{padding:1.3rem 1.6rem .9rem;border-bottom:1px solid var(--border);}
 .modal-head-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;}
-.modal-lesson-num{font-size:.8rem;color:var(--ink3);margin-bottom:.25rem;}
-.modal-title{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:900;line-height:1.2;}
+.modal-lesson-num{font-size:.78rem;color:var(--ink3);margin-bottom:.2rem;}
+.modal-title{font-family:'Fraunces',serif;font-size:1.35rem;font-weight:900;line-height:1.2;}
 .modal-close{background:var(--surface2);border:none;color:var(--ink2);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:var(--border);color:var(--ink);}
 .modal-tabs{display:flex;overflow-x:auto;padding:0 1.6rem;background:var(--bg);border-bottom:1px solid var(--border);}
-.mtab{padding:11px 15px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:var(--ink3);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
+.mtab{padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:.81rem;font-weight:500;color:var(--ink3);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap;}
 .mtab:hover{color:var(--ink);}
 .mtab.active{color:var(--ink);border-bottom-color:var(--ink);}
-.modal-body{flex:1;overflow-y:auto;padding:1.5rem 1.6rem;}
+.modal-body{flex:1;overflow-y:auto;padding:1.4rem 1.6rem;}
 
-.res-item{display:flex;align-items:center;gap:12px;padding:11px 13px;background:var(--surface2);border-radius:10px;margin-bottom:9px;border:1px solid transparent;transition:border .18s;}
+.res-item{display:flex;align-items:center;gap:11px;padding:10px 12px;background:var(--surface2);border-radius:10px;margin-bottom:8px;border:1px solid transparent;transition:border .15s;}
 .res-item:hover{border-color:var(--border);}
-.res-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.res-icon{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
 .ri-pdf{background:#ede9f8;}.ri-video{background:#fee2e2;}.ri-notes{background:#dcfce7;}.ri-ppt{background:#fef3c7;}
 .res-info{flex:1;min-width:0;}
-.res-name{font-size:.88rem;font-weight:500;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.res-meta{font-size:.73rem;color:var(--ink3);}
-.res-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
-.res-btn{padding:5px 13px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;cursor:pointer;border:1.5px solid currentColor;background:none;text-decoration:none;display:inline-block;white-space:nowrap;}
+.res-name{font-size:.87rem;font-weight:500;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.res-meta{font-size:.72rem;color:var(--ink3);}
+.res-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;}
+.res-btn{padding:4px 12px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid currentColor;background:none;text-decoration:none;display:inline-block;white-space:nowrap;}
 .res-btn-pdf{color:#6d28d9;}.res-btn-video{color:#b91c1c;}.res-btn-notes{color:#15803d;}.res-btn-ppt{color:#92400e;}
-.res-del-btn{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:.85rem;padding:4px 6px;border-radius:5px;}
-.res-del-btn:hover{color:#b91c1c;background:#fee2e2;}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:.82rem;padding:4px 6px;border-radius:5px;}
+.del-btn:hover{color:#b91c1c;background:#fee2e2;}
 
 /* ADD RESOURCE PANEL */
-.add-res-panel{background:var(--surface2);border-radius:12px;padding:1.1rem;margin-top:.8rem;}
-.add-res-panel h4{font-size:.8rem;font-weight:600;color:var(--ink2);margin-bottom:.7rem;}
-.add-res-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:.7rem;}
-.add-type-btn{padding:6px 13px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;color:var(--ink2);cursor:pointer;}
-.add-type-btn:hover{color:var(--ink);}
-.quick-form{background:var(--surface);border-radius:9px;padding:.9rem;margin-top:.5rem;display:none;}
-.quick-form.open{display:block;}
-.qf-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px;}
-.qf-input{flex:1;min-width:140px;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.83rem;padding:8px 10px;outline:none;}
-.qf-input:focus{border-color:var(--ink2);}
-.qf-ta{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.83rem;padding:8px 10px;outline:none;resize:vertical;min-height:80px;margin-bottom:7px;}
+.add-res-box{background:var(--surface2);border:1px dashed var(--border);border-radius:11px;padding:1rem;margin-top:.9rem;}
+.add-res-box h4{font-size:.78rem;font-weight:600;color:var(--ink2);margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.inp-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px;}
+.inp{flex:1;min-width:130px;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.83rem;padding:8px 10px;outline:none;transition:border .18s;}
+.inp:focus{border-color:var(--ink2);}
+.ta{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.83rem;padding:8px 10px;outline:none;resize:vertical;min-height:80px;margin-bottom:7px;}
+.ta:focus{border-color:var(--ink2);}
 
 .yt-player{position:relative;padding-bottom:56.25%;height:0;border-radius:10px;overflow:hidden;background:#111;margin-bottom:1rem;}
 .yt-player iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
 .yt-list{display:flex;flex-direction:column;gap:7px;margin-bottom:1rem;}
 .yt-row{display:flex;align-items:center;gap:10px;padding:9px;background:var(--surface2);border-radius:9px;cursor:pointer;border:1px solid transparent;transition:all .18s;}
-.yt-row:hover{border-color:rgba(185,28,28,.3);}
-.yt-row.playing{border-color:rgba(185,28,28,.4);background:#fef2f2;}
-.yt-thumb{width:76px;height:43px;border-radius:5px;overflow:hidden;flex-shrink:0;background:#ddd;}
+.yt-row:hover,.yt-row.playing{border-color:rgba(185,28,28,.35);background:#fef2f2;}
+.yt-thumb{width:74px;height:42px;border-radius:5px;overflow:hidden;flex-shrink:0;background:#e2e8f0;display:flex;align-items:center;justify-content:center;}
 .yt-thumb img{width:100%;height:100%;object-fit:cover;}
-.yt-ttl{font-size:.83rem;font-weight:500;margin-bottom:2px;}
-.yt-dur{font-size:.72rem;color:var(--ink3);}
-.now-playing{font-size:.68rem;background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:4px;white-space:nowrap;}
+.yt-ttl{font-size:.82rem;font-weight:500;margin-bottom:2px;}
+.yt-dur{font-size:.71rem;color:var(--ink3);}
+.np-badge{font-size:.67rem;background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:4px;white-space:nowrap;}
 
-.notes-ta{width:100%;min-height:160px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.88rem;padding:12px 14px;outline:none;resize:vertical;line-height:1.7;}
-.notes-bar{display:flex;gap:8px;margin-top:9px;align-items:center;}
-.btn-pri{padding:7px 18px;background:var(--ink);color:#fff;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;}
-.btn-sec{padding:7px 14px;background:none;border:1px solid var(--border);color:var(--ink2);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;}
-.saved-msg{font-size:.77rem;color:#15803d;display:none;margin-left:4px;}
+.notes-ta{width:100%;min-height:155px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.87rem;padding:11px 13px;outline:none;resize:vertical;line-height:1.7;}
+.notes-ta:focus{border-color:var(--ink2);}
+.notes-bar{display:flex;gap:8px;margin-top:8px;align-items:center;}
+.btn-pri{padding:7px 17px;background:var(--ink);color:#fff;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;}
+.btn-pri:hover{opacity:.85;}
+.btn-sec{padding:7px 13px;background:none;border:1px solid var(--border);color:var(--ink2);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;}
+.btn-sec:hover{color:var(--ink);}
+.saved-tag{font-size:.75rem;color:#15803d;display:none;margin-left:4px;}
 
-.embed-hint{background:var(--surface2);border-radius:10px;padding:1rem;margin-top:.8rem;}
-.embed-hint p{font-size:.79rem;color:var(--ink3);margin-bottom:.6rem;}
+.embed-box{background:var(--surface2);border-radius:10px;padding:.9rem;margin-top:.8rem;}
+.embed-box p{font-size:.78rem;color:var(--ink3);margin-bottom:.6rem;}
 .embed-row{display:flex;gap:7px;}
-.embed-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:8px 11px;outline:none;}
-.embed-frame{width:100%;display:none;margin-top:10px;border-radius:10px;overflow:hidden;}
+.embed-inp{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:8px 10px;outline:none;}
+.embed-inp:focus{border-color:var(--ink2);}
+.embed-frame{width:100%;display:none;margin-top:10px;border-radius:9px;overflow:hidden;}
 .embed-frame iframe{width:100%;height:450px;border:none;}
 
-.ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px;margin-bottom:1.5rem;}
-.ov-card{background:var(--surface2);border-radius:10px;padding:13px;text-align:center;}
-.ov-icon{font-size:1.4rem;margin-bottom:4px;}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.4rem;}
+.ov-card{background:var(--surface2);border-radius:9px;padding:12px;text-align:center;}
+.ov-icon{font-size:1.3rem;margin-bottom:3px;}
 .ov-num{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;}
-.ov-lbl{font-size:.7rem;color:var(--ink3);margin-top:2px;}
-.prog-row{background:var(--surface2);border-radius:10px;padding:1rem;display:flex;align-items:center;gap:12px;}
+.ov-lbl{font-size:.68rem;color:var(--ink3);margin-top:2px;}
+.prog-row{background:var(--surface2);border-radius:10px;padding:.9rem;display:flex;align-items:center;gap:12px;}
 
 /* ADD LESSON MODAL */
 .add-overlay{display:none;position:fixed;inset:0;background:rgba(26,22,18,.55);z-index:1100;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px);}
 .add-overlay.open{display:flex;}
-.add-modal{background:var(--surface);border-radius:18px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;animation:pop .22s ease;}
-.add-modal-head{padding:1.3rem 1.5rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface);z-index:2;}
-.add-modal-head h2{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:900;}
-.add-body{padding:1.3rem 1.5rem;}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:.9rem;}
-.fg label{font-size:.76rem;font-weight:600;color:var(--ink2);}
-.fg input,.fg select,.fg textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.86rem;padding:9px 12px;outline:none;}
+.add-modal{background:var(--surface);border-radius:18px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;animation:pop .2s ease;}
+.add-modal-head{padding:1.2rem 1.4rem .9rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface);z-index:2;}
+.add-modal-head h2{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:900;}
+.add-body{padding:1.2rem 1.4rem;}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:.85rem;}
+.fg label{font-size:.75rem;font-weight:600;color:var(--ink2);}
+.fg input,.fg select,.fg textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.85rem;padding:9px 11px;outline:none;transition:border .18s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--ink2);}
 .fg textarea{resize:vertical;min-height:70px;}
-.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
 .form-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:1rem;}
 
-.toast{position:fixed;bottom:1.8rem;right:1.8rem;background:var(--ink);color:#fff;border-radius:9px;padding:11px 18px;font-size:.84rem;font-weight:500;z-index:3000;opacity:0;transform:translateY(10px);transition:all .28s;pointer-events:none;}
+/* BACKUP MODAL */
+.backup-overlay{display:none;position:fixed;inset:0;background:rgba(26,22,18,.55);z-index:1200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px);}
+.backup-overlay.open{display:flex;}
+.backup-modal{background:var(--surface);border-radius:18px;width:100%;max-width:500px;padding:1.8rem;animation:pop .2s ease;}
+.backup-modal h2{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:900;margin-bottom:.5rem;}
+.backup-modal p{font-size:.85rem;color:var(--ink2);line-height:1.65;margin-bottom:1.2rem;}
+.backup-ta{width:100%;min-height:140px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--ink);font-family:monospace;font-size:.75rem;padding:10px 12px;outline:none;resize:vertical;}
+.backup-actions{display:flex;gap:8px;margin-top:.9rem;flex-wrap:wrap;}
+
+.toast{position:fixed;bottom:1.8rem;right:1.8rem;background:var(--ink);color:#fff;border-radius:9px;padding:10px 16px;font-size:.83rem;font-weight:500;z-index:3000;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;}
 .toast.show{opacity:1;transform:none;}
-.empty{text-align:center;padding:4rem 1rem;color:var(--ink3);}
+.empty{text-align:center;padding:3.5rem 1rem;color:var(--ink3);}
 .empty .ei{font-size:2.5rem;margin-bottom:.8rem;}
 
 ::-webkit-scrollbar{width:5px;height:5px;}
@@ -190,46 +203,47 @@ header{background:var(--ink);color:#fff;padding:0 2.5rem;position:sticky;top:0;z
 ::-webkit-scrollbar-thumb{background:rgba(26,22,18,.18);border-radius:3px;}
 
 @media(max-width:640px){
-  header,.hero-band,.filter-row,.type-filter,.lessons-wrap{padding-left:1rem;padding-right:1rem;}
+  header{padding:0 1rem;gap:.7rem;}
+  .hbtn-export,.hbtn-import{display:none;}
+  .hero-band,.filter-row,.type-filter,.lessons-wrap{padding-left:1rem;padding-right:1rem;}
   .lesson-grid{grid-template-columns:1fr;}
   .fg-row{grid-template-columns:1fr;}
-  .modal-head,.modal-body,.modal-tabs{padding-left:1.1rem;padding-right:1.1rem;}
+  .modal-head,.modal-body{padding-left:1.1rem;padding-right:1.1rem;}
+  .modal-tabs{padding:0 1.1rem;}
 }
 </style>
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
-<div id="loadScreen">
-  <div class="load-logo">🔬 Sci<span>&</span>Tech</div>
-  <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
-  <div class="load-msg" id="loadMsg">Loading saved data…</div>
-</div>
-
-<!-- SAVE INDICATOR -->
-<div id="saveIndicator">💾 Saving…</div>
+<div id="statusBar"></div>
+<div id="saveBadge"></div>
 
 <header>
   <a class="logo" href="#">🔬 Sci<em>&</em>Tech</a>
   <div class="header-search">
-    <span style="opacity:.45">⌕</span>
+    <span style="opacity:.4">⌕</span>
     <input type="text" placeholder="Search lessons…" id="gSearch" oninput="applyFilters()">
   </div>
   <div class="header-right">
-    <button class="btn-add" onclick="openAddModal()">＋ Add Lesson</button>
+    <button class="hbtn hbtn-export" onclick="openBackup('export')" title="Export all your data">📤 Export</button>
+    <button class="hbtn hbtn-import" onclick="openBackup('import')" title="Import saved data">📥 Import</button>
+    <button class="hbtn hbtn-add" onclick="openAddModal()">＋ Add Lesson</button>
   </div>
 </header>
 
 <div class="hero-band">
   <h1>Science &amp; Technology<br><span>Lessons 1 – 19</span></h1>
-  <p>PDF publications, video lectures, editable notes, and presentations — all stored permanently in the cloud.</p>
+  <p>PDF publications, video lectures, editable notes and presentations. Your data is saved locally and can be exported for backup.</p>
   <div class="hero-stats">
     <div class="hstat"><div class="hstat-n" id="stat-l">19</div><div class="hstat-l">Lessons</div></div>
     <div class="hstat"><div class="hstat-n" id="stat-r">—</div><div class="hstat-l">Resources</div></div>
     <div class="hstat"><div class="hstat-n">5</div><div class="hstat-l">Subjects</div></div>
     <div class="hstat"><div class="hstat-n">9–10</div><div class="hstat-l">Grade</div></div>
   </div>
-  <div class="cloud-badge">☁ Cloud storage — links saved permanently, survive page reload</div>
+  <div class="info-notice">
+    <span>💾</span>
+    <span><strong style="color:#a7f3d0">Auto-saved to your browser.</strong> Use <strong style="color:#a7f3d0">📤 Export</strong> in the header to save a backup file — import it anytime to restore everything.</span>
+  </div>
 </div>
 
 <div class="filter-row">
@@ -251,20 +265,20 @@ header{background:var(--ink);color:#fff;padding:0 2.5rem;position:sticky;top:0;z
 </div>
 
 <div class="lessons-wrap">
-  <div class="section-title" id="sectionTitle">All Lessons</div>
+  <div class="section-title">All Lessons</div>
   <div class="lesson-grid" id="lessonGrid"></div>
 </div>
 
 <!-- LESSON MODAL -->
-<div class="overlay" id="lessonOverlay" onclick="if(event.target===this)closeLessonModal()">
+<div class="overlay" id="lessonOverlay" onclick="if(event.target===this)closeLesson()">
   <div class="modal">
     <div class="modal-head">
       <div class="modal-head-top">
         <div>
-          <div class="modal-lesson-num" id="mLessonNum"></div>
+          <div class="modal-lesson-num" id="mNum"></div>
           <div class="modal-title" id="mTitle"></div>
         </div>
-        <button class="modal-close" onclick="closeLessonModal()">✕</button>
+        <button class="modal-close" onclick="closeLesson()">✕</button>
       </div>
     </div>
     <div class="modal-tabs" id="mTabs"></div>
@@ -307,31 +321,65 @@ header{background:var(--ink);color:#fff;padding:0 2.5rem;position:sticky;top:0;z
   </div>
 </div>
 
+<!-- BACKUP / IMPORT MODAL -->
+<div class="backup-overlay" id="backupOverlay" onclick="if(event.target===this)closeBackup()">
+  <div class="backup-modal">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem">
+      <h2 id="backupTitle">Export Data</h2>
+      <button class="modal-close" onclick="closeBackup()">✕</button>
+    </div>
+    <p id="backupDesc"></p>
+    <textarea class="backup-ta" id="backupTa" spellcheck="false"></textarea>
+    <div class="backup-actions" id="backupActions"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-// ══════════════════════════════════════════════
-//  PERSISTENT STORAGE — reads & writes survive
-//  page reload, cache clear, and browser restart
-// ══════════════════════════════════════════════
-const STORE_KEY = 'scitech_lessons_v3';
+// ══════════════════════════════════════
+//  STORAGE — localStorage with backup
+// ══════════════════════════════════════
+const LS_KEY = 'scitech_v4';
 
-async function cloudGet(key) {
+function saveData(){
   try {
-    const r = await window.storage.get(key);
-    return r ? JSON.parse(r.value) : null;
-  } catch(e) { return null; }
-}
-
-async function cloudSet(key, value) {
-  try {
-    await window.storage.set(key, JSON.stringify(value));
+    localStorage.setItem(LS_KEY, JSON.stringify(lessons));
+    showBadge('saved','✓ Saved');
     return true;
-  } catch(e) { return false; }
+  } catch(e) {
+    showBadge('error','⚠ Could not save — storage full?');
+    return false;
+  }
 }
 
-// ── Subject config ──
-const SUBJ = {
+function loadData(){
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  } catch(e){}
+  return null;
+}
+
+// ── Save badge ──
+let badgeTimer=null;
+function showBadge(type,msg){
+  const el=document.getElementById('saveBadge');
+  const bar=document.getElementById('statusBar');
+  el.className='show '+type;
+  el.textContent=msg;
+  bar.className=type;
+  clearTimeout(badgeTimer);
+  badgeTimer=setTimeout(()=>{ el.className=''; bar.className=''; },2800);
+}
+
+// ══════════════════════════════════════
+//  SUBJECT CONFIG
+// ══════════════════════════════════════
+const SUBJ={
   physics:   {color:'#2980b9',bg:'#dbeafe',text:'#1e40af',icon:'⚡'},
   chemistry: {color:'#c0392b',bg:'#fee2e2',text:'#991b1b',icon:'⚗'},
   biology:   {color:'#27ae60',bg:'#dcfce7',text:'#166534',icon:'🧬'},
@@ -339,199 +387,165 @@ const SUBJ = {
   technology:{color:'#d35400',bg:'#fef3c7',text:'#92400e',icon:'💻'},
 };
 
-// ── Default 19 lessons (used only on first load) ──
-const DEFAULT_LESSONS = [
-  {id:1, num:1, subject:'physics', title:'Introduction to Motion', unit:'Unit 1: Mechanics', grade:'Grade 9', desc:'Explore scalars and vectors, distance vs displacement, speed and velocity with real-world examples.', progress:90, resources:[
-    {type:'pdf', name:'Motion & Kinematics — Chapter 1', url:'#', size:'2.1 MB'},
-    {type:'pdf', name:'Motion Problems Worksheet', url:'#', size:'0.8 MB'},
-    {type:'video', name:'Intro to Motion — Khan Academy', ytid:'ZM8ECpBuQYE', duration:'10:12'},
-    {type:'video', name:'Scalars vs Vectors Explained', ytid:'A05n32Bl0aY', duration:'8:45'},
-    {type:'notes', name:'Class Notes — Motion Basics', content:'Key Concepts:\n\n• Distance: Total path length (scalar)\n• Displacement: Shortest path from start to end (vector)\n• Speed = distance / time\n• Velocity = displacement / time\n\nFormulas:\n  v = d/t\n  a = Δv / Δt\n  s = ut + ½at²\n  v² = u² + 2as'},
-    {type:'ppt', name:'Motion — Lecture Slides', url:'#', slides:'24 slides'},
+// ══════════════════════════════════════
+//  DEFAULT 19 LESSONS
+// ══════════════════════════════════════
+const DEFAULTS=[
+  {id:1,num:1,subject:'physics',title:'Introduction to Motion',unit:'Unit 1: Mechanics',grade:'Grade 9',desc:'Explore scalars and vectors, distance vs displacement, speed and velocity with real-world examples.',progress:90,resources:[
+    {type:'pdf',name:'Motion & Kinematics — Chapter 1',url:'#',size:'2.1 MB'},
+    {type:'pdf',name:'Motion Problems Worksheet',url:'#',size:'0.8 MB'},
+    {type:'video',name:'Intro to Motion — Khan Academy',ytid:'ZM8ECpBuQYE',duration:'10:12'},
+    {type:'video',name:'Scalars vs Vectors Explained',ytid:'A05n32Bl0aY',duration:'8:45'},
+    {type:'notes',name:'Class Notes — Motion Basics',content:'Key Concepts:\n• Distance: Total path length (scalar)\n• Displacement: Shortest path (vector)\n• Speed = distance / time\n• Velocity = displacement / time\n\nFormulas:\n  v = d/t\n  a = Δv/Δt\n  s = ut + ½at²\n  v² = u² + 2as'},
+    {type:'ppt',name:'Motion — Lecture Slides',url:'#',slides:'24 slides'},
   ]},
-  {id:2, num:2, subject:'physics', title:"Newton's Laws of Motion", unit:'Unit 2: Forces', grade:'Grade 9', desc:"Understand Newton's three fundamental laws and apply them to solve force problems.", progress:85, resources:[
-    {type:'pdf', name:"Newton's Laws — Full Chapter", url:'#', size:'2.8 MB'},
-    {type:'video', name:"Newton's 1st Law (Inertia)", ytid:'CQYELiTtUs8', duration:'11:30'},
-    {type:'video', name:"Newton's 2nd & 3rd Laws", ytid:'ou9YMWlJgkE', duration:'15:22'},
-    {type:'notes', name:'Force Laws Reference', content:"Newton's 1st Law: An object at rest stays at rest unless acted upon by a net force.\n\nNewton's 2nd Law: F = ma\n  F = Force (N), m = mass (kg), a = acceleration (m/s²)\n\nNewton's 3rd Law: For every action there is an equal and opposite reaction."},
-    {type:'ppt', name:'Forces & Motion Slides', url:'#', slides:'30 slides'},
+  {id:2,num:2,subject:'physics',title:"Newton's Laws of Motion",unit:'Unit 2: Forces',grade:'Grade 9',desc:"Understand Newton's three fundamental laws and apply them to solve force problems.",progress:85,resources:[
+    {type:'pdf',name:"Newton's Laws — Full Chapter",url:'#',size:'2.8 MB'},
+    {type:'video',name:"Newton's 1st Law (Inertia)",ytid:'CQYELiTtUs8',duration:'11:30'},
+    {type:'video',name:"Newton's 2nd & 3rd Laws",ytid:'ou9YMWlJgkE',duration:'15:22'},
+    {type:'notes',name:'Force Laws Reference',content:"1st Law: Object at rest stays at rest unless acted on by net force.\n\n2nd Law: F = ma\n  F=Force(N), m=mass(kg), a=acceleration(m/s²)\n\n3rd Law: Every action has equal & opposite reaction."},
+    {type:'ppt',name:'Forces & Motion Slides',url:'#',slides:'30 slides'},
   ]},
-  {id:3, num:3, subject:'physics', title:'Work, Energy & Power', unit:'Unit 3: Energy', grade:'Grade 9', desc:'Study the relationship between work, kinetic and potential energy, and understand power.', progress:70, resources:[
-    {type:'pdf', name:'Work & Energy — Chapter Notes', url:'#', size:'1.9 MB'},
-    {type:'video', name:'Work, Energy & Power Explained', ytid:'w4QFJb9a6PE', duration:'14:55'},
-    {type:'notes', name:'Energy Formulas', content:'Work: W = F × d × cosθ\n\nKinetic Energy: KE = ½mv²\n\nPotential Energy: PE = mgh\n\nPower: P = W/t  (Watts)\n\nConservation of Energy: KE + PE = constant'},
-    {type:'ppt', name:'Energy Concepts Slides', url:'#', slides:'28 slides'},
+  {id:3,num:3,subject:'physics',title:'Work, Energy & Power',unit:'Unit 3: Energy',grade:'Grade 9',desc:'Study the relationship between work, kinetic & potential energy, and power.',progress:70,resources:[
+    {type:'pdf',name:'Work & Energy — Chapter Notes',url:'#',size:'1.9 MB'},
+    {type:'video',name:'Work, Energy & Power Explained',ytid:'w4QFJb9a6PE',duration:'14:55'},
+    {type:'notes',name:'Energy Formulas',content:'Work: W = F×d×cosθ\nKE = ½mv²\nPE = mgh\nPower: P = W/t (Watts)\n\nConservation: KE + PE = constant (no friction)'},
+    {type:'ppt',name:'Energy Concepts Slides',url:'#',slides:'28 slides'},
   ]},
-  {id:4, num:4, subject:'chemistry', title:'Atomic Structure', unit:'Unit 1: Matter', grade:'Grade 9', desc:"Discover the structure of atoms — protons, neutrons, electrons — and Bohr's atomic model.", progress:80, resources:[
-    {type:'pdf', name:'Atomic Structure Handbook', url:'#', size:'3.1 MB'},
-    {type:'video', name:'Atomic Structure — Full Lesson', ytid:'W3SbnbI0ocA', duration:'16:40'},
-    {type:'video', name:"Bohr's Model of the Atom", ytid:'GuFQEOzFXgA', duration:'9:55'},
-    {type:'notes', name:'Atomic Structure Notes', content:"Key Terms:\n• Proton: +1 charge, in nucleus\n• Neutron: 0 charge, in nucleus\n• Electron: -1 charge, orbits nucleus\n\nAtomic Number = protons\nMass Number = protons + neutrons\n\nBohr's Model:\n  Shell 1 → max 2 electrons\n  Shell 2 → max 8 electrons\n  Shell 3 → max 18 electrons"},
-    {type:'ppt', name:'Atomic Structure Slides', url:'#', slides:'32 slides'},
+  {id:4,num:4,subject:'chemistry',title:'Atomic Structure',unit:'Unit 1: Matter',grade:'Grade 9',desc:"Discover protons, neutrons, electrons and Bohr's atomic model.",progress:80,resources:[
+    {type:'pdf',name:'Atomic Structure Handbook',url:'#',size:'3.1 MB'},
+    {type:'video',name:'Atomic Structure — Full Lesson',ytid:'W3SbnbI0ocA',duration:'16:40'},
+    {type:'video',name:"Bohr's Model of the Atom",ytid:'GuFQEOzFXgA',duration:'9:55'},
+    {type:'notes',name:'Atomic Structure Notes',content:'Proton: +1, in nucleus\nNeutron: 0, in nucleus\nElectron: -1, orbits nucleus\n\nAtomic Number = protons\nMass Number = protons + neutrons\n\nShell 1→2e, Shell 2→8e, Shell 3→18e'},
+    {type:'ppt',name:'Atomic Structure Slides',url:'#',slides:'32 slides'},
   ]},
-  {id:5, num:5, subject:'chemistry', title:'Periodic Table & Trends', unit:'Unit 2: Elements', grade:'Grade 9', desc:'Understand the layout of the periodic table, element groups, and key periodic trends.', progress:60, resources:[
-    {type:'pdf', name:'Periodic Table Reference Guide', url:'#', size:'4.2 MB'},
-    {type:'video', name:'Periodic Table Visual Guide', ytid:'0RRVV4Diomg', duration:'13:45'},
-    {type:'notes', name:'Periodic Trends Summary', content:'Groups:\n• Group 1: Alkali metals — 1 valence electron\n• Group 2: Alkaline earth metals\n• Group 17: Halogens — very reactive\n• Group 18: Noble gases — stable\n\nTrends (left → right):\n• Atomic radius ↓\n• Ionization energy ↑\n• Electronegativity ↑'},
-    {type:'ppt', name:'Periodic Table Slides', url:'#', slides:'36 slides'},
+  {id:5,num:5,subject:'chemistry',title:'Periodic Table & Trends',unit:'Unit 2: Elements',grade:'Grade 9',desc:'Understand the layout of the periodic table, element groups, and periodic trends.',progress:60,resources:[
+    {type:'pdf',name:'Periodic Table Reference Guide',url:'#',size:'4.2 MB'},
+    {type:'video',name:'Periodic Table Visual Guide',ytid:'0RRVV4Diomg',duration:'13:45'},
+    {type:'notes',name:'Periodic Trends Summary',content:'Group 1: Alkali metals — 1 valence e⁻\nGroup 2: Alkaline earth metals\nGroup 17: Halogens — very reactive\nGroup 18: Noble gases — stable\n\nLeft→Right trend:\nAtomic radius↓  Ionization energy↑  Electronegativity↑'},
+    {type:'ppt',name:'Periodic Table Slides',url:'#',slides:'36 slides'},
   ]},
-  {id:6, num:6, subject:'chemistry', title:'Chemical Bonding', unit:'Unit 3: Bonding', grade:'Grade 9', desc:'Explore ionic, covalent, and metallic bonds and understand bond polarity.', progress:50, resources:[
-    {type:'pdf', name:'Chemical Bonding — Full Chapter', url:'#', size:'2.6 MB'},
-    {type:'video', name:'Ionic vs Covalent Bonds', ytid:'QqjcCvzWwww', duration:'12:10'},
-    {type:'notes', name:'Bond Types Summary', content:'Ionic Bond:\n• Metal + Non-metal\n• Electron transfer\n• e.g. NaCl\n\nCovalent Bond:\n• Non-metal + Non-metal\n• Electron sharing\n• e.g. H₂O, CO₂\n\nMetallic Bond:\n• Sea of delocalised electrons'},
-    {type:'ppt', name:'Chemical Bonding Slides', url:'#', slides:'34 slides'},
+  {id:6,num:6,subject:'chemistry',title:'Chemical Bonding',unit:'Unit 3: Bonding',grade:'Grade 9',desc:'Explore ionic, covalent, and metallic bonds and understand bond polarity.',progress:50,resources:[
+    {type:'pdf',name:'Chemical Bonding — Full Chapter',url:'#',size:'2.6 MB'},
+    {type:'video',name:'Ionic vs Covalent Bonds',ytid:'QqjcCvzWwww',duration:'12:10'},
+    {type:'notes',name:'Bond Types Summary',content:'Ionic: Metal + Non-metal → electron transfer (e.g. NaCl)\nCovalent: Non-metal + Non-metal → electron sharing (e.g. H₂O)\nMetallic: Metal + Metal → sea of delocalised electrons\n\nPolar covalent: unequal sharing → δ+ and δ−'},
+    {type:'ppt',name:'Chemical Bonding Slides',url:'#',slides:'34 slides'},
   ]},
-  {id:7, num:7, subject:'biology', title:'Cell Structure & Organelles', unit:'Unit 1: Cell Biology', grade:'Grade 9', desc:'Study plant and animal cells in detail — the role of each organelle and how cells maintain life.', progress:95, resources:[
-    {type:'pdf', name:'Cell Biology Guide', url:'#', size:'3.7 MB'},
-    {type:'pdf', name:'Cell Labeling Worksheet', url:'#', size:'0.7 MB'},
-    {type:'video', name:'Inside the Cell — 3D Animation', ytid:'URUJD5NEXC8', duration:'11:47'},
-    {type:'notes', name:'Organelle Functions', content:'• Nucleus: Control centre; holds DNA\n• Mitochondria: ATP production\n• Ribosomes: Protein synthesis\n• Rough ER: Protein transport\n• Smooth ER: Lipid synthesis\n• Golgi Apparatus: Package & ship proteins\n• Vacuole: Storage (large in plants)\n• Chloroplast (plants): Photosynthesis\n• Cell Wall (plants): Structural support'},
-    {type:'ppt', name:'Cell Structure Slides', url:'#', slides:'40 slides'},
+  {id:7,num:7,subject:'biology',title:'Cell Structure & Organelles',unit:'Unit 1: Cell Biology',grade:'Grade 9',desc:'Study plant and animal cells in detail — organelles and their functions.',progress:95,resources:[
+    {type:'pdf',name:'Cell Biology Guide',url:'#',size:'3.7 MB'},
+    {type:'pdf',name:'Cell Labeling Worksheet',url:'#',size:'0.7 MB'},
+    {type:'video',name:'Inside the Cell — 3D Animation',ytid:'URUJD5NEXC8',duration:'11:47'},
+    {type:'notes',name:'Organelle Functions',content:'Nucleus: Control centre; holds DNA\nMitochondria: ATP production\nRibosomes: Protein synthesis\nRough ER: Protein transport\nGolgi Apparatus: Package & ship proteins\nVacuole: Storage\nChloroplast (plants): Photosynthesis\nCell Wall (plants): Structural support'},
+    {type:'ppt',name:'Cell Structure Slides',url:'#',slides:'40 slides'},
   ]},
-  {id:8, num:8, subject:'biology', title:'Photosynthesis & Respiration', unit:'Unit 2: Energy in Life', grade:'Grade 9', desc:'Understand how plants convert light to energy and how cells release energy through respiration.', progress:75, resources:[
-    {type:'pdf', name:'Photosynthesis & Respiration PDF', url:'#', size:'2.4 MB'},
-    {type:'video', name:'Photosynthesis Explained', ytid:'g78utcLQrJ4', duration:'14:22'},
-    {type:'video', name:'Cellular Respiration Overview', ytid:'Gh2P5CmCC0M', duration:'12:38'},
-    {type:'notes', name:'Equation Summary', content:'Photosynthesis:\n  6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂\n\nAerobic Respiration:\n  C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP\n\nAnaerobic:\n  Glucose → Lactic acid (animals)\n  Glucose → Ethanol + CO₂ (yeast)'},
-    {type:'ppt', name:'Energy in Life Slides', url:'#', slides:'38 slides'},
+  {id:8,num:8,subject:'biology',title:'Photosynthesis & Respiration',unit:'Unit 2: Energy in Life',grade:'Grade 9',desc:'How plants convert light to energy and how cells release energy through respiration.',progress:75,resources:[
+    {type:'pdf',name:'Photosynthesis & Respiration PDF',url:'#',size:'2.4 MB'},
+    {type:'video',name:'Photosynthesis Explained',ytid:'g78utcLQrJ4',duration:'14:22'},
+    {type:'video',name:'Cellular Respiration Overview',ytid:'Gh2P5CmCC0M',duration:'12:38'},
+    {type:'notes',name:'Equation Summary',content:'Photosynthesis:\n  6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂\n\nAerobic Respiration:\n  C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP (~38)\n\nAnaerobic:\n  Glucose → Lactic acid (animals)\n  Glucose → Ethanol + CO₂ (yeast)'},
+    {type:'ppt',name:'Energy in Life Slides',url:'#',slides:'38 slides'},
   ]},
-  {id:9, num:9, subject:'biology', title:'Genetics & Heredity', unit:'Unit 3: Genetics', grade:'Grade 10', desc:'Learn about DNA, genes, chromosomes, Mendelian genetics and how traits are inherited.', progress:55, resources:[
-    {type:'pdf', name:'Genetics — Complete Chapter', url:'#', size:'3.3 MB'},
-    {type:'video', name:'Mendelian Genetics Explained', ytid:'NWqgZUnJdAY', duration:'17:05'},
-    {type:'notes', name:'Genetics Key Terms', content:"Mendel's Laws:\n1. Segregation: allele pairs separate during gamete formation\n2. Independent Assortment: genes on different chromosomes assort independently\n\nGenotype: genetic makeup (e.g. Aa, BB)\nPhenotype: observable trait\nDominant: capital letter\nRecessive: lowercase letter"},
-    {type:'ppt', name:'Genetics Slides', url:'#', slides:'42 slides'},
+  {id:9,num:9,subject:'biology',title:'Genetics & Heredity',unit:'Unit 3: Genetics',grade:'Grade 10',desc:'DNA, genes, chromosomes, Mendelian genetics and how traits are inherited.',progress:55,resources:[
+    {type:'pdf',name:'Genetics — Complete Chapter',url:'#',size:'3.3 MB'},
+    {type:'video',name:'Mendelian Genetics Explained',ytid:'NWqgZUnJdAY',duration:'17:05'},
+    {type:'notes',name:'Genetics Key Terms',content:"Mendel's Laws:\n1. Segregation: allele pairs separate in gametes\n2. Independent Assortment: genes on diff chromosomes assort independently\n\nGenotype: genetic makeup (Aa, BB)\nPhenotype: observable trait\nDominant=capital, Recessive=lowercase"},
+    {type:'ppt',name:'Genetics Slides',url:'#',slides:'42 slides'},
   ]},
-  {id:10, num:10, subject:'math', title:'Quadratic Equations', unit:'Unit 1: Algebra', grade:'Grade 9', desc:'Master solving quadratics by factoring, completing the square, and the quadratic formula.', progress:65, resources:[
-    {type:'pdf', name:'Quadratics — Theory & Examples', url:'#', size:'1.8 MB'},
-    {type:'video', name:'Solving Quadratics — Full Lesson', ytid:'i7idZfS8t8w', duration:'22:10'},
-    {type:'video', name:'The Quadratic Formula', ytid:'3ayhvAI3RBI', duration:'10:55'},
-    {type:'notes', name:'Quadratic Formula Reference', content:'Standard form: ax² + bx + c = 0\n\nQuadratic Formula:\n  x = (−b ± √(b²−4ac)) / 2a\n\nDiscriminant Δ = b²−4ac:\n  Δ > 0 → 2 real roots\n  Δ = 0 → 1 repeated root\n  Δ < 0 → no real roots'},
-    {type:'ppt', name:'Quadratics Slides', url:'#', slides:'26 slides'},
+  {id:10,num:10,subject:'math',title:'Quadratic Equations',unit:'Unit 1: Algebra',grade:'Grade 9',desc:'Solve quadratics by factoring, completing the square, and the quadratic formula.',progress:65,resources:[
+    {type:'pdf',name:'Quadratics — Theory & Examples',url:'#',size:'1.8 MB'},
+    {type:'video',name:'Solving Quadratics — Full Lesson',ytid:'i7idZfS8t8w',duration:'22:10'},
+    {type:'video',name:'The Quadratic Formula',ytid:'3ayhvAI3RBI',duration:'10:55'},
+    {type:'notes',name:'Quadratic Formula Reference',content:'ax² + bx + c = 0\n\nx = (−b ± √(b²−4ac)) / 2a\n\nDiscriminant Δ = b²−4ac:\n  Δ>0 → 2 real roots\n  Δ=0 → 1 repeated root\n  Δ<0 → no real roots'},
+    {type:'ppt',name:'Quadratics Slides',url:'#',slides:'26 slides'},
   ]},
-  {id:11, num:11, subject:'math', title:'Trigonometry', unit:'Unit 2: Geometry', grade:'Grade 10', desc:'Explore sine, cosine, tangent ratios and solve right-angled triangle problems.', progress:45, resources:[
-    {type:'pdf', name:'Trigonometry Chapter Notes', url:'#', size:'2.0 MB'},
-    {type:'video', name:'SOH-CAH-TOA Explained', ytid:'F21S9Wpi0y8', duration:'13:22'},
-    {type:'notes', name:'Trig Ratios & Rules', content:'sin θ = Opposite / Hypotenuse\ncos θ = Adjacent / Hypotenuse\ntan θ = Opposite / Adjacent\n\nSOH-CAH-TOA\n\nPythagorean Theorem: a² + b² = c²\n\nSpecial angles:\n  sin 30°=0.5, cos 30°=√3/2\n  sin 45°=√2/2, cos 45°=√2/2\n  sin 60°=√3/2, cos 60°=0.5'},
-    {type:'ppt', name:'Trigonometry Slides', url:'#', slides:'30 slides'},
+  {id:11,num:11,subject:'math',title:'Trigonometry',unit:'Unit 2: Geometry',grade:'Grade 10',desc:'Sine, cosine, tangent ratios and solving right-angled triangle problems.',progress:45,resources:[
+    {type:'pdf',name:'Trigonometry Chapter Notes',url:'#',size:'2.0 MB'},
+    {type:'video',name:'SOH-CAH-TOA Explained',ytid:'F21S9Wpi0y8',duration:'13:22'},
+    {type:'notes',name:'Trig Ratios & Rules',content:'sin θ = Opp/Hyp\ncos θ = Adj/Hyp\ntan θ = Opp/Adj\n\nSOH-CAH-TOA\n\na² + b² = c²\n\nSpecial angles:\nsin30°=0.5, cos30°=√3/2\nsin45°=√2/2, sin60°=√3/2'},
+    {type:'ppt',name:'Trigonometry Slides',url:'#',slides:'30 slides'},
   ]},
-  {id:12, num:12, subject:'math', title:'Statistics & Probability', unit:'Unit 3: Data', grade:'Grade 9', desc:'Collect, organise and interpret data. Understand mean, median, mode and basic probability.', progress:40, resources:[
-    {type:'pdf', name:'Statistics & Probability PDF', url:'#', size:'1.6 MB'},
-    {type:'video', name:'Mean, Median, Mode & Range', ytid:'B1HEzNTGeZ4', duration:'9:44'},
-    {type:'notes', name:'Statistics Summary', content:'Mean = sum / count\nMedian = middle value (ordered)\nMode = most frequent\nRange = max − min\n\nP(event) = favourable / total\n0 ≤ P ≤ 1\nP(A) + P(not A) = 1'},
-    {type:'ppt', name:'Statistics Slides', url:'#', slides:'24 slides'},
+  {id:12,num:12,subject:'math',title:'Statistics & Probability',unit:'Unit 3: Data',grade:'Grade 9',desc:'Collect, organise and interpret data. Mean, median, mode and probability basics.',progress:40,resources:[
+    {type:'pdf',name:'Statistics & Probability PDF',url:'#',size:'1.6 MB'},
+    {type:'video',name:'Mean, Median, Mode & Range',ytid:'B1HEzNTGeZ4',duration:'9:44'},
+    {type:'notes',name:'Statistics Summary',content:'Mean = sum/count\nMedian = middle value (sorted)\nMode = most frequent\nRange = max−min\n\nP(event) = favourable/total\n0≤P≤1,  P(A)+P(notA)=1\nP(A and B)=P(A)×P(B) [independent]'},
+    {type:'ppt',name:'Statistics Slides',url:'#',slides:'24 slides'},
   ]},
-  {id:13, num:13, subject:'math', title:'Linear Functions & Graphs', unit:'Unit 4: Functions', grade:'Grade 9', desc:'Understand linear equations, gradient, slope-intercept form, and coordinate graphing.', progress:70, resources:[
-    {type:'pdf', name:'Linear Functions Chapter', url:'#', size:'1.5 MB'},
-    {type:'video', name:'Linear Equations & Graphs', ytid:'MXV65i9g1Xg', duration:'11:30'},
-    {type:'notes', name:'Linear Function Notes', content:'y = mx + c\n  m = gradient = (y₂−y₁)/(x₂−x₁)\n  c = y-intercept\n\nParallel lines: same gradient\nPerpendicular: m₁ × m₂ = −1\n\nx-intercept: set y = 0\ny-intercept: set x = 0'},
-    {type:'ppt', name:'Linear Functions Slides', url:'#', slides:'22 slides'},
+  {id:13,num:13,subject:'math',title:'Linear Functions & Graphs',unit:'Unit 4: Functions',grade:'Grade 9',desc:'Linear equations, gradient, slope-intercept form, and graphing on coordinate plane.',progress:70,resources:[
+    {type:'pdf',name:'Linear Functions Chapter',url:'#',size:'1.5 MB'},
+    {type:'video',name:'Linear Equations & Graphs',ytid:'MXV65i9g1Xg',duration:'11:30'},
+    {type:'notes',name:'Linear Function Notes',content:'y = mx + c\nm = gradient = (y₂−y₁)/(x₂−x₁)\nc = y-intercept\n\nParallel: same gradient\nPerpendicular: m₁×m₂=−1\n\nx-intercept: set y=0\ny-intercept: set x=0'},
+    {type:'ppt',name:'Linear Functions Slides',url:'#',slides:'22 slides'},
   ]},
-  {id:14, num:14, subject:'technology', title:'Introduction to Computing', unit:'Unit 1: Digital Literacy', grade:'Grade 9', desc:'Understand computer hardware, software, the CPU cycle, and binary number systems.', progress:85, resources:[
-    {type:'pdf', name:'Computer Fundamentals Guide', url:'#', size:'2.9 MB'},
-    {type:'video', name:'How Computers Work', ytid:'mCq8-xTH7jA', duration:'11:44'},
-    {type:'notes', name:'Computing Basics Notes', content:'Hardware:\n• CPU: Fetch–Decode–Execute\n• RAM: Temporary (volatile)\n• ROM: Permanent (non-volatile)\n• Input: keyboard, mouse\n• Output: monitor, printer\n\nSoftware:\n• System: OS (Windows, Linux)\n• Application: Word, browsers\n\nBinary: base-2 (0s and 1s)'},
-    {type:'ppt', name:'Computing Intro Slides', url:'#', slides:'32 slides'},
+  {id:14,num:14,subject:'technology',title:'Introduction to Computing',unit:'Unit 1: Digital Literacy',grade:'Grade 9',desc:'Computer hardware, software, CPU cycle, binary numbers and data representation.',progress:85,resources:[
+    {type:'pdf',name:'Computer Fundamentals Guide',url:'#',size:'2.9 MB'},
+    {type:'video',name:'How Computers Work',ytid:'mCq8-xTH7jA',duration:'11:44'},
+    {type:'notes',name:'Computing Basics Notes',content:'CPU: Fetch–Decode–Execute\nRAM: Temporary volatile memory\nROM: Permanent non-volatile memory\nInput: keyboard, mouse\nOutput: monitor, printer\n\nSoftware:\nSystem → OS (Windows, Linux)\nApplication → Word, browsers\n\nBinary: base-2 (0s and 1s)'},
+    {type:'ppt',name:'Computing Intro Slides',url:'#',slides:'32 slides'},
   ]},
-  {id:15, num:15, subject:'technology', title:'Programming with Python', unit:'Unit 2: Coding', grade:'Grade 9', desc:'Learn Python basics — variables, data types, conditionals, loops, and functions.', progress:60, resources:[
-    {type:'pdf', name:"Python Beginner's Handbook", url:'#', size:'4.0 MB'},
-    {type:'video', name:'Python Tutorial for Beginners', ytid:'kqtD5dpn9C8', duration:'1:01:30'},
-    {type:'video', name:'Loops and Functions in Python', ytid:'DZwmZ8Usvnk', duration:'16:45'},
-    {type:'notes', name:'Python Quick Reference', content:'name = "Alice"\nage = 16\n\nif age >= 18:\n    print("Adult")\nelse:\n    print("Minor")\n\nfor i in range(5):\n    print(i)\n\ndef greet(name):\n    return f"Hello, {name}!"'},
-    {type:'ppt', name:'Python Programming Slides', url:'#', slides:'38 slides'},
+  {id:15,num:15,subject:'technology',title:'Programming with Python',unit:'Unit 2: Coding',grade:'Grade 9',desc:'Python basics — variables, data types, conditionals, loops, and functions.',progress:60,resources:[
+    {type:'pdf',name:"Python Beginner's Handbook",url:'#',size:'4.0 MB'},
+    {type:'video',name:'Python Tutorial for Beginners',ytid:'kqtD5dpn9C8',duration:'1:01:30'},
+    {type:'video',name:'Loops and Functions in Python',ytid:'DZwmZ8Usvnk',duration:'16:45'},
+    {type:'notes',name:'Python Quick Reference',content:'name="Alice"; age=16\n\nif age>=18:\n  print("Adult")\nelse:\n  print("Minor")\n\nfor i in range(5):\n  print(i)\n\ndef greet(name):\n  return f"Hello, {name}!"'},
+    {type:'ppt',name:'Python Programming Slides',url:'#',slides:'38 slides'},
   ]},
-  {id:16, num:16, subject:'technology', title:'The Internet & Networking', unit:'Unit 3: Networks', grade:'Grade 10', desc:'Discover how the internet works — protocols, IP, DNS, HTTP and network security.', progress:35, resources:[
-    {type:'pdf', name:'Networking Fundamentals PDF', url:'#', size:'2.3 MB'},
-    {type:'video', name:'How the Internet Works', ytid:'x3c1ih2NJEg', duration:'8:55'},
-    {type:'notes', name:'Networking Key Concepts', content:'IP Address: unique device identifier\nDNS: domain → IP translation\nHTTP/HTTPS: web protocol\nTCP/IP: data transmission suite\n\nLAN: Local (home/school)\nWAN: Wide (internet)\n\nSecurity:\n• Firewall: filters traffic\n• Encryption: scrambles data\n• HTTPS: SSL/TLS encryption'},
-    {type:'ppt', name:'Networking Slides', url:'#', slides:'30 slides'},
+  {id:16,num:16,subject:'technology',title:'The Internet & Networking',unit:'Unit 3: Networks',grade:'Grade 10',desc:'How the internet works — protocols, IP, DNS, HTTP and network security basics.',progress:35,resources:[
+    {type:'pdf',name:'Networking Fundamentals PDF',url:'#',size:'2.3 MB'},
+    {type:'video',name:'How the Internet Works',ytid:'x3c1ih2NJEg',duration:'8:55'},
+    {type:'notes',name:'Networking Key Concepts',content:'IP Address: unique device identifier\nDNS: domain→IP translation\nHTTP/HTTPS: web protocol\nTCP/IP: data transmission suite\n\nLAN: Local (home/school)\nWAN: Wide (internet)\n\nFirewall: filters traffic\nEncryption: scrambles data\nHTTPS: SSL/TLS encryption'},
+    {type:'ppt',name:'Networking Slides',url:'#',slides:'30 slides'},
   ]},
-  {id:17, num:17, subject:'physics', title:'Waves & Sound', unit:'Unit 4: Waves', grade:'Grade 10', desc:'Explore wave properties — amplitude, frequency, wavelength — and the nature of sound.', progress:50, resources:[
-    {type:'pdf', name:'Waves & Sound Chapter', url:'#', size:'2.7 MB'},
-    {type:'video', name:'Waves — Properties & Types', ytid:'tJW_a6JeXD8', duration:'13:20'},
-    {type:'notes', name:'Wave Equations', content:'v = fλ\n  v = speed (m/s)\n  f = frequency (Hz)\n  λ = wavelength (m)\n\nT = 1/f  (period)\n\nTransverse: vibration ⊥ travel (light)\nLongitudinal: vibration ∥ travel (sound)\n\nSound speed in air ≈ 340 m/s'},
-    {type:'ppt', name:'Waves & Sound Slides', url:'#', slides:'28 slides'},
+  {id:17,num:17,subject:'physics',title:'Waves & Sound',unit:'Unit 4: Waves',grade:'Grade 10',desc:'Wave properties — amplitude, frequency, wavelength — and the nature of sound.',progress:50,resources:[
+    {type:'pdf',name:'Waves & Sound Chapter',url:'#',size:'2.7 MB'},
+    {type:'video',name:'Waves — Properties & Types',ytid:'tJW_a6JeXD8',duration:'13:20'},
+    {type:'notes',name:'Wave Equations',content:'v = fλ\n  v=speed(m/s), f=frequency(Hz), λ=wavelength(m)\nT = 1/f\n\nTransverse: vibration⊥travel (light, water)\nLongitudinal: vibration∥travel (sound)\n\nSound speed in air ≈ 340 m/s'},
+    {type:'ppt',name:'Waves & Sound Slides',url:'#',slides:'28 slides'},
   ]},
-  {id:18, num:18, subject:'chemistry', title:'Chemical Reactions & Equations', unit:'Unit 4: Reactions', grade:'Grade 10', desc:'Write and balance chemical equations. Study synthesis, decomposition, and redox reactions.', progress:40, resources:[
-    {type:'pdf', name:'Chemical Reactions PDF', url:'#', size:'2.2 MB'},
-    {type:'video', name:'Balancing Chemical Equations', ytid:'RnGe8mTJut4', duration:'10:30'},
-    {type:'notes', name:'Reaction Types Summary', content:'1. Synthesis: A + B → AB\n2. Decomposition: AB → A + B\n3. Single Displacement: A + BC → AC + B\n4. Double Displacement: AB + CD → AD + CB\n5. Combustion: Fuel + O₂ → CO₂ + H₂O\n\nLaw of Conservation of Mass:\n  Reactants mass = Products mass'},
-    {type:'ppt', name:'Chemical Reactions Slides', url:'#', slides:'34 slides'},
+  {id:18,num:18,subject:'chemistry',title:'Chemical Reactions & Equations',unit:'Unit 4: Reactions',grade:'Grade 10',desc:'Write and balance equations. Synthesis, decomposition, and redox reactions.',progress:40,resources:[
+    {type:'pdf',name:'Chemical Reactions PDF',url:'#',size:'2.2 MB'},
+    {type:'video',name:'Balancing Chemical Equations',ytid:'RnGe8mTJut4',duration:'10:30'},
+    {type:'notes',name:'Reaction Types Summary',content:'1. Synthesis: A+B→AB\n2. Decomposition: AB→A+B\n3. Single Displacement: A+BC→AC+B\n4. Double Displacement: AB+CD→AD+CB\n5. Combustion: Fuel+O₂→CO₂+H₂O\n\nLaw of Conservation of Mass:\nMass of reactants = Mass of products'},
+    {type:'ppt',name:'Chemical Reactions Slides',url:'#',slides:'34 slides'},
   ]},
-  {id:19, num:19, subject:'biology', title:'Human Body Systems', unit:'Unit 4: Human Biology', grade:'Grade 10', desc:'Survey the major systems: digestive, circulatory, respiratory, and nervous systems.', progress:30, resources:[
-    {type:'pdf', name:'Human Body Systems Guide', url:'#', size:'5.1 MB'},
-    {type:'pdf', name:'System Diagrams & Worksheets', url:'#', size:'1.8 MB'},
-    {type:'video', name:'Human Body Systems Overview', ytid:'Ae4MadKPJhQ', duration:'15:50'},
-    {type:'video', name:'The Circulatory System', ytid:'CWFyxn0qDEU', duration:'12:15'},
-    {type:'notes', name:'Body Systems Summary', content:'Digestive: Mouth→Oesophagus→Stomach→Small intestine→Large intestine\nBreaks down food; absorbs nutrients\n\nCirculatory: Heart→Arteries→Capillaries→Veins\nTransports O₂, nutrients, hormones\n\nRespiratory: Nose→Trachea→Bronchi→Alveoli\nGas exchange: O₂ in, CO₂ out\n\nNervous: Brain + Spinal cord (CNS)\nControls all body functions'},
-    {type:'ppt', name:'Human Body Systems Slides', url:'#', slides:'46 slides'},
+  {id:19,num:19,subject:'biology',title:'Human Body Systems',unit:'Unit 4: Human Biology',grade:'Grade 10',desc:'Digestive, circulatory, respiratory and nervous systems of the human body.',progress:30,resources:[
+    {type:'pdf',name:'Human Body Systems Guide',url:'#',size:'5.1 MB'},
+    {type:'pdf',name:'System Diagrams & Worksheets',url:'#',size:'1.8 MB'},
+    {type:'video',name:'Human Body Systems Overview',ytid:'Ae4MadKPJhQ',duration:'15:50'},
+    {type:'video',name:'The Circulatory System',ytid:'CWFyxn0qDEU',duration:'12:15'},
+    {type:'notes',name:'Body Systems Summary',content:'Digestive: Mouth→Oesophagus→Stomach→Small intestine→Large intestine\nAbsorbs nutrients\n\nCirculatory: Heart→Arteries→Capillaries→Veins\nTransports O₂, nutrients\n\nRespiratory: Nose→Trachea→Bronchi→Alveoli\nGas exchange: O₂ in, CO₂ out\n\nNervous: Brain+Spinal cord (CNS)\nControls all body functions'},
+    {type:'ppt',name:'Human Body Systems Slides',url:'#',slides:'46 slides'},
   ]},
 ];
 
-// ── State ──
-let lessons = [];
-let curSubj = 'all', curType = 'all', curLesson = null, curYt = null;
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let lessons = loadData() || JSON.parse(JSON.stringify(DEFAULTS));
+let curSubj='all', curType='all', curLesson=null, curYt=null;
 
-// ── Save indicator ──
-let saveTimer = null;
-function showSaving(){ const el=document.getElementById('saveIndicator'); el.className='saving'; el.textContent='💾 Saving…'; }
-function showSaved(){  const el=document.getElementById('saveIndicator'); el.className='saved';  el.textContent='✓ Saved to cloud'; clearTimeout(saveTimer); saveTimer=setTimeout(()=>el.className='',2500); }
-function showSaveErr(){ const el=document.getElementById('saveIndicator'); el.className='error'; el.textContent='⚠ Save failed'; }
-
-// ── Persist ──
-async function persistLessons(){
-  showSaving();
-  const ok = await cloudSet(STORE_KEY, lessons);
-  ok ? showSaved() : showSaveErr();
-}
-
-// ── Progress loader ──
-function setLoad(pct, msg){
-  document.getElementById('loadFill').style.width = pct+'%';
-  document.getElementById('loadMsg').textContent = msg;
-}
-
-// ── Boot: load from cloud or seed defaults ──
-async function boot(){
-  setLoad(20,'Connecting to cloud storage…');
-  await new Promise(r=>setTimeout(r,300));
-  setLoad(50,'Loading your lessons…');
-  const saved = await cloudGet(STORE_KEY);
-  setLoad(80,'Restoring resources…');
-  await new Promise(r=>setTimeout(r,200));
-  if(saved && Array.isArray(saved) && saved.length){
-    lessons = saved;
-  } else {
-    lessons = JSON.parse(JSON.stringify(DEFAULT_LESSONS));
-    await cloudSet(STORE_KEY, lessons);
-  }
-  setLoad(100,'Ready!');
-  await new Promise(r=>setTimeout(r,300));
-  document.getElementById('loadScreen').classList.add('hidden');
-  updateStats();
-  applyFilters();
-}
-
-// ── Helpers ──
-function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
-function toast(msg, dur=2200){ const t=document.getElementById('toast'); document.getElementById('toastMsg').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),dur); }
+// ── helpers ──
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function toast(msg,d=2200){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
 
 function updateStats(){
-  document.getElementById('stat-l').textContent = lessons.length;
-  document.getElementById('stat-r').textContent = lessons.reduce((a,l)=>a+(l.resources||[]).length,0);
+  document.getElementById('stat-l').textContent=lessons.length;
+  document.getElementById('stat-r').textContent=lessons.reduce((a,l)=>a+(l.resources||[]).length,0);
 }
 
-// ── Render cards ──
+// ══════════════════════════════════════
+//  RENDER CARDS
+// ══════════════════════════════════════
 function applyFilters(){
-  const q = document.getElementById('gSearch').value.toLowerCase();
-  const list = lessons.filter(l=>{
-    return (curSubj==='all'||l.subject===curSubj) &&
-           (curType==='all'||(l.resources||[]).some(r=>r.type===curType)) &&
+  const q=document.getElementById('gSearch').value.toLowerCase();
+  const list=lessons.filter(l=>{
+    return (curSubj==='all'||l.subject===curSubj)&&
+           (curType==='all'||(l.resources||[]).some(r=>r.type===curType))&&
            (!q||l.title.toLowerCase().includes(q)||(l.unit||'').toLowerCase().includes(q));
   });
-  document.getElementById('fcount').textContent = list.length+' lesson'+(list.length!==1?'s':'');
-  const grid = document.getElementById('lessonGrid');
-  if(!list.length){ grid.innerHTML='<div class="empty"><div class="ei">🔭</div><p>No lessons match this filter.</p></div>'; return; }
-  grid.innerHTML = list.map(l=>{
+  document.getElementById('fcount').textContent=list.length+' lesson'+(list.length!==1?'s':'');
+  const grid=document.getElementById('lessonGrid');
+  if(!list.length){grid.innerHTML='<div class="empty"><div class="ei">🔭</div><p>No lessons match this filter.</p></div>';return;}
+  grid.innerHTML=list.map(l=>{
     const s=SUBJ[l.subject]||{color:'#888',bg:'#eee',text:'#333',icon:'📘'};
     const res=l.resources||[];
     const types=[...new Set(res.map(r=>r.type))];
@@ -548,7 +562,7 @@ function applyFilters(){
         </div>
         <div class="card-title">${l.title}</div>
         <div class="card-desc">${l.desc||''}</div>
-        <div class="card-pills">${pills}</div>
+        <div class="card-pills">${pills||'<span style="font-size:.75rem;color:var(--ink3)">No resources yet</span>'}</div>
         <div class="card-progress">
           <div class="prog-track"><div class="prog-fill" style="width:${l.progress||0}%;background:${s.color}"></div></div>
           <span class="prog-label">${l.progress||0}%</span>
@@ -558,260 +572,333 @@ function applyFilters(){
   }).join('');
 }
 
-function setSubj(s,el){ curSubj=s; document.querySelectorAll('.subj-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); applyFilters(); }
-function setType(t,el){ curType=t; document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); applyFilters(); }
+function setSubj(s,el){curSubj=s;document.querySelectorAll('.subj-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');applyFilters();}
+function setType(t,el){curType=t;document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');applyFilters();}
 
-// ── Open lesson modal ──
-function openLesson(id, tab){
-  curLesson = lessons.find(l=>l.id===id);
-  if(!curLesson) return;
+// ══════════════════════════════════════
+//  LESSON MODAL
+// ══════════════════════════════════════
+function openLesson(id,tab){
+  curLesson=lessons.find(l=>l.id===id); if(!curLesson) return;
   const l=curLesson, s=SUBJ[l.subject]||{};
-  curYt = (l.resources||[]).find(r=>r.type==='video')?.ytid||null;
-  document.getElementById('mLessonNum').innerHTML=`<span style="background:${s.bg||'#eee'};color:${s.text||'#333'};padding:2px 10px;border-radius:5px;font-size:.72rem;font-weight:700">${s.icon||''} ${cap(l.subject)}</span>&nbsp;Lesson ${l.num}&nbsp;•&nbsp;${l.grade||''}`;
+  curYt=(l.resources||[]).find(r=>r.type==='video')?.ytid||null;
+  document.getElementById('mNum').innerHTML=`<span style="background:${s.bg||'#eee'};color:${s.text||'#333'};padding:2px 10px;border-radius:5px;font-size:.71rem;font-weight:700">${s.icon||''} ${cap(l.subject)}</span>&nbsp;Lesson ${l.num}&nbsp;•&nbsp;${l.grade||''}`;
   document.getElementById('mTitle').textContent=l.title;
-  const res=l.resources||[];
-  const tabDefs=[{k:'overview',lbl:'📋 Overview'},
-    ...(res.some(r=>r.type==='pdf')?[{k:'pdf',lbl:'📄 PDFs'}]:[]),
-    ...(res.some(r=>r.type==='video')?[{k:'video',lbl:'▶ Videos'}]:[]),
-    ...(res.some(r=>r.type==='notes')?[{k:'notes',lbl:'📝 Notes'}]:[]),
-    ...(res.some(r=>r.type==='ppt')?[{k:'ppt',lbl:'📊 PPT'}]:[]),
-  ];
-  document.getElementById('mTabs').innerHTML=tabDefs.map(td=>
-    `<button class="mtab${tab===td.k?' active':''}" onclick="switchMTab('${td.k}',this)">${td.lbl}</button>`
-  ).join('');
+  rebuildTabs(tab);
   renderTab(tab);
   document.getElementById('lessonOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
 
-function switchMTab(k,el){ document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); renderTab(k); }
-function closeLessonModal(){ document.getElementById('lessonOverlay').classList.remove('open'); document.body.style.overflow=''; curYt=null; }
+function rebuildTabs(active){
+  const res=curLesson.resources||[];
+  const defs=[{k:'overview',lbl:'📋 Overview'},
+    ...(res.some(r=>r.type==='pdf')?[{k:'pdf',lbl:'📄 PDFs'}]:[]),
+    ...(res.some(r=>r.type==='video')?[{k:'video',lbl:'▶ Videos'}]:[]),
+    ...(res.some(r=>r.type==='notes')?[{k:'notes',lbl:'📝 Notes'}]:[]),
+    ...(res.some(r=>r.type==='ppt')?[{k:'ppt',lbl:'📊 PPT'}]:[]),
+  ];
+  document.getElementById('mTabs').innerHTML=defs.map(d=>`<button class="mtab${active===d.k?' active':''}" onclick="switchTab('${d.k}',this)">${d.lbl}</button>`).join('');
+}
 
-// ── Render tab content ──
+function switchTab(k,el){document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTab(k);}
+function closeLesson(){document.getElementById('lessonOverlay').classList.remove('open');document.body.style.overflow='';curYt=null;}
+
+// ══════════════════════════════════════
+//  RENDER TAB CONTENT
+// ══════════════════════════════════════
 function renderTab(k){
   const l=curLesson, res=l.resources||[], s=SUBJ[l.subject]||{};
   let html='';
 
   if(k==='overview'){
     const cnts={pdf:0,video:0,notes:0,ppt:0};
-    res.forEach(r=>{ if(cnts[r.type]!==undefined) cnts[r.type]++; });
-    const cards=Object.entries(cnts).filter(([,n])=>n).map(([t,n])=>`
-      <div class="ov-card"><div class="ov-icon">${{pdf:'📄',video:'▶️',notes:'📝',ppt:'📊'}[t]}</div><div class="ov-num">${n}</div><div class="ov-lbl">${cap(t)}</div></div>`).join('');
-    html=`<p style="color:var(--ink2);font-size:.9rem;line-height:1.75;margin-bottom:1.5rem">${l.desc||''}</p>
-      <div class="ov-grid">${cards}</div>
-      <div class="prog-row">
-        <span style="font-size:.82rem;color:var(--ink2)">Progress</span>
-        <div class="prog-track" style="flex:1;height:6px"><div class="prog-fill" style="width:${l.progress||0}%;background:${s.color||'#888'}"></div></div>
-        <span style="font-size:.82rem;font-weight:600;color:${s.color||'#888'}">${l.progress||0}%</span>
-        <button class="btn-sec" style="font-size:.76rem;padding:5px 12px" onclick="updateProgress(${l.id})">Edit</button>
-      </div>`;
+    res.forEach(r=>{if(cnts[r.type]!==undefined)cnts[r.type]++;});
+    html=`<p style="color:var(--ink2);font-size:.9rem;line-height:1.75;margin-bottom:1.4rem">${l.desc||''}</p>
+    <div class="ov-grid">${Object.entries(cnts).filter(([,n])=>n).map(([t,n])=>`<div class="ov-card"><div class="ov-icon">${{pdf:'📄',video:'▶️',notes:'📝',ppt:'📊'}[t]}</div><div class="ov-num">${n}</div><div class="ov-lbl">${cap(t)}</div></div>`).join('')}</div>
+    <div class="prog-row">
+      <span style="font-size:.82rem;color:var(--ink2)">Progress</span>
+      <div class="prog-track" style="flex:1;height:6px"><div class="prog-fill" style="width:${l.progress||0}%;background:${s.color||'#888'}"></div></div>
+      <span style="font-size:.82rem;font-weight:600;color:${s.color||'#888'}">${l.progress||0}%</span>
+      <button class="btn-sec" style="font-size:.75rem;padding:5px 11px" onclick="editProgress(${l.id})">Edit</button>
+    </div>`;
   }
 
   else if(k==='pdf'){
-    const pdfs=res.filter(r=>r.type==='pdf');
-    html = pdfs.map((p,i)=>`
-      <div class="res-item">
+    const items=res.filter(r=>r.type==='pdf');
+    html=items.map((p,gi)=>{
+      const ri=res.indexOf(p);
+      return `<div class="res-item">
         <div class="res-icon ri-pdf">📄</div>
         <div class="res-info"><div class="res-name">${p.name}</div><div class="res-meta">${p.size||'PDF Document'}</div></div>
         <div class="res-actions">
-          ${p.url&&p.url!=='#'?`<a class="res-btn res-btn-pdf" href="${p.url}" target="_blank">Open ↗</a>`:'<span style="font-size:.72rem;color:var(--ink3)">No URL yet</span>'}
-          <button class="res-del-btn" title="Delete" onclick="deleteResource(${l.id},${i})">🗑</button>
+          ${p.url&&p.url!=='#'?`<a class="res-btn res-btn-pdf" href="${p.url}" target="_blank">Open ↗</a>`:`<span style="font-size:.71rem;color:var(--ink3)">No link yet</span>`}
+          <button class="del-btn" title="Delete" onclick="delRes(${l.id},${ri})">🗑</button>
         </div>
-      </div>`).join('');
-    html += addResourcePanel('pdf', l.id);
-    html += `<div class="embed-hint">
-      <p>Paste any PDF URL below to view it inline (Google Drive, direct .pdf link, etc.)</p>
-      <div class="embed-row"><input class="embed-input" id="pdfUrl" placeholder="https://…/file.pdf"><button class="btn-pri" onclick="embedItem('pdf')">Embed</button></div>
+      </div>`;
+    }).join('');
+    html+=addBox('pdf',l.id);
+    html+=`<div class="embed-box"><p>Paste a PDF URL to view it here (Google Drive share link, direct .pdf URL):</p>
+      <div class="embed-row"><input class="embed-inp" id="pdfUrl" placeholder="https://…/document.pdf"><button class="btn-pri" onclick="doEmbed('pdf')">View Inline</button></div>
       <div class="embed-frame" id="pdfFrame"></div></div>`;
   }
 
   else if(k==='video'){
-    const vids=res.filter(r=>r.type==='video');
-    if(!curYt && vids.length) curYt=vids[0].ytid;
-    const player=curYt?`<div class="yt-player"><iframe src="https://www.youtube.com/embed/${curYt}?rel=0" allowfullscreen></iframe></div>`:'';
-    const list=vids.map((v,i)=>`
-      <div class="yt-row${curYt===v.ytid?' playing':''}" onclick="playVid('${v.ytid}',this)">
+    const items=res.filter(r=>r.type==='video');
+    if(!curYt&&items.length) curYt=items[0].ytid;
+    html=(curYt?`<div class="yt-player"><iframe src="https://www.youtube.com/embed/${curYt}?rel=0" allowfullscreen></iframe></div>`:'')+
+    `<div class="yt-list">${items.map(v=>{
+      const ri=res.indexOf(v);
+      return `<div class="yt-row${curYt===v.ytid?' playing':''}" onclick="playVid('${v.ytid}')">
         <div class="yt-thumb"><img src="https://img.youtube.com/vi/${v.ytid}/mqdefault.jpg" alt="" onerror="this.parentNode.innerHTML='▶'"></div>
         <div class="yt-info"><div class="yt-ttl">${v.name}</div><div class="yt-dur">${v.duration||''}</div></div>
-        ${curYt===v.ytid?'<span class="now-playing">▶ Playing</span>':''}
-        <button class="res-del-btn" onclick="event.stopPropagation();deleteResource(${l.id},${res.indexOf(v)})" title="Remove">🗑</button>
-      </div>`).join('');
-    html=player+`<div class="yt-list">${list}</div>`+addResourcePanel('video', l.id);
+        ${curYt===v.ytid?'<span class="np-badge">▶ Playing</span>':''}
+        <button class="del-btn" onclick="event.stopPropagation();delRes(${l.id},${ri})" title="Remove">🗑</button>
+      </div>`;
+    }).join('')}</div>`+addBox('video',l.id);
   }
 
   else if(k==='notes'){
-    const notes=res.filter(r=>r.type==='notes');
-    if(!notes.length) html='<div class="empty"><div class="ei">📝</div><p>No notes yet. Add one below.</p></div>';
-    else html=notes.map((n,i)=>`
-      <div style="margin-bottom:1.3rem">
-        <div style="font-size:.85rem;font-weight:600;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
-          ${n.name}
-          <button class="res-del-btn" onclick="deleteResource(${l.id},${res.indexOf(n)})" title="Delete note">🗑</button>
+    const items=res.filter(r=>r.type==='notes');
+    html=(items.length?items.map((n,ni)=>{
+      const ri=res.indexOf(n);
+      return `<div style="margin-bottom:1.2rem">
+        <div style="font-size:.85rem;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">
+          ${n.name}<button class="del-btn" onclick="delRes(${l.id},${ri})" title="Delete">🗑</button>
         </div>
-        <textarea class="notes-ta" id="note${i}" rows="12">${n.content||''}</textarea>
+        <textarea class="notes-ta" id="nt${ni}" rows="11">${n.content||''}</textarea>
         <div class="notes-bar">
-          <button class="btn-pri" onclick="saveNote(${l.id},${i})">Save</button>
-          <button class="btn-sec" onclick="navigator.clipboard.writeText(document.getElementById('note${i}').value).then(()=>toast('Copied!'))">Copy</button>
-          <span class="saved-msg" id="savedMsg${i}">✓ Saved!</span>
+          <button class="btn-pri" onclick="saveNote(${l.id},${ni})">Save</button>
+          <button class="btn-sec" onclick="copyNote(${ni})">Copy</button>
+          <span class="saved-tag" id="stag${ni}">✓ Saved!</span>
         </div>
-      </div>`).join('');
-    html += addResourcePanel('notes', l.id);
+      </div>`;
+    }).join(''):`<div class="empty"><div class="ei">📝</div><p>No notes yet.</p></div>`)+addBox('notes',l.id);
   }
 
   else if(k==='ppt'){
-    const ppts=res.filter(r=>r.type==='ppt');
-    html = ppts.map((p,i)=>`
-      <div class="res-item">
+    const items=res.filter(r=>r.type==='ppt');
+    html=items.map((p,gi)=>{
+      const ri=res.indexOf(p);
+      return `<div class="res-item">
         <div class="res-icon ri-ppt">📊</div>
         <div class="res-info"><div class="res-name">${p.name}</div><div class="res-meta">${p.slides||'Presentation'}</div></div>
         <div class="res-actions">
-          ${p.url&&p.url!=='#'?`<a class="res-btn res-btn-ppt" href="${p.url}" target="_blank">Open ↗</a>`:'<span style="font-size:.72rem;color:var(--ink3)">No URL yet</span>'}
-          <button class="res-del-btn" onclick="deleteResource(${l.id},${res.indexOf(p)})" title="Delete">🗑</button>
+          ${p.url&&p.url!=='#'?`<a class="res-btn res-btn-ppt" href="${p.url}" target="_blank">Open ↗</a>`:`<span style="font-size:.71rem;color:var(--ink3)">No link yet</span>`}
+          <button class="del-btn" onclick="delRes(${l.id},${ri})" title="Delete">🗑</button>
         </div>
-      </div>`).join('');
-    html += addResourcePanel('ppt', l.id);
-    html += `<div class="embed-hint">
-      <p>Embed a Google Slides or OneDrive PowerPoint URL to view it here:</p>
-      <div class="embed-row"><input class="embed-input" id="pptUrl" placeholder="https://docs.google.com/presentation/d/…/embed"><button class="btn-pri" onclick="embedItem('ppt')">Embed</button></div>
+      </div>`;
+    }).join('');
+    html+=addBox('ppt',l.id);
+    html+=`<div class="embed-box"><p>Embed a Google Slides or OneDrive PowerPoint to view it here:</p>
+      <div class="embed-row"><input class="embed-inp" id="pptUrl" placeholder="https://docs.google.com/presentation/d/…/embed"><button class="btn-pri" onclick="doEmbed('ppt')">View Inline</button></div>
       <div class="embed-frame" id="pptFrame"></div></div>`;
   }
 
   document.getElementById('mBody').innerHTML=html;
 }
 
-// ── Add resource inline panel ──
-function addResourcePanel(type, lessonId){
-  const labels={pdf:'PDF URL',video:'YouTube URL',notes:'Notes content',ppt:'PPT / Google Slides URL'};
-  const ph={pdf:'https://drive.google.com/…/file.pdf',video:'https://www.youtube.com/watch?v=…',notes:'Type your notes here…',ppt:'https://docs.google.com/presentation/d/…'};
-  return `<div class="add-res-panel">
-    <h4>＋ Add new ${type.toUpperCase()} resource to this lesson</h4>
-    <div class="qf-row">
-      <input class="qf-input" id="qfName${type}" placeholder="Name / title of resource">
-      ${type!=='notes'?`<input class="qf-input" id="qfUrl${type}" placeholder="${ph[type]}">`:''}
+// ── add resource box template ──
+function addBox(type,lid){
+  const ph={pdf:'https://drive.google.com/file/d/…/view?usp=sharing',video:'https://www.youtube.com/watch?v=…',notes:'Type your notes here…',ppt:'https://docs.google.com/presentation/d/…'};
+  const extra={
+    pdf:`<div class="inp-row"><input class="inp" id="qsz" placeholder="File size e.g. 2.4 MB" style="max-width:170px"></div>`,
+    video:`<div class="inp-row"><input class="inp" id="qdur" placeholder="Duration e.g. 12:30" style="max-width:150px"></div>`,
+    ppt:`<div class="inp-row"><input class="inp" id="qsl" placeholder="Slides e.g. 24 slides" style="max-width:160px"></div>`,
+    notes:''
+  }[type]||'';
+  return `<div class="add-res-box">
+    <h4>＋ Add ${type.toUpperCase()} to this lesson</h4>
+    <div class="inp-row">
+      <input class="inp" id="qname" placeholder="Name / title">
+      ${type!=='notes'?`<input class="inp" id="qurl" placeholder="${ph[type]}">`:''}
     </div>
-    ${type==='notes'?`<textarea class="qf-ta" id="qfContent${type}" placeholder="${ph[type]}"></textarea>`:''}
-    ${type==='pdf'?`<div class="qf-row"><input class="qf-input" id="qfSize${type}" placeholder="File size (e.g. 2.4 MB)" style="max-width:180px"></div>`:''}
-    ${type==='video'?`<div class="qf-row"><input class="qf-input" id="qfDur${type}" placeholder="Duration (e.g. 12:30)" style="max-width:160px"></div>`:''}
-    ${type==='ppt'?`<div class="qf-row"><input class="qf-input" id="qfSlides${type}" placeholder="No. of slides (e.g. 24 slides)" style="max-width:180px"></div>`:''}
-    <button class="btn-pri" style="margin-top:4px" onclick="addResource(${lessonId},'${type}')">Save & Add ↗</button>
+    ${type==='notes'?`<textarea class="ta" id="qcontent" placeholder="${ph[type]}"></textarea>`:''}
+    ${extra}
+    <button class="btn-pri" onclick="addRes(${lid},'${type}')">Save Resource ↗</button>
   </div>`;
 }
 
-// ── Add resource & persist ──
-async function addResource(lid, type){
-  const name = (document.getElementById('qfName'+type)||{}).value?.trim()||'Untitled';
-  const l = lessons.find(x=>x.id===lid);
-  let newRes = {type, name};
+// ══════════════════════════════════════
+//  ADD / DELETE RESOURCES
+// ══════════════════════════════════════
+function addRes(lid,type){
+  const name=(document.getElementById('qname')||{}).value?.trim()||'Untitled';
+  const l=lessons.find(x=>x.id===lid);
+  let r={type,name};
 
   if(type==='notes'){
-    newRes.content = (document.getElementById('qfContent'+type)||{}).value||'';
+    r.content=(document.getElementById('qcontent')||{}).value||'';
   } else if(type==='video'){
-    const url = (document.getElementById('qfUrl'+type)||{}).value?.trim()||'';
-    const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    newRes.ytid = m?m[1]:url;
-    newRes.duration = (document.getElementById('qfDur'+type)||{}).value?.trim()||'';
+    const url=(document.getElementById('qurl')||{}).value?.trim()||'';
+    const m=url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    r.ytid=m?m[1]:url;
+    r.duration=(document.getElementById('qdur')||{}).value?.trim()||'';
+    if(!r.ytid){toast('Please enter a valid YouTube URL.'); return;}
   } else if(type==='pdf'){
-    newRes.url = (document.getElementById('qfUrl'+type)||{}).value?.trim()||'#';
-    newRes.size = (document.getElementById('qfSize'+type)||{}).value?.trim()||'';
+    r.url=(document.getElementById('qurl')||{}).value?.trim()||'#';
+    r.size=(document.getElementById('qsz')||{}).value?.trim()||'';
+    if(r.url==='#'||!r.url){toast('Please enter a URL or link.'); return;}
   } else if(type==='ppt'){
-    newRes.url = (document.getElementById('qfUrl'+type)||{}).value?.trim()||'#';
-    newRes.slides = (document.getElementById('qfSlides'+type)||{}).value?.trim()||'';
+    r.url=(document.getElementById('qurl')||{}).value?.trim()||'#';
+    r.slides=(document.getElementById('qsl')||{}).value?.trim()||'';
+    if(r.url==='#'||!r.url){toast('Please enter a URL or link.'); return;}
   }
 
-  l.resources.push(newRes);
-  curLesson = l;
-  await persistLessons();
-  updateStats();
-
-  // If new type, re-render tabs
-  const res=l.resources;
-  const tabDefs=[{k:'overview',lbl:'📋 Overview'},
-    ...(res.some(r=>r.type==='pdf')?[{k:'pdf',lbl:'📄 PDFs'}]:[]),
-    ...(res.some(r=>r.type==='video')?[{k:'video',lbl:'▶ Videos'}]:[]),
-    ...(res.some(r=>r.type==='notes')?[{k:'notes',lbl:'📝 Notes'}]:[]),
-    ...(res.some(r=>r.type==='ppt')?[{k:'ppt',lbl:'📊 PPT'}]:[]),
-  ];
-  document.getElementById('mTabs').innerHTML=tabDefs.map(td=>
-    `<button class="mtab${type===td.k?' active':''}" onclick="switchMTab('${td.k}',this)">${td.lbl}</button>`
-  ).join('');
-  if(type==='video') curYt=newRes.ytid||curYt;
+  l.resources.push(r);
+  curLesson=l;
+  if(saveData()) toast('✓ Resource saved!');
+  updateStats(); applyFilters();
+  if(type==='video') curYt=r.ytid||curYt;
+  rebuildTabs(type);
   renderTab(type);
-  toast('✓ Resource saved permanently!');
 }
 
-// ── Delete resource ──
-async function deleteResource(lid, resIdx){
+function delRes(lid,ri){
   if(!confirm('Remove this resource?')) return;
   const l=lessons.find(x=>x.id===lid);
-  const type=l.resources[resIdx]?.type;
-  l.resources.splice(resIdx,1);
+  const type=l.resources[ri]?.type;
+  l.resources.splice(ri,1);
   curLesson=l;
-  await persistLessons();
+  if(saveData()) toast('Removed.');
   updateStats(); applyFilters();
+  rebuildTabs(type||'overview');
   renderTab(type||'overview');
-  toast('Resource removed.');
 }
 
-// ── Video player ──
-function playVid(ytid){ curYt=ytid; renderTab('video'); }
+function playVid(ytid){curYt=ytid;renderTab('video');}
 
-// ── Embed viewer ──
-function embedItem(type){
-  const urlEl=document.getElementById(type+'Url'), frameEl=document.getElementById(type+'Frame');
+function doEmbed(type){
+  const urlEl=document.getElementById(type+'Url');
+  const frameEl=document.getElementById(type+'Frame');
   if(!urlEl||!frameEl) return;
   const url=urlEl.value.trim(); if(!url) return;
   frameEl.style.display='block';
-  const eUrl=(type==='ppt'&&url.includes('docs.google.com'))?url.replace('/edit','/embed').replace('/pub','/embed'):url;
-  frameEl.innerHTML=`<iframe src="${eUrl}" allowfullscreen></iframe>`;
+  const eu=(type==='ppt'&&url.includes('docs.google.com'))?url.replace('/edit','/embed').replace('/pub','/embed'):url;
+  frameEl.innerHTML=`<iframe src="${eu}" allowfullscreen></iframe>`;
 }
 
-// ── Save note text ──
-async function saveNote(lid, i){
-  const val=document.getElementById('note'+i)?.value||'';
+function saveNote(lid,ni){
+  const val=document.getElementById('nt'+ni)?.value||'';
   const l=lessons.find(x=>x.id===lid);
-  l.resources.filter(r=>r.type==='notes')[i].content=val;
+  l.resources.filter(r=>r.type==='notes')[ni].content=val;
   curLesson=l;
-  await persistLessons();
-  const m=document.getElementById('savedMsg'+i); if(m){m.style.display='inline'; setTimeout(()=>m.style.display='none',2000);}
+  if(saveData()){
+    const m=document.getElementById('stag'+ni);
+    if(m){m.style.display='inline';setTimeout(()=>m.style.display='none',2000);}
+  }
 }
 
-// ── Progress ──
-async function updateProgress(id){
+function copyNote(ni){
+  navigator.clipboard.writeText(document.getElementById('nt'+ni)?.value||'').then(()=>toast('Copied!'));
+}
+
+function editProgress(id){
   const cur=lessons.find(l=>l.id===id).progress||0;
   const v=prompt('Set progress % (0–100):',cur); if(v===null) return;
   const p=Math.min(100,Math.max(0,parseInt(v)||0));
   lessons.find(l=>l.id===id).progress=p;
   curLesson=lessons.find(l=>l.id===id);
-  await persistLessons();
-  renderTab('overview'); applyFilters(); toast('Progress updated!');
+  if(saveData()){renderTab('overview');applyFilters();toast('Progress updated!');}
 }
 
-// ── Add lesson modal ──
-function openAddModal(){ document.getElementById('addOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeAddModal(){ document.getElementById('addOverlay').classList.remove('open'); document.body.style.overflow=''; }
+// ══════════════════════════════════════
+//  ADD LESSON
+// ══════════════════════════════════════
+function openAddModal(){document.getElementById('addOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeAddModal(){document.getElementById('addOverlay').classList.remove('open');document.body.style.overflow='';}
 
-async function submitLesson(){
+function submitLesson(){
   const title=document.getElementById('f-title').value.trim();
   const subj=document.getElementById('f-subj').value;
   const num=parseInt(document.getElementById('f-num').value)||lessons.length+1;
-  if(!title||!subj){toast('Please fill in title and subject.'); return;}
+  if(!title||!subj){toast('Please fill in title and subject.');return;}
   const lesson={
-    id:Date.now(), num, subject:subj,
-    title, unit:document.getElementById('f-unit').value.trim(),
+    id:Date.now(),num,subject:subj,
+    title,unit:document.getElementById('f-unit').value.trim(),
     grade:document.getElementById('f-grade').value.trim(),
     desc:document.getElementById('f-desc').value.trim(),
-    progress:0, resources:[]
+    progress:0,resources:[]
   };
   lessons.push(lesson);
   lessons.sort((a,b)=>a.num-b.num);
-  await persistLessons();
-  closeAddModal(); applyFilters(); updateStats();
-  ['f-title','f-subj','f-num','f-unit','f-grade','f-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  toast('Lesson '+num+' saved!');
+  if(saveData()){
+    closeAddModal();applyFilters();updateStats();
+    ['f-title','f-subj','f-num','f-unit','f-grade','f-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast('Lesson '+num+' added!');
+  }
 }
 
-// ── Start ──
-boot();
+// ══════════════════════════════════════
+//  EXPORT / IMPORT BACKUP
+// ══════════════════════════════════════
+let backupMode='export';
+
+function openBackup(mode){
+  backupMode=mode;
+  const overlay=document.getElementById('backupOverlay');
+  const ta=document.getElementById('backupTa');
+  const desc=document.getElementById('backupDesc');
+  const actions=document.getElementById('backupActions');
+  if(mode==='export'){
+    document.getElementById('backupTitle').textContent='📤 Export Data';
+    desc.textContent='Copy all your lessons and resources below. Save this text in a .txt or .json file to keep as a backup. You can import it anytime to restore everything.';
+    ta.value=JSON.stringify(lessons,null,2);
+    ta.readOnly=true;
+    actions.innerHTML=`
+      <button class="btn-pri" onclick="copyExport()">Copy All</button>
+      <button class="btn-sec" onclick="downloadExport()">Download .json</button>
+      <button class="btn-sec" onclick="closeBackup()">Close</button>`;
+  } else {
+    document.getElementById('backupTitle').textContent='📥 Import Data';
+    desc.textContent='Paste your previously exported JSON data below and click Import. This will replace your current data with the imported data.';
+    ta.value='';
+    ta.readOnly=false;
+    ta.placeholder='Paste your exported JSON here…';
+    actions.innerHTML=`
+      <button class="btn-pri" onclick="doImport()">Import & Restore</button>
+      <button class="btn-sec" onclick="closeBackup()">Cancel</button>`;
+  }
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeBackup(){document.getElementById('backupOverlay').classList.remove('open');document.body.style.overflow='';}
+
+function copyExport(){
+  navigator.clipboard.writeText(document.getElementById('backupTa').value).then(()=>toast('Copied to clipboard!'));
+}
+
+function downloadExport(){
+  const blob=new Blob([JSON.stringify(lessons,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='scitech_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('Download started!');
+}
+
+function doImport(){
+  const raw=document.getElementById('backupTa').value.trim();
+  try {
+    const data=JSON.parse(raw);
+    if(!Array.isArray(data)||!data.length) throw new Error('Invalid format');
+    if(!confirm('This will replace your current '+lessons.length+' lessons with '+data.length+' imported lessons. Continue?')) return;
+    lessons=data;
+    if(saveData()){
+      closeBackup();applyFilters();updateStats();
+      toast('✓ '+data.length+' lessons imported successfully!',3000);
+    }
+  } catch(e){
+    toast('⚠ Invalid data. Please paste the correct JSON.');
+  }
+}
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+updateStats();
+applyFilters();
 </script>
 </body>
 </html>
