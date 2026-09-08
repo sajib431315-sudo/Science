@@ -1,783 +1,1359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SciTech Learning Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --surface2: #1a2235;
-    --border: rgba(99,179,237,0.15);
-    --accent: #38bdf8;
-    --accent2: #818cf8;
-    --accent3: #34d399;
-    --accent4: #fb923c;
-    --text: #f0f4ff;
-    --text-muted: #8899bb;
-    --pill-bg: rgba(56,189,248,0.1);
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Space Grotesk',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science & Technology Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0e1a;
+            --surface: #111827;
+            --surface2: #1a2235;
+            --border: rgba(99, 179, 237, 0.12);
+            --accent: #63b3ed;
+            --accent2: #68d391;
+            --accent3: #f6ad55;
+            --text: #e2e8f0;
+            --muted: #718096;
+            --glow: rgba(99, 179, 237, 0.25);
+            --radius: 12px;
+        }
 
-  /* NAV */
-  nav { position:sticky; top:0; z-index:100; background:rgba(10,14,26,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; gap:2rem; height:64px; }
-  .nav-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; color:var(--text); display:flex; align-items:center; gap:10px; text-decoration:none; }
-  .nav-logo span { color:var(--accent); }
-  .nav-links { display:flex; gap:1.5rem; flex:1; }
-  .nav-links button { background:none; border:none; color:var(--text-muted); font-family:'Space Grotesk',sans-serif; font-size:0.9rem; cursor:pointer; padding:6px 12px; border-radius:6px; transition:all .2s; }
-  .nav-links button:hover, .nav-links button.active { color:var(--accent); background:var(--pill-bg); }
-  .nav-search { display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:6px 12px; width:220px; }
-  .nav-search input { background:none; border:none; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:0.85rem; outline:none; width:100%; }
-  .nav-search input::placeholder { color:var(--text-muted); }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* HERO */
-  .hero { padding:4rem 2rem 3rem; text-align:center; position:relative; overflow:hidden; }
-  .hero::before { content:''; position:absolute; top:-60%; left:50%; transform:translateX(-50%); width:800px; height:800px; background:radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%); pointer-events:none; }
-  .hero-badge { display:inline-flex; align-items:center; gap:6px; background:var(--pill-bg); border:1px solid rgba(56,189,248,0.3); color:var(--accent); font-size:0.78rem; padding:5px 14px; border-radius:20px; margin-bottom:1.5rem; }
-  .hero h1 { font-family:'Syne',sans-serif; font-size:clamp(2.2rem,5vw,3.5rem); font-weight:800; line-height:1.1; margin-bottom:1rem; }
-  .hero h1 em { font-style:normal; color:var(--accent); }
-  .hero p { color:var(--text-muted); font-size:1.05rem; max-width:560px; margin:0 auto 2rem; line-height:1.7; }
-  .hero-stats { display:flex; justify-content:center; gap:3rem; }
-  .stat { text-align:center; }
-  .stat-num { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:700; color:var(--text); }
-  .stat-label { font-size:0.78rem; color:var(--text-muted); margin-top:2px; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-  /* SUBJECT TABS */
-  .subjects { padding:0 2rem 2rem; }
-  .section-label { font-size:0.72rem; font-weight:600; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; }
-  .subject-tabs { display:flex; gap:10px; flex-wrap:wrap; }
-  .subject-tab { display:flex; align-items:center; gap:8px; padding:10px 18px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; transition:all .2s; font-size:0.88rem; font-weight:500; color:var(--text-muted); }
-  .subject-tab:hover { border-color:var(--accent); color:var(--text); }
-  .subject-tab.active { background:var(--pill-bg); border-color:var(--accent); color:var(--accent); }
-  .subject-tab .icon { font-size:1.1rem; }
+        /* ─── Starfield Background ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99,179,237,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(104,211,145,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 0%, rgba(246,173,85,0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-  /* RESOURCE FILTER */
-  .filter-bar { padding:0 2rem 1.5rem; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .filter-btn { display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:20px; border:1px solid var(--border); background:none; color:var(--text-muted); font-family:'Space Grotesk',sans-serif; font-size:0.82rem; cursor:pointer; transition:all .2s; }
-  .filter-btn:hover { border-color:var(--accent); color:var(--text); }
-  .filter-btn.active { color:#fff; border-color:transparent; }
-  .filter-btn.f-all.active { background:#334155; }
-  .filter-btn.f-pdf.active { background:#7c3aed; border-color:#7c3aed; }
-  .filter-btn.f-video.active { background:#dc2626; border-color:#dc2626; }
-  .filter-btn.f-notes.active { background:#0e7490; border-color:#0e7490; }
-  .filter-btn.f-ppt.active { background:#b45309; border-color:#b45309; }
-  .filter-label { font-size:0.78rem; color:var(--text-muted); margin-left:auto; }
+        /* ─── Header ─── */
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 48px 48px 32px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(10,14,26,0.95) 0%, transparent 100%);
+            backdrop-filter: blur(8px);
+        }
 
-  /* LESSON GRID */
-  .lessons-grid { padding:0 2rem 3rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1.25rem; }
-  .lesson-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:all .25s; cursor:pointer; }
-  .lesson-card:hover { border-color:var(--accent); transform:translateY(-3px); }
-  .card-header { padding:1.2rem 1.2rem 0.8rem; display:flex; justify-content:space-between; align-items:flex-start; }
-  .card-unit { font-size:0.7rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; }
-  .card-num { font-size:0.72rem; color:var(--text-muted); background:var(--surface2); padding:3px 8px; border-radius:4px; }
-  .card-title { padding:0 1.2rem 0.8rem; font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:600; line-height:1.35; color:var(--text); }
-  .card-desc { padding:0 1.2rem 1rem; font-size:0.82rem; color:var(--text-muted); line-height:1.6; }
-  .card-resources { padding:0.8rem 1.2rem; border-top:1px solid var(--border); display:flex; gap:6px; flex-wrap:wrap; }
-  .resource-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:6px; font-size:0.75rem; font-weight:500; cursor:pointer; transition:all .2s; }
-  .resource-pill:hover { opacity:0.8; transform:scale(1.03); }
-  .pill-pdf { background:rgba(124,58,237,0.15); color:#a78bfa; border:1px solid rgba(124,58,237,0.3); }
-  .pill-video { background:rgba(220,38,38,0.15); color:#f87171; border:1px solid rgba(220,38,38,0.3); }
-  .pill-notes { background:rgba(14,116,144,0.15); color:#67e8f9; border:1px solid rgba(14,116,144,0.3); }
-  .pill-ppt { background:rgba(180,83,9,0.15); color:#fbbf24; border:1px solid rgba(180,83,9,0.3); }
-  .card-footer { padding:0.6rem 1.2rem; display:flex; align-items:center; justify-content:space-between; }
-  .progress-bar { flex:1; height:3px; background:var(--surface2); border-radius:2px; overflow:hidden; margin-right:10px; }
-  .progress-fill { height:100%; background:linear-gradient(90deg, var(--accent), var(--accent2)); border-radius:2px; transition:width .5s; }
-  .card-progress-label { font-size:0.72rem; color:var(--text-muted); }
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+        }
 
-  /* MODAL */
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:999; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(4px); }
-  .modal-overlay.open { display:flex; }
-  .modal { background:var(--surface); border:1px solid var(--border); border-radius:18px; width:100%; max-width:860px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; animation:slideUp .25s ease; }
-  @keyframes slideUp { from { transform:translateY(24px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-  .modal-header { padding:1.5rem 1.5rem 1rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; }
-  .modal-meta { display:flex; gap:8px; margin-bottom:6px; }
-  .modal-title { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; }
-  .modal-close { background:var(--surface2); border:none; color:var(--text-muted); font-size:1.2rem; width:34px; height:34px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .modal-close:hover { color:var(--text); }
-  .modal-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 1.5rem; overflow-x:auto; }
-  .modal-tab { padding:12px 16px; font-size:0.85rem; font-weight:500; color:var(--text-muted); border:none; background:none; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; font-family:'Space Grotesk',sans-serif; display:flex; align-items:center; gap:6px; }
-  .modal-tab:hover { color:var(--text); }
-  .modal-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
-  .modal-body { flex:1; overflow-y:auto; padding:1.5rem; }
-  .tab-panel { display:none; }
-  .tab-panel.active { display:block; }
+        .logo-group { display: flex; flex-direction: column; gap: 8px; }
 
-  /* Resource list inside modal */
-  .resource-item { display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface2); border-radius:10px; margin-bottom:10px; transition:all .2s; }
-  .resource-item:hover { border-left:3px solid var(--accent); padding-left:11px; }
-  .resource-icon { width:38px; height:38px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
-  .icon-pdf { background:rgba(124,58,237,0.2); }
-  .icon-video { background:rgba(220,38,38,0.2); }
-  .icon-notes { background:rgba(14,116,144,0.2); }
-  .icon-ppt { background:rgba(180,83,9,0.2); }
-  .resource-info { flex:1; }
-  .resource-name { font-size:0.9rem; font-weight:500; margin-bottom:2px; }
-  .resource-meta { font-size:0.75rem; color:var(--text-muted); }
-  .resource-btn { padding:6px 14px; border-radius:7px; font-family:'Space Grotesk',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; border:1px solid var(--accent); background:var(--pill-bg); color:var(--accent); transition:all .2s; text-decoration:none; display:inline-block; }
-  .resource-btn:hover { background:var(--accent); color:var(--bg); }
+        .eyebrow {
+            font-size: 0.7rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 500;
+        }
 
-  /* YouTube embed area */
-  .yt-embed-wrapper { position:relative; padding-bottom:56.25%; height:0; border-radius:10px; overflow:hidden; background:#000; }
-  .yt-embed-wrapper iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
-  .yt-playlist { display:flex; flex-direction:column; gap:8px; margin-top:1rem; }
-  .yt-item { display:flex; gap:12px; align-items:center; padding:10px; background:var(--surface2); border-radius:9px; cursor:pointer; transition:all .2s; border:1px solid transparent; }
-  .yt-item:hover, .yt-item.playing { border-color:rgba(220,38,38,0.4); background:rgba(220,38,38,0.05); }
-  .yt-thumb { width:80px; height:45px; border-radius:5px; background:#1a1a2e; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem; overflow:hidden; }
-  .yt-thumb img { width:100%; height:100%; object-fit:cover; }
-  .yt-info { flex:1; }
-  .yt-title { font-size:0.85rem; font-weight:500; margin-bottom:3px; }
-  .yt-dur { font-size:0.73rem; color:var(--text-muted); }
-  .playing-badge { font-size:0.7rem; color:#f87171; background:rgba(220,38,38,0.15); padding:2px 7px; border-radius:4px; }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.1;
+        }
 
-  /* Notes panel */
-  .notes-editor { width:100%; min-height:180px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:0.9rem; padding:14px; outline:none; resize:vertical; line-height:1.7; }
-  .notes-actions { display:flex; gap:8px; margin-top:10px; align-items:center; }
-  .btn-primary { padding:8px 18px; background:var(--accent); color:var(--bg); border:none; border-radius:8px; font-family:'Space Grotesk',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; }
-  .btn-ghost { padding:8px 16px; background:none; border:1px solid var(--border); color:var(--text-muted); border-radius:8px; font-family:'Space Grotesk',sans-serif; font-size:0.85rem; cursor:pointer; }
-  .btn-ghost:hover { color:var(--text); border-color:var(--text-muted); }
-  .notes-saved { display:none; font-size:0.8rem; color:var(--accent3); margin-left:8px; }
+        h1 span { color: var(--accent); }
 
-  /* PDF viewer placeholder */
-  .pdf-viewer-area { background:var(--surface2); border-radius:10px; padding:1.5rem; text-align:center; min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; }
+        .header-desc {
+            font-size: 0.85rem;
+            color: var(--muted);
+            max-width: 380px;
+            line-height: 1.6;
+        }
 
-  /* Add resource form */
-  .add-form { background:var(--surface2); border-radius:12px; padding:1.5rem; }
-  .add-form h3 { font-size:1rem; font-weight:600; margin-bottom:1.2rem; color:var(--text); }
-  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
-  .form-group { display:flex; flex-direction:column; gap:6px; }
-  .form-group label { font-size:0.78rem; color:var(--text-muted); font-weight:500; }
-  .form-group input, .form-group select, .form-group textarea { background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:0.87rem; padding:9px 12px; outline:none; transition:border .2s; }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); }
-  .form-group select option { background:var(--surface); }
-  .form-group textarea { resize:vertical; min-height:80px; }
+        .stats-row {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
 
-  /* Admin section */
-  .admin-section { padding:2rem; border-top:1px solid var(--border); }
-  .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
-  .admin-header h2 { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:700; }
-  .add-lesson-btn { display:flex; align-items:center; gap:8px; padding:9px 18px; background:var(--accent); color:var(--bg); border:none; border-radius:9px; font-family:'Space Grotesk',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; transition:all .2s; }
-  .add-lesson-btn:hover { opacity:0.9; transform:scale(1.02); }
+        .stat {
+            text-align: center;
+        }
 
-  /* Toast */
-  .toast { position:fixed; bottom:2rem; right:2rem; background:var(--surface); border:1px solid var(--accent3); border-radius:10px; padding:12px 20px; color:var(--accent3); font-size:0.88rem; font-weight:500; z-index:9999; opacity:0; transform:translateY(12px); transition:all .3s; pointer-events:none; display:flex; align-items:center; gap:8px; }
-  .toast.show { opacity:1; transform:translateY(0); }
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--accent);
+            font-weight: 700;
+            line-height: 1;
+        }
 
-  /* Loading state */
-  .empty-state { text-align:center; padding:3rem; color:var(--text-muted); }
-  .empty-state .icon { font-size:2.5rem; margin-bottom:1rem; }
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width:5px; height:5px; }
-  ::-webkit-scrollbar-track { background:var(--surface); }
-  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 
-  @media(max-width:600px) {
-    nav { padding:0 1rem; }
-    .nav-search { display:none; }
-    .hero { padding:3rem 1rem 2rem; }
-    .hero-stats { gap:1.5rem; }
-    .subjects, .filter-bar, .lessons-grid, .admin-section { padding-left:1rem; padding-right:1rem; }
-    .lessons-grid { grid-template-columns:1fr; }
-    .form-row { grid-template-columns:1fr; }
-  }
-</style>
+        /* ─── Author Avatar ─── */
+        .author-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(99,179,237,0.06);
+            border: 1px solid rgba(99,179,237,0.15);
+            border-radius: 12px;
+            padding: 10px 16px;
+            flex-shrink: 0;
+        }
+
+        .author-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(99,179,237,0.4);
+            box-shadow: 0 0 0 4px rgba(99,179,237,0.1);
+            flex-shrink: 0;
+        }
+
+        .author-info { display: flex; flex-direction: column; gap: 2px; }
+
+        .author-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .author-role {
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+        /* ─── Search ─── */
+        .search-bar {
+            max-width: 1280px;
+            margin: 28px auto 0;
+            padding: 0 48px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            max-width: 440px;
+        }
+
+        .search-input-wrap svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        #searchInput:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--glow);
+        }
+
+        #searchInput::placeholder { color: var(--muted); }
+
+        /* ─── Main Layout ─── */
+        main {
+            position: relative;
+            z-index: 5;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 36px 48px 80px;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 48px;
+            align-items: start;
+        }
+
+        /* ─── Section Headings ─── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .section-pill {
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 99px;
+            background: rgba(99,179,237,0.12);
+            color: var(--accent);
+            border: 1px solid rgba(99,179,237,0.25);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ─── Lesson Grid ─── */
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        .lesson-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.22s ease;
+            overflow: visible;
+        }
+
+        .lesson-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, rgba(99,179,237,0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.22s;
+        }
+
+        .lesson-card:hover {
+            border-color: rgba(99,179,237,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,179,237,0.15);
+        }
+
+        .lesson-card:hover::before { opacity: 1; }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .card-num {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(99,179,237,0.1);
+            border: 1px solid rgba(99,179,237,0.2);
+            border-radius: 6px;
+            padding: 3px 8px;
+            flex-shrink: 0;
+        }
+
+        .card-icon {
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .card-title {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 14px;
+        }
+
+        .action-btn {
+            font-size: 0.7rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.18s;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            color: var(--text);
+            border-color: rgba(99,179,237,0.3);
+            background: rgba(99,179,237,0.08);
+        }
+
+        /* ─── Dropdown portal (appended to body) ─── */
+        .dropdown-wrap { position: relative; }
+
+        .action-btn.active {
+            color: #fff;
+            border-color: rgba(99,179,237,0.5);
+            background: rgba(99,179,237,0.15);
+            box-shadow: 0 0 0 2px rgba(99,179,237,0.15);
+        }
+
+        /* Hidden source menus — data only, not rendered in-place */
+        .dropdown-menu { display: none; }
+        .sub-menu { display: none; }
+
+        /* Sub-trigger rows inside portal */
+        #dropdown-portal a.sub-trigger {
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text);
+        }
+        #dropdown-portal a.sub-trigger:hover { color: var(--accent); }
+
+        /* Sub-empty label */
+        #dropdown-portal .sub-empty, #sub-portal .sub-empty {
+            display: block;
+            padding: 9px 14px;
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* Second-level portal */
+        #sub-portal {
+            position: fixed;
+            z-index: 100000;
+            min-width: 230px;
+            max-height: 320px;
+            overflow-y: auto;
+            background: #162035;
+            border: 1px solid rgba(99,179,237,0.25);
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            padding: 6px 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-6px);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(99,179,237,0.3) transparent;
+        }
+        #sub-portal.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(0);
+        }
+        #sub-portal a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            font-size: 0.78rem;
+            font-family: 'DM Sans', sans-serif;
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        #sub-portal a:hover { background: rgba(99,179,237,0.10); color: var(--accent); }
+        #sub-portal a .dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            flex-shrink: 0; opacity: 0.7;
+        }
+
+        /* The single floating portal panel — appended to body, always on top */
+        #dropdown-portal {
+            position: fixed;
+            z-index: 99999;
+            min-width: 200px;
+            background: #1a2744;
+            border: 1px solid rgba(99,179,237,0.28);
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.75), 0 0 0 1px rgba(99,179,237,0.06);
+            padding: 6px 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-6px);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+
+        #dropdown-portal.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        #dropdown-portal a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            font-size: 0.8rem;
+            font-family: 'DM Sans', sans-serif;
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        #dropdown-portal a:hover {
+            background: rgba(99,179,237,0.10);
+            color: var(--accent);
+        }
+
+        #dropdown-portal a .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            opacity: 0.5;
+        }
+
+        /* ─── Hidden class for search ─── */
+        .lesson-card.hidden { display: none; }
+
+        /* ─── Board Column ─── */
+        .board-section { position: sticky; top: 24px; }
+
+        .board-cards { display: flex; flex-direction: column; gap: 10px; }
+
+        .board-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.22s;
+        }
+
+        .board-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .board-card-header:hover { background: var(--surface2); }
+
+        .board-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .board-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 99px;
+        }
+
+        .badge-new { background: rgba(104,211,145,0.15); color: var(--accent2); border: 1px solid rgba(104,211,145,0.25); }
+        .badge-available { background: rgba(99,179,237,0.12); color: var(--accent); border: 1px solid rgba(99,179,237,0.2); }
+        .badge-soon { background: rgba(246,173,85,0.1); color: var(--accent3); border: 1px solid rgba(246,173,85,0.2); }
+
+        .chevron {
+            width: 16px;
+            height: 16px;
+            color: var(--muted);
+            transition: transform 0.22s;
+        }
+
+        .board-card.open .chevron { transform: rotate(180deg); }
+
+        .board-body {
+            display: none;
+            padding: 0 18px 14px;
+        }
+
+        .board-card.open .board-body { display: block; }
+
+        .board-sub-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 10px 0 6px;
+        }
+
+        .board-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.78rem;
+            color: #a0aec0;
+            transition: all 0.15s;
+            margin-bottom: 2px;
+        }
+
+        .board-link:hover { background: rgba(99,179,237,0.08); color: var(--accent); }
+
+        .board-link svg { width: 13px; height: 13px; flex-shrink: 0; opacity: 0.6; }
+
+        .medium-group { margin-bottom: 8px; }
+
+        .medium-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            color: #a0aec0;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .medium-toggle:hover { background: var(--surface2); color: var(--text); }
+
+        .medium-toggle svg { width: 12px; height: 12px; transition: transform 0.18s; }
+
+        .medium-group.open .medium-toggle svg { transform: rotate(90deg); }
+
+        .medium-links { display: none; padding-left: 14px; }
+
+        .medium-group.open .medium-links { display: block; }
+
+        /* ─── Footer ─── */
+        footer {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            padding: 28px;
+            color: var(--muted);
+            font-size: 0.78rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ─── Animations ─── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .lesson-card {
+            animation: fadeInUp 0.4s ease both;
+        }
+
+        /* Staggered delay */
+        .lesson-card:nth-child(1)  { animation-delay: 0.02s; }
+        .lesson-card:nth-child(2)  { animation-delay: 0.04s; }
+        .lesson-card:nth-child(3)  { animation-delay: 0.06s; }
+        .lesson-card:nth-child(4)  { animation-delay: 0.08s; }
+        .lesson-card:nth-child(5)  { animation-delay: 0.10s; }
+        .lesson-card:nth-child(6)  { animation-delay: 0.12s; }
+        .lesson-card:nth-child(7)  { animation-delay: 0.14s; }
+        .lesson-card:nth-child(8)  { animation-delay: 0.16s; }
+        .lesson-card:nth-child(9)  { animation-delay: 0.18s; }
+        .lesson-card:nth-child(10) { animation-delay: 0.20s; }
+        .lesson-card:nth-child(11) { animation-delay: 0.22s; }
+        .lesson-card:nth-child(12) { animation-delay: 0.24s; }
+        .lesson-card:nth-child(13) { animation-delay: 0.26s; }
+        .lesson-card:nth-child(14) { animation-delay: 0.28s; }
+        .lesson-card:nth-child(15) { animation-delay: 0.30s; }
+        .lesson-card:nth-child(16) { animation-delay: 0.32s; }
+        .lesson-card:nth-child(17) { animation-delay: 0.34s; }
+        .lesson-card:nth-child(18) { animation-delay: 0.36s; }
+        .lesson-card:nth-child(19) { animation-delay: 0.38s; }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 900px) {
+            main { grid-template-columns: 1fr; padding: 24px 20px 60px; }
+            header { padding: 28px 20px 24px; }
+            .search-bar { padding: 0 20px; }
+            .header-inner { flex-direction: column; align-items: flex-start; }
+            .board-section { position: static; }
+        }
+
+        /* ─── No-results message ─── */
+        #noResults {
+            display: none;
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 48px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* ─── Empty placeholder text for coming-soon links ─── */
+        .coming-soon {
+            font-size: 0.72rem;
+            color: var(--muted);
+            padding: 4px 10px;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#"><span>⚗</span> Sci<span>Tech</span></a>
-  <div class="nav-links">
-    <button class="active" onclick="showSection('home')">Home</button>
-    <button onclick="showSection('lessons')">Lessons</button>
-    <button onclick="showSection('admin')">Manage</button>
-  </div>
-  <div class="nav-search">
-    <span style="color:var(--text-muted); font-size:0.9rem;">🔍</span>
-    <input type="text" placeholder="Search lessons..." id="globalSearch" oninput="filterLessons()">
-  </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero" id="sec-home">
-  <div class="hero-badge">🔬 Science &amp; Technology Learning Portal</div>
-  <h1>Learn. Explore.<br><em>Discover Science.</em></h1>
-  <p>Access PDFs, video lectures, lesson notes, and presentations — all organized by subject and topic in one place.</p>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-num" id="stat-lessons">0</div><div class="stat-label">Lessons</div></div>
-    <div class="stat"><div class="stat-num" id="stat-resources">0</div><div class="stat-label">Resources</div></div>
-    <div class="stat"><div class="stat-num" id="stat-subjects">5</div><div class="stat-label">Subjects</div></div>
-  </div>
-</div>
-
-<!-- SUBJECTS -->
-<div class="subjects" id="sec-lessons">
-  <div class="section-label">Browse by Subject</div>
-  <div class="subject-tabs">
-    <div class="subject-tab active" onclick="filterBySubject('all',this)"><span class="icon">🌐</span> All Subjects</div>
-    <div class="subject-tab" onclick="filterBySubject('physics',this)"><span class="icon">⚡</span> Physics</div>
-    <div class="subject-tab" onclick="filterBySubject('chemistry',this)"><span class="icon">⚗</span> Chemistry</div>
-    <div class="subject-tab" onclick="filterBySubject('biology',this)"><span class="icon">🧬</span> Biology</div>
-    <div class="subject-tab" onclick="filterBySubject('math',this)"><span class="icon">📐</span> Mathematics</div>
-    <div class="subject-tab" onclick="filterBySubject('technology',this)"><span class="icon">💻</span> Technology</div>
-  </div>
-</div>
-
-<!-- FILTER BAR -->
-<div class="filter-bar">
-  <button class="filter-btn f-all active" onclick="filterByType('all',this)">📋 All Types</button>
-  <button class="filter-btn f-pdf" onclick="filterByType('pdf',this)">📄 PDF</button>
-  <button class="filter-btn f-video" onclick="filterByType('video',this)">▶️ Video</button>
-  <button class="filter-btn f-notes" onclick="filterByType('notes',this)">📝 Notes</button>
-  <button class="filter-btn f-ppt" onclick="filterByType('ppt',this)">📊 PPT</button>
-  <span class="filter-label" id="count-label">Loading…</span>
-</div>
-
-<!-- LESSON GRID -->
-<div class="lessons-grid" id="lessonsGrid"></div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="lessonModal" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <div style="flex:1">
-        <div class="modal-meta" id="modalMeta"></div>
-        <div class="modal-title" id="modalTitle">Lesson</div>
-      </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+<!-- ═══ Header ═══ -->
+<header>
+    <div class="header-inner">
+        <div class="logo-group">
+            <span class="eyebrow">SEE Class 10 · Nepal</span>
+            <h1>Science &amp; <span>Technology</span> Hub</h1>
+            <p class="header-desc">Access lesson notes, slides, Q&amp;A resources and SEE board exam solutions — all in one place.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:16px;">
+            <div class="author-card">
+                <img src="https://lh3.googleusercontent.com/d/11RamGDowk27icqWfRsXbA8Vp-NTUZ0T-" 
+     alt="Mausam Nepali" 
+     class="author-avatar">
+                <div class="author-info">
+                    <span class="author-name">Sajib Manandhar<br>Science Teacher</span>
+                    <span class="author-role">SEE Class 10 · Nepal</span>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-num">19</div>
+                    <div class="stat-label">Chapters</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">5+</div>
+                    <div class="stat-label">Resource Types</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">3</div>
+                    <div class="stat-label">Exam Years</div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="modal-tabs" id="modalTabs"></div>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
+</header>
 
-<!-- ADD LESSON MODAL -->
-<div class="modal-overlay" id="addModal" onclick="closeAddOutside(event)">
-  <div class="modal" style="max-width:600px">
-    <div class="modal-header">
-      <div class="modal-title">Add New Lesson</div>
-      <button class="modal-close" onclick="closeAddModal()">✕</button>
+<!-- ═══ Search ═══ -->
+<div class="search-bar">
+    <div class="search-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search chapters…" autocomplete="off">
     </div>
-    <div class="modal-body">
-      <div class="add-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Lesson Title *</label>
-            <input type="text" id="f-title" placeholder="e.g. Newton's Laws of Motion">
-          </div>
-          <div class="form-group">
-            <label>Subject *</label>
-            <select id="f-subject">
-              <option value="">Select subject</option>
-              <option value="physics">⚡ Physics</option>
-              <option value="chemistry">⚗ Chemistry</option>
-              <option value="biology">🧬 Biology</option>
-              <option value="math">📐 Mathematics</option>
-              <option value="technology">💻 Technology</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Unit / Chapter</label>
-            <input type="text" id="f-unit" placeholder="e.g. Unit 2: Forces">
-          </div>
-          <div class="form-group">
-            <label>Grade / Level</label>
-            <input type="text" id="f-grade" placeholder="e.g. Grade 10">
-          </div>
-        </div>
-        <div class="form-group" style="margin-bottom:1rem">
-          <label>Description</label>
-          <textarea id="f-desc" placeholder="Brief summary of this lesson..."></textarea>
-        </div>
-        <hr style="border-color:var(--border); margin-bottom:1rem">
-        <div class="add-form" style="background:var(--bg); padding:0; margin-bottom:0">
-          <h3 style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem">Resources (add at least one)</h3>
-          <div id="resources-list"></div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:1rem">
-            <button class="btn-ghost" onclick="addResourceField('pdf')">+ PDF</button>
-            <button class="btn-ghost" onclick="addResourceField('video')">+ YouTube Video</button>
-            <button class="btn-ghost" onclick="addResourceField('notes')">+ Notes</button>
-            <button class="btn-ghost" onclick="addResourceField('ppt')">+ PPT Link</button>
-          </div>
-        </div>
-        <div style="display:flex; gap:10px; justify-content:flex-end">
-          <button class="btn-ghost" onclick="closeAddModal()">Cancel</button>
-          <button class="btn-primary" onclick="saveLesson()">Save Lesson</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- ADMIN SECTION -->
-<div class="admin-section" id="sec-admin" style="display:none">
-  <div class="admin-header">
-    <h2>Manage Content</h2>
-    <button class="add-lesson-btn" onclick="openAddModal()">+ Add Lesson</button>
-  </div>
-  <div id="adminGrid" class="lessons-grid" style="padding:0"></div>
-</div>
+<!-- ═══ Main ═══ -->
+<main>
+    <!-- Lessons Section -->
+    <section>
+        <div class="section-header">
+            <h2>Chapter Lessons</h2>
+            <span class="section-pill">19 topics</span>
+            <div class="section-line"></div>
+        </div>
+        <div class="lesson-grid" id="mainList">
+            <div id="noResults">No chapters match your search.</div>
+        </div>
+    </section>
 
-<!-- TOAST -->
-<div class="toast" id="toast">✓ <span id="toast-msg">Saved</span></div>
+    <!-- Board Exams Sidebar -->
+    <aside class="board-section">
+        <div class="section-header">
+            <h2>SEE Board Exams</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="board-cards">
+
+            <!-- SEE 2082 -->
+            <div class="board-card" id="board2082">
+                <div class="board-card-header" onclick="toggleBoard('board2082')">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="board-year">SEE 2082</span>
+                        <span class="board-badge badge-available">Available</span>
+                    </div>
+
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="board-body">
+                    <div class="board-sub-title">📝 Question Papers</div>
+                    <a class="board-link" href="https://drive.google.com/file/d/1Bkw_L3-yEoCF_66uhGuzm8Pk903LTScF/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Koshi Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1ljt7D3q6WG11R7XKDf6h4ojmNma-rjrn/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Madhesh Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1JqiPAyPed60mFddweGDKvi4vWiLKp0KC/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bagmati Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1xgPe0yo79TcQxkK1IKGKG03VKGYjuQ1H/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Gandaki Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/18wey3nsecHtG0IB4wtd7oaDOuk5aH6PV/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Lumbini Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/12vG2TpiETsGjZ5rM7uoLvpkvAkEpCVhu/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Karnali Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1LlK-wO55oDk_XoWEUbXf9ty9ryrzDOrW/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Sudur Paschim</a>
+                    
+
+                    <div class="board-sub-title">✅ Solution Sheets</div>
+                    <span class="coming-soon">Solutions will be uploaded soon</span>
+                </div>
+            </div>
+
+            <!-- SEE 2081 -->
+            <div class="board-card" id="board2081">
+                <div class="board-card-header" onclick="toggleBoard('board2081')">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="board-year">SEE 2081</span>
+                        <span class="board-badge badge-available">Available</span>
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="board-body">
+                    <div class="board-sub-title">📝 Question Papers</div>
+                    <a class="board-link" href="https://drive.google.com/file/d/10Llck-aPvBy0FQs2H3UIjvTR9FSWetkX/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Koshi Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1-ETCUbrAcKcHIFhhArsukp23gofIBFZT/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Madhesh Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1HzAT4ipSjQE24noMa4EZ_3JlA5C2sfe9/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bagmati Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1X1v1TDXGDzbXmUN9Y4jOKGf-kBUYMhFj/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Gandaki Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1kgrh8WyRAITjOPZZz_5ab_8bTN_M8XVu/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Lumbini Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1LdjSPKYukEnKch4F-4LcEwojZhgmQVYT/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Karnali Province</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1e8t9DSgMK8Jv3Xhbg1P3Q8kJ9aalUP6l/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Sudur Paschim</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1FMUBUkBZe3TWcE9jyGtPhcKADOWcdvOS/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Practice Sets</a>
+
+                    <div class="board-sub-title">✅ Solutions — Nepali Medium</div>
+                    <a class="board-link" href="https://drive.google.com/file/d/12jUIhWGUQ370UWnOkdjKXn73-pFsIuZb/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Koshi (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1fP5ftwGOEMxw_KRhkQAitYCJRQ29d3h5/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Madhesh (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1-7n9YsqEX7BF5k_gqL5jeysBmWp__cUl/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bagmati (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1FRVXbJR48e4Q0OLTsu3wTeoHPRPRW0w1/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Gandaki (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1qR4CdaJqN5efYkHoHhsIguvHBVwZuSIk/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Lumbini (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1GfOscLgv-4hCLTalP6WlKS5ZVGLdXExL/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Karnali (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1Swk1udgv0f_7YPlP3BypFU969xZenPGR/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Sudur Paschim (Nepali)</a>
+
+                    <div class="board-sub-title">✅ Solutions — English Medium</div>
+                    <a class="board-link" href="https://docs.google.com/document/d/11LCJTiuiSVO_p_iVMAflZOnKdXNriYQn/edit?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Koshi (English)</a>
+                    <a class="board-link" href="https://docs.google.com/document/d/1ryiXdeDBPEUk1i7dl8a88HzzGOwBJ-Vd/edit?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Madhesh (English)</a>
+                    <a class="board-link" href="https://docs.google.com/document/d/1JWhiLlnnYtfHXk70k3YnmPh6F9SL9pCP/edit?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bagmati (English)</a>
+                    <a class="board-link" href="https://docs.google.com/document/d/1m2cShG6JpewvUv4ZT_sNL1Hwuwe7D24j/edit?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Gandaki (English)</a>
+ <a class="board-link" href="https://docs.google.com/document/d/1fDH87W9bV-w56tDZfbcG8_idiGdkukOw/edit?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Lumbini (English)</a>
+ <a class="board-link" href="https://docs.google.com/document/d/1JI6rO1S9iHulMjkjRjZzwx8OoMAlYo-s/edit?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Karnali (English)</a>
+ <a class="board-link" href="https://docs.google.com/document/d/1PUfC9AIFGmRI-SWrmn8GNv7W2K2pmNxf/edit?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Sudur Paschim (English)</a>
+                </div>
+            </div>
+
+            <!-- SEE 2080 -->
+            <div class="board-card" id="board2080">
+                <div class="board-card-header" onclick="toggleBoard('board2080')">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="board-year">SEE 2080</span>
+                        <span class="board-badge badge-available">Available</span>
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="board-body">
+                    <div class="board-sub-title">📝 Question Papers</div>
+                    <span class="coming-soon">Links coming soon</span>
+
+                    <div class="board-sub-title">✅ Solutions — Nepali Medium</div>
+                    <a class="board-link" href="https://drive.google.com/file/d/1yRu23ApVG1-5ZwegtSwMXOSaWyjWulUa/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Koshi (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1e3FgTaphybOMefRs37qCeCA45jrhS31e/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Madhesh (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1705VA68NCFFtodtlPyB7DZR8V93ncie8/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bagmati (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1SWUj1r50ZiZDtLKvha5PeZhAfG6AaKHD/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Gandaki (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1hzMBJ-WGc6MN9ziReUEvbShBOP8RCeRE/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Lumbini (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1mJJIHYVPoh1D3uWfHu6CVk9cJlhQJPuI/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Karnali (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1JvPAojjQtH4eXT6SumthE51s9aKZ0b25/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Sudur Paschim (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1yxvgyKzIYsI8wXKH_rg_QuE1GgC_thB_/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Set 1 (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1tnUNFSxdVEYaHLDK4EHYa2AV7j_AbAkt/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Set 2 (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1F2zMTDwGIhXhghcRO5Hk3OUtrg_qZPua/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Set 3 (Nepali)</a>
+                    <a class="board-link" href="https://drive.google.com/file/d/1dmA3Zi21KuaJjRz-i9WBO72CtDdpUI/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Grade Inc. (Nepali)</a>
+
+                    <div class="board-sub-title">✅ Solutions — English Medium</div>
+                    <span class="coming-soon">English medium links coming soon</span>
+                </div>
+            </div>
+
+        </div>
+<br><!-- Teacher Resources Sidebar -->
+    <aside class="board-section">
+        <div class="section-header">
+            <h2>Teacher Resources</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="board-cards">
+
+            <!-- Teacher Resources 10 -->
+            <div class="board-card open" id="Teacher Resources 10">
+                <div class="board-card-header" onclick="toggleBoard('Teacher Resources 10')">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="board-year">Teacher Resources 10</span>
+                        <span class="board-badge badge-available">Available</span>
+                    </div>
+
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="board-body">
+                     <div class="board-sub-title"><a class="board-link" href="https://drive.google.com/file/d/1p-1OBqFrf7NVCzFiLwfQbYyXL06p3mjz/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>📝 Curriculum 10</a></div>
+                    <div class="board-sub-title"><a class="board-link" href="https://drive.google.com/file/d/1aWRr_juaMd2wjYhZP4dLGfuQJ86kdt6Y/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>📝 Teacher's Guide 10</a></div>    
+                </div>
+            </div>
+ <div class="board-cards">
+
+            <!-- Teacher Resources 9 -->
+            <div class="board-card" id="Teacher Resources 9">
+                <div class="board-card-header" onclick="toggleBoard('Teacher Resources 9')">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="board-year">Teacher Resources 9</span>
+                        <span class="board-badge badge-available">Available</span>
+                    </div>
+
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="board-body">
+                    <div class="board-sub-title"><a class="board-link" href="https://drive.google.com/file/d/1O5LuOJ24L_kXQ0bbszeT5bmnCFdhy2Oc/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>📝 Curriculum 9</a></div>
+                    <div class="board-sub-title"><a class="board-link" href="https://drive.google.com/file/d/1WKcl-A069YOOaU71jBJX7pC0PEPJdmdF/view?usp=sharing" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>📝 Teacher's Guide 9</a></div>
+                  
+                </div>
+            </div>
+ <div class="board-cards">
+
+             <!-- Teacher Resources 8 -->
+            <div class="board-card" id="Teacher Resources 8">
+                <div class="board-card-header" onclick="toggleBoard('Teacher Resources 8')">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="board-year">Teacher Resources 8</span>
+                        <span class="board-badge badge-available">Available</span>
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                 <div class="board-body">
+                    <div class="board-sub-title"><a class="board-link" href="#" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>📝 Curriculum 8</a></div>
+                    <div class="board-sub-title"><a class="board-link" href="#" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>📝 Teacher's Guide 8</a></div>
+                    <span class="coming-soon">Solutions will be uploaded soon</span>
+                </div>
+            </div>
+
+
+
+    </aside>
+</main>
+
+<footer>
+    Science &amp; Technology Hub · SEE Class 10 Resources · Nepal
+</footer>
 
 <script>
-// DATA STORE
-let lessons = JSON.parse(localStorage.getItem('scitech_lessons') || 'null');
-if (!lessons) {
-  lessons = [
-    {
-      id:1, title:"Newton's Laws of Motion", subject:"physics", unit:"Unit 3: Forces & Motion", grade:"Grade 10",
-      desc:"Understand the three fundamental laws that describe the relationship between forces and the motion of objects.",
-      progress:65, resources:[
-        {type:"pdf", name:"Newton's Laws — Full Chapter PDF", url:"#", size:"2.4 MB"},
-        {type:"pdf", name:"Practice Problems Set A", url:"#", size:"1.1 MB"},
-        {type:"video", name:"Introduction to Newton's 1st Law", ytid:"ZM8ECpBuQYE", duration:"12:34"},
-        {type:"video", name:"Newton's 2nd & 3rd Laws Explained", ytid:"ou9YMWlJgkE", duration:"18:22"},
-        {type:"notes", name:"Class Notes — Laws of Motion", content:"Newton's 1st Law (Inertia): An object at rest stays at rest...\n\nNewton's 2nd Law: F = ma\n- F = Force (Newtons)\n- m = mass (kg)\n- a = acceleration (m/s²)\n\nNewton's 3rd Law: For every action, there is an equal and opposite reaction."},
-        {type:"ppt", name:"Lecture Slides — Forces & Motion", url:"#", slides:"28 slides"}
-      ]
-    },
-    {
-      id:2, title:"Periodic Table & Chemical Elements", subject:"chemistry", unit:"Unit 1: Atomic Structure", grade:"Grade 9",
-      desc:"Explore the organization of elements, periodic trends, and chemical properties across the periodic table.",
-      progress:40, resources:[
-        {type:"pdf", name:"Periodic Table Handbook", url:"#", size:"5.2 MB"},
-        {type:"video", name:"The Periodic Table — A Visual Guide", ytid:"0RRVV4Diomg", duration:"14:55"},
-        {type:"video", name:"Understanding Atomic Number & Mass", ytid:"W3SbnbI0ocA", duration:"9:12"},
-        {type:"notes", name:"Study Notes — Element Groups", content:"Main groups of the periodic table:\n\n• Alkali metals (Group 1): Highly reactive, 1 valence electron\n• Alkaline earth metals (Group 2): 2 valence electrons\n• Transition metals: Groups 3–12\n• Halogens (Group 17): Very reactive non-metals\n• Noble gases (Group 18): Stable, full valence shell"},
-        {type:"ppt", name:"Presentation — Periodic Trends", url:"#", slides:"34 slides"}
-      ]
-    },
-    {
-      id:3, title:"Cell Structure & Function", subject:"biology", unit:"Unit 2: Cell Biology", grade:"Grade 10",
-      desc:"Dive deep into the structure of plant and animal cells, organelles and their functions.",
-      progress:80, resources:[
-        {type:"pdf", name:"Cell Biology — Comprehensive Guide", url:"#", size:"3.8 MB"},
-        {type:"pdf", name:"Cell Diagrams & Labeling Worksheet", url:"#", size:"0.9 MB"},
-        {type:"video", name:"Inside the Cell — 3D Animation", ytid:"URUJD5NEXC8", duration:"11:47"},
-        {type:"notes", name:"Organelle Reference Sheet", content:"Key Organelles:\n\n🔵 Nucleus — Control center; contains DNA\n🟢 Mitochondria — 'Powerhouse of the cell'; produces ATP\n🟡 Ribosome — Protein synthesis\n🔴 Endoplasmic Reticulum (ER) — Protein & lipid transport\n🟠 Golgi Apparatus — Packaging & shipping of proteins\n🔵 Chloroplast (plants) — Photosynthesis"},
-        {type:"ppt", name:"Cell Structure Slides", url:"#", slides:"42 slides"}
-      ]
-    },
-    {
-      id:4, title:"Quadratic Equations", subject:"math", unit:"Unit 4: Algebra", grade:"Grade 9",
-      desc:"Master solving quadratic equations using factoring, completing the square, and the quadratic formula.",
-      progress:55, resources:[
-        {type:"pdf", name:"Quadratic Equations — Theory & Examples", url:"#", size:"1.7 MB"},
-        {type:"video", name:"Solving Quadratics — Full Lesson", ytid:"i7idZfS8t8w", duration:"22:10"},
-        {type:"notes", name:"Formula Reference Card", content:"Quadratic Formula: x = (-b ± √(b²-4ac)) / 2a\n\nStandard form: ax² + bx + c = 0\n\nDiscriminant (b²-4ac):\n  > 0 → two real solutions\n  = 0 → one real solution\n  < 0 → no real solutions\n\nFactoring tip: Look for two numbers that multiply to 'ac' and add to 'b'"},
-        {type:"ppt", name:"Quadratic Equations Slides", url:"#", slides:"22 slides"}
-      ]
-    },
-    {
-      id:5, title:"Introduction to Programming", subject:"technology", unit:"Unit 1: Computational Thinking", grade:"Grade 11",
-      desc:"Learn fundamental programming concepts including variables, loops, conditionals and functions using Python.",
-      progress:30, resources:[
-        {type:"pdf", name:"Python Beginner's Handbook", url:"#", size:"4.1 MB"},
-        {type:"video", name:"Python for Beginners — Full Course", ytid:"kqtD5dpn9C8", duration:"1:01:30"},
-        {type:"video", name:"Understanding Loops & Conditions", ytid:"DZwmZ8Usvnk", duration:"16:45"},
-        {type:"notes", name:"Python Quick Reference", content:"Variables:\nname = 'Alice'\nage = 16\n\nIf-else:\nif age >= 18:\n    print('Adult')\nelse:\n    print('Minor')\n\nFor loop:\nfor i in range(5):\n    print(i)\n\nFunction:\ndef greet(name):\n    return f'Hello, {name}!'"},
-        {type:"ppt", name:"Intro to Programming Slides", url:"#", slides:"38 slides"}
-      ]
-    },
-    {
-      id:6, title:"Electricity & Circuits", subject:"physics", unit:"Unit 5: Electromagnetism", grade:"Grade 11",
-      desc:"Understand electric current, voltage, resistance and how to analyze simple and complex circuits.",
-      progress:20, resources:[
-        {type:"pdf", name:"Electricity Fundamentals PDF", url:"#", size:"3.3 MB"},
-        {type:"video", name:"Ohm's Law — Visual Explanation", ytid:"8jB6hDUqN0Y", duration:"13:20"},
-        {type:"notes", name:"Circuit Laws Cheat Sheet", content:"Ohm's Law: V = IR\n\nKirchhoff's Laws:\n• KCL: Sum of currents at a node = 0\n• KVL: Sum of voltages in a loop = 0\n\nSeries circuit: R_total = R1 + R2 + ...\nParallel circuit: 1/R_total = 1/R1 + 1/R2 + ..."},
-        {type:"ppt", name:"Circuits & Electricity Slides", url:"#", slides:"31 slides"}
-      ]
+    // ─── Data ───
+    const cdcLinks = { 1:"https://drive.google.com/file/d/1ND8tgxusuOUIdBYbsEFabl_AS7LhJzZI/view?usp=sharing", 2:"https://drive.google.com/file/d/1u8WEwj3fsgL6TolfEyZwZ7dtm1-g-1xj/view?usp=sharing", 3:"https://drive.google.com/file/d/122eCgUmth14pfEdRJjBigj3aj1oywLJi/view?usp=sharing", 4:"https://drive.google.com/file/d/1ldUHlpFm8s8viHI2LxePLTAJC-1gR3Yf/view?usp=sharing", 5:"https://drive.google.com/file/d/1LP-AkkcJW7H9WvAxHsnFp5Xkh4AcDspC/view?usp=sharing", 6:"https://drive.google.com/file/d/1_oYH9f0PFq_x3hgV9LTfJAzHsizsYr8v/view?usp=sharing", 7:"https://drive.google.com/file/d/12WQmR109GOywkFsQFMPuZ0oFp1IyvHS8/view?usp=sharing", 8:"https://drive.google.com/file/d/1G4jeZpcyM-w3AjqtnRBIddTbjvejR-l6/view?usp=sharing", 9:"https://drive.google.com/file/d/1XUw3SvNlwviJb7IBtpJjFRw4LBbAOuWc/view?usp=sharing", 10:"https://drive.google.com/file/d/1tS078XwQwZKivRpqsMFEUkYiDxYG9eZv/view?usp=sharing", 11:"https://drive.google.com/file/d/1ED1rc9ymh6kTeVlfNoyc72d2guAkQHR-/view?usp=sharing", 12:"https://drive.google.com/file/d/1RhTmIBhbEZafgB3T7ImfCGxgQWkTPOvc/view?usp=sharing", 13:"https://drive.google.com/file/d/1HnYyymnk8Af-l-j0trQzQB6HUf2GiYKy/view?usp=sharing", 14:"https://drive.google.com/file/d/1NzGjX0MYj0ZVnj99sIq95nMF1URUNs3m/view?usp=sharing", 15:"https://drive.google.com/file/d/1UCvf8d5JqCZ2sWLOzIqWSTlfQF5JJcIc/view?usp=sharing", 16:"https://drive.google.com/file/d/1XazsywjvTrmGcQo9eGWlVYGy0STBkLpr/view?usp=sharing", 17:"https://drive.google.com/file/d/1yWlkrDPSKw0KaJKp-50TPuj7GNbOxDGg/view?usp=sharing", 18:"https://drive.google.com/file/d/1P36-QCQeJq0uAt6BoGeSshRmW_u-8M_3/view?usp=sharing", 19:"https://drive.google.com/file/d/1d3Ee_s8DIRHaOzrVZpErSkxcqSMq8RVg/view?usp=sharing" };
+    const modernLinks = { 1:"https://drive.google.com/file/d/1B_DPZQKESwNUl1LLpLZgD2aeu8M4yrjM/view?usp=sharing", 2:"https://drive.google.com/file/d/1qG1OPOIzWiAxoTT-A8nbDdg7UUGiwDby/view?usp=sharing", 3:"https://drive.google.com/file/d/1Z-TOALgqP9uxZO9_GjrAit4k4wxGu11h/view?usp=sharing", 4:"https://drive.google.com/file/d/1uZlxC73g_qa3Bv569RTN-IHgDmC4SO3q/view?usp=sharing", 5:"https://drive.google.com/file/d/1YdkKELYQFnVX0Cl4GJkRyIMDrTOzlg7i/view?usp=sharing", 6:"https://drive.google.com/file/d/1m6JTGHXqNlrZRBqf1unE6GDVAe8BYlRk/view?usp=sharing", 7:"https://drive.google.com/file/d/1bh9g2NfhN5-uOd24mB1h7j1wWkDSNuo5/view?usp=sharing", 8:"https://drive.google.com/file/d/1WaB66XaOLicv7_-jDghwJxaaz-pWu7wZ/view?usp=sharing", 9:"https://drive.google.com/file/d/1ciWIiImBBUbeer6rfccmCjfE53zJXB-Y/view?usp=sharing", 10:"https://drive.google.com/file/d/17xbumPh6202mHdAYCwiJhUZKi_aHdPqJ/view?usp=sharing", 11:"https://drive.google.com/file/d/19NEzvFWfmHDXbzyJVix6QtN5AaMF1oSq/view?usp=sharing", 12:"https://drive.google.com/file/d/1dmllg44szRQi72edj9xmyW0iOBjvmESQ/view?usp=sharing", 13:"https://drive.google.com/file/d/1ys8EYEvcqObMT0cKFoIXmMcUkvm6nP5M/view?usp=sharing", 14:"https://drive.google.com/file/d/1CbhmEx9AAWdc-a3q0CtcU72KG0ZT9yCE/view?usp=sharing", 15:"https://drive.google.com/file/d/1y6f5hak5P-LMvmfecXrBwHhMjS2GMyHl/view?usp=sharing", 16:"https://drive.google.com/file/d/11Ha0EYjHeObK9dI1FDPOvdqQ3F7xuUVI/view?usp=sharing", 17:"https://drive.google.com/file/d/10QlSU2diMNjRc8jCVqLYnJd2BUy31elN/view?usp=sharing", 18:"https://drive.google.com/file/d/1pD01KmGPCM5gy1_58L53tzKYin2Irk6D/view?usp=sharing", 19:"https://drive.google.com/file/d/1ufry8I3VUgtBce0r5a9lFt7nXTmpR7Nx/view?usp=sharing" };
+    const neemaQA = { 1:"https://drive.google.com/file/d/1O4a89dNXMolgw8G7YgAmEE9swMk5tz_r/view?usp=drive_link", 2:"https://drive.google.com/file/d/1pAdcYajfxe4E29y11reHcfC5DrFbrFLv/view?usp=drive_link", 3:"https://drive.google.com/file/d/1vDbUmqpttoUqsjGE5iJmbd_xw0CX9Hth/view?usp=drive_link", 4:"https://drive.google.com/file/d/1XHLlmwcErsagFr_LYAanLRhEubDc71yV/view?usp=drive_link", 5:"https://drive.google.com/file/d/1cYk3ZxJZG7TTm3ldDkfQO93Aq1fRtfMG/view?usp=drive_link", 6:"https://drive.google.com/file/d/13BSiGMs7MuP0bLANLRs_agGFc3oWCA8W/view?usp=drive_link", 7:"https://drive.google.com/file/d/1vFrTXHcrQ2yRkibuBWx-EMQfVkDCVsxI/view?usp=drive_link", 8:"https://drive.google.com/file/d/1B6GfF7MeUcw0DCc7aCz_C-aULRGyanyu/view?usp=drive_link", 9:"https://drive.google.com/file/d/1hZvlmgpjG2ml9vJu0lNO-OeRMwMxl61o/view?usp=drive_link", 10:"https://drive.google.com/file/d/1y3d6bNZFwrmKNwaJRasRgGfNULNXprij/view?usp=drive_link", 11:"https://drive.google.com/file/d/1WydqGwINjyB622xTWS6l4bk9jh5WVXi5/view?usp=drive_link", 12:"https://drive.google.com/file/d/1o057i6fdKwbNwuxFPGSuCKZByHXEmBdU/view?usp=drive_link", 13:"https://drive.google.com/file/d/1YAXKMVzEDRxFDiUppykEnST2DjOHNxlE/view?usp=drive_link", 14:"https://drive.google.com/file/d/1iuM07zk08PLYu-LCK5pprCWkqgC-UtyJ/view?usp=drive_link", 15:"https://drive.google.com/file/d/1-3o0jsEzy2ENPWBM0_8ZNETC4rrIl8IC/view?usp=drive_link", 16:"https://drive.google.com/file/d/1K-zq2g2IXSFKfnJGStWp5FbHX-Olm4bK/view?usp=drive_link", 17:"https://drive.google.com/file/d/1xipPfiawjh7N6wY9XbIFGKC9KBZyyFva/view?usp=drive_link", 18:"https://drive.google.com/file/d/1Xa0yqHR5ORA0t-v9B8hxftcKjDmMUkOX/view?usp=drive_link", 19:"https://drive.google.com/file/d/1VYLc0bHQONyt5PD7923YsO1LPT9ta41I/view?usp=drive_link" };
+ const importantedunotesQA = { 1:"https://importantedunotes.com/unit-1-scientific-study/", 2:"https://importantedunotes.com/unit-2-classification-of-living-beings/", 3:"https://importantedunotes.com/unit-3-honey-bee/", 4:"https://importantedunotes.com/chapter-4-heredity-see/", 5:"https://importantedunotes.com/physiological-structure-and-life-process/", 6:"https://importantedunotes.com/unit-6-nature-and-environment/", 7:"https://importantedunotes.com/chapter-7-force-and-motion/", 8:"https://importantedunotes.com/class-10-science-chapter-8-pressure-exercise/", 9:"https://importantedunotes.com/chapter-9-heat/", 10:"https://importantedunotes.com/chapter-10-wave/", 11:"https://importantedunotes.com/chapter-11-electricity-and-magnetism/", 12:"https://importantedunotes.com/chapter-12-universe/", 13:"https://importantedunotes.com/information-communication-technology/", 14:"https://importantedunotes.com/chapter-14-classification-of-elements/", 15:"https://importantedunotes.com/chapter-15-chemical-reactions/", 16:"https://importantedunotes.com/chapter-16-some-gases/", 17:"https://importantedunotes.com/unit-17-metals-and-non-metals/", 18:"https://importantedunotes.com/hydrocarbon-and-its-compounds/", 19:"https://importantedunotes.com/unit-19-chemicals-used-in-daily-life/" };
+    const cdcQA = { 1:"https://docs.google.com/document/d/1ER9HMD23EZZkNSn6WAtQiJW3QA1RK0Ek/edit?usp=drive_link", 2:"https://docs.google.com/document/d/11-yEaqW4iFFPuSZZSIKY_Ktf_lyDESU5/edit?usp=drive_link", 3:"https://docs.google.com/document/d/1lPzKHEQL-bnEPW9cCWDKDeq_9rAZ3zQ-/edit?usp=drive_link", 4:"https://docs.google.com/document/d/1tRtyRqDUsoCRhi4paxhP_9cJ6QoT0JGL/edit?usp=drive_link", 5:"https://docs.google.com/document/d/1XHyACi3WOlqnOR11GdxB2kYCJszC9QCE/edit?usp=drive_link", 6:"https://docs.google.com/document/d/1p28rJUG02pXM3X9GXxRHDGS7ASo1lYex/edit?usp=sharing", 7:"https://docs.google.com/document/d/1HkJxW2S7MB7NQQrpzfvVr4QLnTu5CPPJ/edit?usp=drive_link", 8:"https://docs.google.com/document/d/1Y9HZX6wTP7qWCyu222gTvTTwKMZUNGvM/edit?usp=drive_link", 9:"https://docs.google.com/document/d/1edjfV_DdpZOnjQIdDwMmnUka2Ib3Kx3C/edit?usp=drive_link", 10:"https://docs.google.com/document/d/1HUwQxfPjqtPA76FiT4CPxlOr2h2lAfmS/edit?usp=drive_link", 11:"https://docs.google.com/document/d/1RXlarvMskO4W9B9_LZ6_SQwZ1Dcg7f3Y/edit?usp=drive_link", 12:"https://docs.google.com/document/d/1jIfzQ6ok37rD_DkyRiKEBdAcYcl0-EOP/edit?usp=drive_link", 13:"https://docs.google.com/document/d/18ctUdVYgbejInY7Ao4HBDubqAM-n6Ol5/edit?usp=drive_link", 14:"https://docs.google.com/document/d/1fg-DL7J56S6Ac9JZdxfgyV6XqtPmNTiP/edit?usp=drive_link", 15:"https://docs.google.com/document/d/1ucqLmjTygfQn5v57vepTt3WXBimcu31n/edit?usp=drive_link", 16:"https://docs.google.com/document/d/15ohe-amAATbZN40iktIe9ef4-CxDxqlz/edit?usp=drive_link", 17:"https://docs.google.com/document/d/1im-un_U_vUcSrLX-jV7mwOWQPZxdzpXb/edit?usp=drive_link", 18:"https://docs.google.com/document/d/1A059lW_diw_vzmdYH_pbNhnsqqk7YbiV/edit?usp=drive_link", 19:"https://docs.google.com/document/d/1s68-qVirVHnbX9fmgYuBj0a6cpMYagLU/edit?usp=drive_link" };
+
+const cdcvideoQA = { 
+1:"https://www.youtube.com/watch?v=1FlkkZJzh6U", 
+2:"https://www.youtube.com/watch?v=QBEmjqmWPx8", 
+3:"https://www.youtube.com/watch?v=tyWKqGjv9Ds", 
+4:"https://www.youtube.com/watch?v=NyT2Un7vdPU",
+5:"https://www.youtube.com/watch?v=ICEF62GZDOQ", 6:"https://www.youtube.com/watch?v=_57xLlACe9I", 7:"https://www.youtube.com/watch?v=FFlIUfn0ak0", 8:"https://www.youtube.com/watch?v=HH-ewcD4UMU", 9:"https://www.youtube.com/watch?v=xgI8T3_mZfE", 10:"https://www.youtube.com/watch?v=WH-67nJwtPI", 
+11:"https://www.youtube.com/watch?v=uasIoLsNyyo", 12:"https://www.youtube.com/watch?v=F4_REzGuJ1w", 13:"https://www.youtube.com/watch?v=5JaBn5mdpW4", 
+14:"https://www.youtube.com/watch?v=35wij7P4ER8", 15:"https://www.youtube.com/watch?v=f6qubd8n-M0", 
+16:"https://www.youtube.com/watch?v=3OHabDua0DA", 
+17:"https://www.youtube.com/watch?v=viKwPTxqL2I", 18:"https://www.youtube.com/watch?v=TjyYctqFc7g", 
+19:"https://www.youtube.com/watch?v=p-eR11pzAKw" };
+
+    const designedLinks = { 1:"https://docs.google.com/presentation/d/1uDdcvGLTkiAejl-c39828B-HacTgFE_d/edit?usp=drive_link", 2:"https://docs.google.com/presentation/d/1RW7Vj-Qu4Ko40sASnO1KJSBQITUwKMks/edit?usp=sharing", 3:"https://docs.google.com/presentation/d/1PftXXcfUxcz4FrPTIeRR0WKtKWUo9VlG/edit?usp=sharing", 4:"https://docs.google.com/presentation/d/1exDU-XQZ8s2aEZ3WGOF6v7e55Uo7A-FH/edit?usp=sharing", 5:"https://docs.google.com/presentation/d/1exDU-XQZ8s2aEZ3WGOF6v7e55Uo7A-FH/edit?usp=sharing", 6:"https://docs.google.com/presentation/d/1exDU-XQZ8s2aEZ3WGOF6v7e55Uo7A-FH/edit?usp=sharing", 7:"https://docs.google.com/presentation/d/1IodTn1BAMErcvWCeay_WgyNioasR29Pz/edit?usp=sharing", 8:"https://docs.google.com/presentation/d/1zaSmsmTmRkGo2cQL3G9H3Oq2U44VnlqR/edit?usp=sharing", 9:"https://docs.google.com/presentation/d/1-5hxC57PeOp8oUgIrAU4xbxF2KcBHs_x/edit?usp=sharing", 10:"https://docs.google.com/presentation/d/1K3LWMiKKGCGFtMN6yhHSd1clvBzJ0sFk/edit?usp=sharing", 11:"https://docs.google.com/presentation/d/1kVylZdXAIs3VRJSAbPYiq6WM6G8jwPAM/edit?usp=sharing", 12:"https://docs.google.com/presentation/d/1RcCLA_mmSRIWGjnkMPs4YQWnuzsVT3ys/edit?usp=sharing", 13:"https://docs.google.com/presentation/d/17fiCqmpKc5QmXnkfUgLUGg8Zu15m_0xY/edit?usp=sharing", 14:"https://docs.google.com/presentation/d/1-Cg4gP6D7_n04BSZchmgBDpan5P5B31l/edit?usp=sharing", 15:"https://docs.google.com/presentation/d/13SjcI7T8QgBFI31-hxIoRYUfmDVyaCSP/edit?usp=sharing", 16:"https://docs.google.com/presentation/d/1mUqZT8aQs6qG4ORt-rdCJWeuCyP3jMb9/edit?usp=sharing", 17:"https://docs.google.com/presentation/d/1Vf8C0YNz7aeBXKyXbUq572qg69A06rnK/edit?usp=sharing", 18:"https://docs.google.com/presentation/d/1sR6nFTFnWDHauXiP_D91cYO1NohhK9Jb/edit?usp=sharing", 19:"https://docs.google.com/presentation/d/14T0z8p0DXJBux9bO58nyA6cT1GRSv4eY/edit?usp=sharing" };
+    const oasisLinks = { 1:"https://drive.google.com/file/d/1rc3NB4b6p2nu4pXnNXg6_70pJHdROfVS/view?usp=sharing", 2:"https://drive.google.com/file/d/1NSHYgYYTV1jJIjbvkNZfPDmHg3LxXO5H/view?usp=sharing", 3:"https://drive.google.com/file/d/1IbgloZ3_9Uq0gGsW3Dho_GFz49dlGbRw/view?usp=sharing", 4:"https://drive.google.com/file/d/1tgf9jaLnjKBGPgwxDwrl7qsAhpAk13hc/view?usp=sharing", 5:"https://drive.google.com/file/d/1-L35ApMUyYuNEF0zoIoPID6KuCh6Mjsc/view?usp=sharing", 6:"https://drive.google.com/file/d/154RE9-YpDzqKTarwLxTqiPJss_mkbiNk/view?usp=sharing", 7:"https://drive.google.com/file/d/1aRoqpQPJ9H5d61dxJjaTFAj8dsJA3STp/view?usp=sharing", 8:"https://drive.google.com/file/d/1zmqqBxv6uVBFMknWtqJQ8kHdu5VuZgVu/view?usp=sharing", 9:"https://drive.google.com/file/d/1HnbXP68UXDWviypidFc8P1ot84Lqb5v1/view?usp=sharing", 10:"https://drive.google.com/file/d/1xFi3ShMha8lbYz4A5ZtYVBZRHLvYDi5E/view?usp=sharing", 11:"https://drive.google.com/file/d/1QfG_bClyRxvUw9mkbKvlF765o5eEpneM/view?usp=sharing", 12:"https://drive.google.com/file/d/1HLVArPJXHw_ymiIskcxVC4zCpVlo6t4J/view?usp=sharing", 13:"https://drive.google.com/file/d/1cgoXA-_uDkp26PoasHPhfTz1NfgQrqyS/view?usp=sharing", 14:"https://drive.google.com/file/d/1yXXRacy_H1TZiagUgb0LsNLNlN-q0M2-/view?usp=sharing", 15:"https://drive.google.com/file/d/1B4U3vXEP0z-nCrtv33P7fkYCm0VuwYTQ/view?usp=sharing", 16:"https://drive.google.com/file/d/16qZFY8SJVn1nkvdp0mgwG2sW5sHFPr1N/view?usp=sharing", 17:"https://drive.google.com/file/d/1hAMS7r4-RDtMGYJUYjuH8SeY9KWvrJb8/view?usp=sharing", 18:"https://drive.google.com/file/d/1U_tWp-J-0ZpL-2kL4DXoY32teXjdBiLO/view?usp=sharing", 19:"https://drive.google.com/file/d/1-0882jdOL6wF7P31QIsw6zyUUT1v_gSb/view?usp=sharing" };
+
+    const aiLinks = { 1:"https://docs.google.com/presentation/d/1E8qTMEhZwk_fEa7VqAfvP2DMdshMfA92/edit?usp=sharing", 2:"https://docs.google.com/presentation/d/1mFbeEw9qwLwFj-3d7uzpZZYcEHy636ef/edit?usp=sharing", 3:"https://docs.google.com/presentation/d/13hTPjHj91JsK3ZQdYjk35iwEvVl-LXWg/edit?usp=sharing", 4:"https://docs.google.com/presentation/d/1FOqHr_uym7rm1PTgmV7bfL2Djvn89fJ4/edit?usp=sharing", 5:"https://docs.google.com/presentation/d/13eb9IvlOqb1Yipa3vq4wkTWZRoZMq1NV/edit?usp=sharing", 6:"https://docs.google.com/presentation/d/1iO--k5P8O--ullrQOUuHE8vvCSBdLuMD/edit?usp=sharing", 7:"https://docs.google.com/presentation/d/18ntkVe-q7pPVELTurxa0rxBGB8PtDaeH/edit?usp=sharing", 8:"https://docs.google.com/presentation/d/1IBB_WrbYKgP09840AYDRpgEOGrXj8vSH/edit?usp=sharing", 9:"https://docs.google.com/presentation/d/1OsoPslrkqeSWHxY48rt6nz8OAGUnyZLJ/edit?usp=sharing", 10:"https://docs.google.com/presentation/d/1oCOn4XVzD33LguRt0_3oeRc2-4Giz_yj/edit?usp=sharing", 11:"https://docs.google.com/presentation/d/15OweV1syZbtM10SIOIy3m5IsBVH7U4iz/edit?usp=sharing", 12:"https://docs.google.com/presentation/d/1h86O65r0McXLOipj6makhPDqmdng3YFs/edit?usp=sharing", 13:"https://docs.google.com/presentation/d/1TuQnU3_x6YKyQW7LavDOZa681Pmr31S9/edit?usp=sharing", 14:"https://docs.google.com/presentation/d/1dn97rm2TurEHK-W_CFmp18jS2EYB2lcv/edit?usp=sharing", 15:"https://docs.google.com/presentation/d/1lDuh11_eyOZzmoWlSlZDM0reRLRFM7Ou/edit?usp=sharing", 16:"https://docs.google.com/presentation/d/1DKm4C4t4epGBGj5k2bogxid5Ic3MMJXK/edit?usp=sharing", 17:"https://docs.google.com/presentation/d/1L1X12pX12s6ePO5J2Bb3ytPFtLSJjoaP/edit?usp=sharing", 18:"https://docs.google.com/presentation/d/1yhd8Ywq-kDgjNKNfcUrxR7wjD_Qma106/edit?usp=sharing", 19:"https://docs.google.com/presentation/d/1sNfdLvRnyCSypEHuzPAjmA2IJwqvuuub/edit?usp=sharing" };
+
+    const sangamsLinks = { 1:"https://drive.google.com/file/d/1ISNqP2cxlK6VnrVTNCnPErf4vQjgRcta/view?usp=sharing", 2:"https://drive.google.com/file/d/1vFh2xLNqZoKFAb6y6wPIMXmaLo9iqgNu/view?usp=sharing", 3:"https://drive.google.com/file/d/1KBy963BFnWyFSAm5aXTrUj0rd56iMRsp/view?usp=sharing", 4:"https://drive.google.com/file/d/1mZjhEqoOPb053vEnbf0SBbiFPgFBDnI0/view?usp=sharing", 5:"https://drive.google.com/file/d/1NwhHbcA_d0l4MmDJrJcL2vw31pb6Tbk8/view?usp=sharing", 6:"https://drive.google.com/file/d/16ekTBCg0qkl5BP1M7S590UHFV07uHG2E/view?usp=sharing", 7:"https://drive.google.com/file/d/1SFkPl1ML6PiHh_m-F8er_3TLoUb7L1DD/view?usp=sharing", 8:"https://drive.google.com/file/d/1TLKfHYW5pGN_5_tN3a1L4dg135gK-wBZ/view?usp=sharing", 9:"https://drive.google.com/file/d/1EovEyM0v1gF1Bzng2f7dHCEoLYsYlXmF/view?usp=sharing", 10:"https://drive.google.com/file/d/1Db_jHFIggT8qRrBEttaPRSU6WPpaMcO_/view?usp=sharing", 11:"https://drive.google.com/file/d/1mjnkvFntGKvCzvyJypArG-7Ku4rgtF9l/view?usp=sharing", 12:"https://drive.google.com/file/d/1tLrHyJ0LL29nkAevEEai41prtrbADD6a/view?usp=sharing", 13:"https://drive.google.com/file/d/1uoMGNhQNOeK7d4iCx5jknQapGt0wRDlx/view?usp=sharing", 14:"https://drive.google.com/file/d/1VLPqqJoLX21deVpPwh22hWsORKgh4oaT/view?usp=sharing", 15:"https://drive.google.com/file/d/1coMNkehK-Ctacf0P10CJHJyU5onWMGhu/view?usp=sharing", 16:"https://drive.google.com/file/d/1F2G_I4jL1adpVZWC8wFEPiXcnqGxZAt6/view?usp=sharing", 17:"https://drive.google.com/file/d/1GRYpy-QwFiowIp0fe5-ICPH5GKPFz-uf/view?usp=sharing", 18:"https://drive.google.com/file/d/1Lez4JxZT3YqWra7E0AO5nlsNqunTA1J1/view?usp=sharing", 19:"https://drive.google.com/file/d/1zhli57rerCbRBqpwamt_nD_o_3xlbAo7/view?usp=sharing" };
+
+const swarnimsLinks = { 1:"https://drive.google.com/file/d/1GWs8zsY5jR7-10svF-fXRynxD0NrYrZu/view?usp=sharing", 2:"https://drive.google.com/file/d/1XnWWe0VyOfOMHe_1fwu6-Js6zXnqcHHU/view?usp=sharing", 3:"https://drive.google.com/file/d/1zO3UZZYdZZI5DeKTNxg3zJ97SCcZSDa2/view?usp=sharing", 4:"https://drive.google.com/file/d/1qflNEj_6ZV_lnP4FQGtCicMo7CJqtQ5m/view?usp=sharing", 5:"https://drive.google.com/file/d/1ASrir4njXmWWcPfvbQSMNQFIr61oxm92/view?usp=sharing", 6:"https://drive.google.com/file/d/1KIxfgZn7MieOBvNJM4ywMSqgWA0ApVfG/view?usp=sharing", 7:"https://drive.google.com/file/d/1UrIkWeqtBykuAqe5jMFU73ui70e7GNOh/view?usp=sharing", 8:"https://drive.google.com/file/d/1K2iBmNVPKPhpVkM9Tf2s3dhD71R2j42C/view?usp=sharing", 9:"https://drive.google.com/file/d/1rpgdNiEgmux4kLxa8kl2CBATohdcCZ2S/view?usp=sharing", 10:"https://drive.google.com/file/d/1ROQHbkgzZyrWDO9WyBRxLyZpesf4-IRS/view?usp=sharing", 11:"https://drive.google.com/file/d/1ElpIkNmcB1CZnNen5TwjRTriri8tzrPk/view?usp=sharing", 12:"https://drive.google.com/file/d/1jUYH3i2S41oMPNjkdY-9mOlQ89HKECRa/view?usp=sharing", 13:"https://drive.google.com/file/d/1c8ogIzu7dvhbo4vJLk91vlnt4xR7YmN2/view?usp=sharing", 14:"https://drive.google.com/file/d/1ypBRfuDBLMIlEf8YKtaDLRtHuBL0Ef-V/view?usp=sharing", 15:"https://drive.google.com/file/d/1NWzIG5jE305N3kqTknxvCn5_b9nc3LgS/view?usp=sharing", 16:"https://drive.google.com/file/d/11E9Xb8FsN7n9uo306-Om81N8bS2foUNn/view?usp=sharing", 17:"https://drive.google.com/file/d/1f45bpf4gw485ZBMbhiSo6Vn-T3q9uiV9/view?usp=sharing", 18:"https://drive.google.com/file/d/1FCoA9IOn9G-VKeGT_2AGwSKQE2yKZDtu/view?usp=sharing", 19:"https://drive.google.com/file/d/1Nswd6gAGecrTTmp58oXDsD1IzNQ8guPt/view?usp=sharing" };
+
+const JBDsLinks = { 
+1:"https://drive.google.com/file/d/1KYSctBbNYeUeCoPLuJkk-c2aOGhCFBMI/view?usp=sharing", 
+2:"https://drive.google.com/file/d/1JucOdixbEo1t_YHm3YRqSlUUka8qzRwq/view?usp=sharing", 3:"https://drive.google.com/file/d/1QO-LUucsuL7Lv9rjNedVxozgcT-4hJbk/view?usp=sharing", 4:"https://drive.google.com/file/d/1z06QKNkk8Gwreipy5DyDSQ2R-4pkbo0N/view?usp=sharing", 5:"https://drive.google.com/file/d/1oVmaFd3YiPWOtHbFnphr9wDDvXlIkzFN/view?usp=sharing", 6:"https://drive.google.com/file/d/1rQR8biXpsYAOFlDgKZEa2Y6QPyxMk6mM/view?usp=sharing", 7:"https://drive.google.com/file/d/1UHjn6LVXloKtNqZacNjjbLDWDXyRM2jp/view?usp=sharing", 8:"https://drive.google.com/file/d/1ZQa7ulUjxyAvkpLlCixe1xZeD1al-Irg/view?usp=sharing", 9:"https://drive.google.com/file/d/1OvrBD1qW5TwMjW14Oowgx5qiGZAFu-dc/view?usp=sharing", 10:"https://drive.google.com/file/d/1OZ2SZNjTN4OQnZIDRbMJ7xpN8dK13BoV/view?usp=sharing", 11:"https://drive.google.com/file/d/1FCLEWgtCPfhfnqxKIm8eZQPZWASTynZn/view?usp=sharing", 12:"https://drive.google.com/file/d/1H8swCXBzMA5aBg8XZoRH463ea1t9xr4b/view?usp=sharing", 13:"https://drive.google.com/file/d/1MGZj31Tc1Ps6UEKpiE5ScNawG2yGgQ5g/view?usp=sharing", 14:"https://drive.google.com/file/d/16dqIuRBQCsiWRwL43afeQHBssrXrueas/view?usp=sharing", 15:"https://drive.google.com/file/d/1gmTfVsmRApnRJkbFZdHn7H8kAn4xA1-8/view?usp=sharing", 16:"https://drive.google.com/file/d/184bMTrUsuOIRntYbsUBdujDcfDWNhiSv/view?usp=sharing", 17:"https://drive.google.com/file/d/1_gzmuO_efZOLs1U-12CL28Tvrc8TlPuM/view?usp=sharing", 18:"https://drive.google.com/file/d/1kFyZdnDe807M0fiI51hhVEEKVAUqHANN/view?usp=sharing", 19:"https://drive.google.com/file/d/1lcKOpQ0d2gaSsCuUjsa-ZG0Wvv0aTzqt/view?usp=sharing" };
+
+
+    const youtubeLinks = {
+        1: [
+            { title: "Variables of Scientific Research",         url: "https://www.youtube.com/watch?v=UUXdfLEZGao" },
+            { title: "Fundamental and Derived Unit – Part 1",    url: "https://www.youtube.com/watch?v=MqbpO10Hylc" },
+            { title: "Fundamental and Derived Unit – Part 2",    url: "https://www.youtube.com/watch?v=OEgaHy2fAzk" },
+            { title: "Unit Analysis of Equation",                url: "https://www.youtube.com/watch?v=xz1z-ktRlJA" }
+        ],
+        2: [
+            { title: "Introduction to Classification",           url: "https://www.youtube.com/watch?v=0qjZN6lijHs" },
+            { title: "Kingdom Classification",                   url: "https://www.youtube.com/watch?v=GBv4AMXKKEI" },
+            { title: "Plantae Kingdom",                          url: "https://www.youtube.com/watch?v=TFdCSC1ocaA" },
+            { title: "Gymnosperms and Angiosperms",              url: "https://www.youtube.com/watch?v=vF2ehMGmbvE" },
+            { title: "Animal Kingdom – Part 1",                  url: "https://www.youtube.com/watch?v=s4KSBSfDyGY" },
+            { title: "Animal Kingdom – Part 2",                  url: "https://www.youtube.com/watch?v=jSiIhveFuLo" },
+            { title: "Phylum Chordata",                          url: "https://www.youtube.com/watch?v=ue9xcl2Jvgk" },
+            { title: "Vertebrates",                              url: "https://www.youtube.com/watch?v=pPjL_udIJPI" },
+            { title: "Classification Summary",                   url: "https://www.youtube.com/watch?v=csFAbtiep1Y" }
+        ],
+        3: [
+            { title: "Introduction to Honey Bee",                url: "https://www.youtube.com/watch?v=sTk0G_2uvE0" },
+            { title: "Structure and Types of Honey Bee",         url: "https://www.youtube.com/watch?v=kBVRwCDbquU" }
+        ],
+        4: [
+            { title: "Introduction to Heredity",                 url: "https://www.youtube.com/watch?v=fNRtF4arTaw" },
+            { title: "DNA and RNA",                              url: "https://www.youtube.com/watch?v=2-BxhzNS7Hs" },
+            { title: "Chromosome and Gene",                      url: "https://www.youtube.com/watch?v=ErXWVmhoEXo" },
+            { title: "Cell Division and Heredity",               url: "https://www.youtube.com/watch?v=C__vW6Hyq2I" },
+            { title: "Genetic Technology",                       url: "https://www.youtube.com/watch?v=iADOnT6RU08" },
+            { title: "Selective Breeding",                       url: "https://www.youtube.com/watch?v=J8dkSiWNNpU" },
+            { title: "Cross Breeding",                           url: "https://www.youtube.com/watch?v=LZAEGqp1E7w" },
+            { title: "Artificial Insemination",                  url: "https://www.youtube.com/watch?v=3JyJrrYhvOQ" },
+            { title: "In-Vitro Fertilization (IVF)",             url: "https://www.youtube.com/watch?v=PlfaVNzafgc" },
+            { title: "Modern Genetic Technology",                url: "https://www.youtube.com/watch?v=7UIHQoiDQtw" }
+        ],
+        5: [
+            { title: "Blood – Part 1",                           url: "https://www.youtube.com/watch?v=9ToepZ1ND54" },
+            { title: "Blood – Part 2",                           url: "https://www.youtube.com/watch?v=UswQ_S6S6pI" },
+            { title: "Human Heart",                              url: "https://www.youtube.com/watch?v=R2Wizldx0ac" },
+            { title: "Heart Attack",                             url: "https://www.youtube.com/watch?v=IzLddLQHkX0" },
+            { title: "Circulatory System",                       url: "https://www.youtube.com/watch?v=lNL_BngJEY0" },
+            { title: "Life Process",                             url: "https://www.youtube.com/watch?v=B7YXnM2ul3w" },
+            { title: "Blood Pressure",                           url: "https://www.youtube.com/watch?v=dBLhPxbUhI8" },
+            { title: "Human Body Systems",                       url: "https://www.youtube.com/watch?v=p2z2sRSMppY" }
+        ],
+        6: [
+            { title: "Climate Change",                           url: "https://www.youtube.com/watch?v=veBa5JTk0_c" },
+            { title: "Nature and Environment – Part 1",          url: "https://www.youtube.com/watch?v=Hrdn46pSo4E" },
+            { title: "Nature and Environment – Part 2",          url: "https://www.youtube.com/watch?v=zXVuc2we0CI" },
+            { title: "Nature and Environment – Part 3",          url: "https://www.youtube.com/watch?v=DvtMFRJpehg" }
+        ],
+        7: [
+            { title: "Gravitation and Newton's Law",             url: "https://www.youtube.com/watch?v=WadmUW9YtT4" },
+            { title: "Gravitational Constant (G)",               url: "https://www.youtube.com/watch?v=y5xAPuH2Rww" },
+            { title: "Acceleration due to Gravity",              url: "https://www.youtube.com/watch?v=eiQMXUjtk3U" },
+            { title: "Value of g and Factors Affecting g",       url: "https://www.youtube.com/watch?v=Tpnf59YUCfE" },
+            { title: "Difference between G and g",               url: "https://www.youtube.com/watch?v=HfgZwGtiSyI" },
+            { title: "Force and Motion – Summary",               url: "https://www.youtube.com/watch?v=nDXFFwXox68" }
+        ],
+        8: [
+            { title: "Pascal's Law",                             url: "https://www.youtube.com/watch?v=kctibqghXC4" },
+            { title: "Hydraulic Machine",                        url: "https://www.youtube.com/watch?v=etW0NUVNJzc" },
+            { title: "Pressure – Part 1",                        url: "https://www.youtube.com/watch?v=HBOQVGrTjZs" },
+            { title: "Pressure – Part 2",                        url: "https://www.youtube.com/watch?v=QhE8EQoqOsc" },
+            { title: "Pressure – Part 3",                        url: "https://www.youtube.com/watch?v=gsLWpVEV2QA" },
+            { title: "Pressure – Part 4",                        url: "https://www.youtube.com/watch?v=kDB2FKmJq1Y" },
+            { title: "Pressure – Part 5",                        url: "https://www.youtube.com/watch?v=B9R-dQOGKvY" }
+        ],
+        9: [
+            { title: "Heat – Part 1",                            url: "https://www.youtube.com/watch?v=JWsfFJz9VrE" },
+            { title: "Heat – Part 2",                            url: "https://www.youtube.com/watch?v=yt0_LpP3CIU" },
+            { title: "Heat – Part 3",                            url: "https://www.youtube.com/watch?v=suKGrxRBIaw" },
+            { title: "Heat – Part 4",                            url: "https://www.youtube.com/watch?v=InayEm9GFRc" }
+        ],
+        10: [
+            { title: "Wave – Part 1",                            url: "https://www.youtube.com/watch?v=tSVkvh3_xPs" },
+            { title: "Wave – Part 2",                            url: "https://www.youtube.com/watch?v=9UAz5lHGTyo" },
+            { title: "Wave – Part 3",                            url: "https://www.youtube.com/watch?v=WimXHLkKs6c" },
+            { title: "Wave – Part 4",                            url: "https://www.youtube.com/watch?v=y0hbO1sRzS4" },
+            { title: "Wave – Part 5",                            url: "https://www.youtube.com/watch?v=ulLBNV04neI" },
+            { title: "Wave – Part 6",                            url: "https://www.youtube.com/watch?v=drL49dZnfJU" },
+            { title: "Image formed by Convex Lens",              url: "https://www.youtube.com/watch?v=XieGYdJqGzI" },
+            { title: "Image formed by Concave Lens",             url: "https://www.youtube.com/watch?v=bJrc_AEzm_k" },
+            { title: "Human Eye",                                url: "https://www.youtube.com/watch?v=SAu1ftNbc8I" },
+            { title: "Defect of Vision and Correction",          url: "https://www.youtube.com/watch?v=CMy_jNMozVg" },
+            { title: "Other Methods of Eye-defect Correction",   url: "https://www.youtube.com/watch?v=cLd1rHK6Ox4" }
+        ],
+        11: [
+            { title: "Magnetic Effect of Electricity",           url: "https://www.youtube.com/watch?v=GcK-NtICj-g" },
+            { title: "Electromagnetic Induction",                url: "https://www.youtube.com/watch?v=uOrtwQTf998" },
+            { title: "Dynamo and Generator",                     url: "https://www.youtube.com/watch?v=pmS_-NoDRqk" },
+            { title: "Motor Effect and Electric Motor",          url: "https://www.youtube.com/watch?v=5brHiFQ2jHA" },
+            { title: "Electricity Transmission",                 url: "https://www.youtube.com/watch?v=KMCnSF3e32E" },
+            { title: "Transformer",                              url: "https://www.youtube.com/watch?v=_1-fxw0lonE" },
+            { title: "Numericals",                               url: "https://www.youtube.com/watch?v=xl9hkJA5O50" }
+        ],
+        12: [
+            { title: "Universe – Part 1",                        url: "https://www.youtube.com/watch?v=2IELbqOB85c" },
+            { title: "Universe – Part 2",                        url: "https://www.youtube.com/watch?v=B5q7ajk98dg" },
+            { title: "Universe – Part 3",                        url: "https://www.youtube.com/watch?v=JHzg8ksyzPQ" }
+        ],
+        13: [
+            { title: "ICT- Part 1",                    url: "https://www.youtube.com/watch?v=KoVim8GvFsw&t=390s" },
+            { title: "ICT- Part 2",                    url: "https://www.youtube.com/watch?v=17y-nuiE-FM&t=124s" },
+            { title: "ICT- Part 3",                    url: "https://www.youtube.com/watch?v=6taP0iQUNkA" },
+            { title: "ICT- Part 4",                    url: "https://www.youtube.com/watch?v=fAAJ50tP8T8&t=307s" },
+            { title: "ICT- Part 5",                    url: "https://www.youtube.com/watch?v=Hbz-FTSQl-M&t=1s" },
+            { title: "ICT- Part 6",                    url: "https://www.youtube.com/watch?v=utUY6WNvniQ&t=4s" },
+            { title: "ICT- Part 7",                    url: "https://www.youtube.com/watch?v=utUY6WNvniQ&t=4s" }
+],
+        14: [
+            { title: "Periodic Table – Introduction",            url: "https://www.youtube.com/watch?v=oeHgYr-WUIU" },
+            { title: "Modern Periodic Table",                    url: "https://www.youtube.com/watch?v=bJT_LptKJZo" },
+            { title: "Mendeleev Periodic Table",                 url: "https://www.youtube.com/watch?v=QnIn9XKBM1I" },
+            { title: "Classification of Elements",               url: "https://www.youtube.com/watch?v=eadsIfHnZbE" }
+        ],
+        15: [
+            { title: "Chemical Reaction – Part 1",               url: "https://www.youtube.com/watch?v=6P04XNaOnwc" },
+            { title: "Chemical Reaction – Part 2",               url: "https://www.youtube.com/watch?v=3At-tlk1N9M" }
+        ],
+        16: [
+            { title: "Carbondioxide Gas",           url: "https://www.youtube.com/watch?v=gFqCHRQ-WcE&t=862s" },
+            { title: "Ammonia Gas",           url: "https://www.youtube.com/watch?v=DPUNQGMrps4&t=1593s" }
+],
+        17: [
+            { title: "Metals and Non-metals – Part 1",           url: "https://www.youtube.com/watch?v=lHgJm9c1MrI" },
+            { title: "Metals and Non-metals – Part 2",           url: "https://www.youtube.com/watch?v=l-YD7b-0BZo" }
+        ],
+        18: [
+            { title: "Hydrocarbon – Part 1",                     url: "https://www.youtube.com/watch?v=2hE_rT-sKjw" },
+            { title: "Hydrocarbon – Part 2",                     url: "https://www.youtube.com/watch?v=oieCoNOKhhU" },
+            { title: "Hydrocarbon – Part 3",                     url: "https://www.youtube.com/watch?v=zbmKtdBnrwo" },
+            { title: "Hydrocarbon – Part 4",                     url: "https://www.youtube.com/watch?v=ctj5adh4JFw" }
+        ],
+        19: [
+            { title: "Chemicals Used in Daily Life – Part 1",    url: "https://www.youtube.com/watch?v=pdDe7ZmmZxA" },
+            { title: "Chemicals Used in Daily Life – Part 2",    url: "https://www.youtube.com/watch?v=vV5ToF_0Zhw" }
+        ]
+    };
+
+    const lessonIcons = ['🔬','🧬','🐝','🧬','🦴','🌿','⚡','🔩','🌡️','🌊','🔋','🌌','💻','⚗️','🧪','🫧','⚙️','🛢️','🧴'];
+    const lessons = ["Scientific study","Classification of living things","Lifecycle of honeybee","Heredity","Physiological structure and life process","Nature and environment","Force and Motion","Pressure","Heat","Wave","Electricity and Magnetism","Universe","Information and communication technology","Classification of elements","Chemical reaction","Some gases","Metals","Hydrocarbon and its compounds","Chemicals used in daily life"];
+
+    const container = document.getElementById('mainList');
+    const noResults = document.getElementById('noResults');
+
+    // ─── Render Lesson Cards ───
+    lessons.forEach((title, idx) => {
+        const n = idx + 1;
+        const card = document.createElement('div');
+        card.className = 'lesson-card';
+        card.dataset.title = title.toLowerCase();
+
+        card.innerHTML = `
+            <div class="card-top">
+                <span class="card-num">CH ${String(n).padStart(2,'0')}</span>
+                <span class="card-icon">${lessonIcons[idx]}</span>
+            </div>
+            <div class="card-title">${title}</div>
+            <div class="card-actions">
+                <div class="dropdown-wrap">
+                    <button class="action-btn">📄 PDF Notes ▾</button>
+                    <div class="dropdown-menu">
+                        <a href="${cdcLinks[n]}" target="_blank"><span class="dot"></span>CDC Notes</a>
+                        <a href="${modernLinks[n]}" target="_blank"><span class="dot"></span>Modern Notes</a>
+                        <a href="${oasisLinks[n]}" target="_blank"><span class="dot"></span>Oasis Notes</a>
+                        <a href="${sangamsLinks[n]}" target="_blank"><span class="dot"></span>Sangam's Notes</a>
+<a href="${swarnimsLinks[n]}" target="_blank"><span class="dot"></span>Swarnim's Notes</a>
+<a href="${JBDsLinks[n]}" target="_blank"><span class="dot"></span>JBD's Notes</a>
+                    </div>
+                </div>
+                <div class="dropdown-wrap">
+                    <button class="action-btn">📊 PPT Slides ▾</button>
+                    <div class="dropdown-menu">
+                        <a href="${designedLinks[n]}" target="_blank"><span class="dot"></span>Designed</a>
+                        <a href="${aiLinks[n]}" target="_blank"><span class="dot"></span>AI Assisted</a>
+                        <a href="#" target="_blank"><span class="dot"></span>NCED</a>
+                    </div>
+                </div>
+                <div class="dropdown-wrap">
+                    <button class="action-btn">❓ Q&amp;A ▾</button>
+                    <div class="dropdown-menu">
+                        <a href="${cdcQA[n]}" target="_blank"><span class="dot"></span>CDC Q&amp;A</a>
+                        <a href="${cdcvideoQA[n]}" target="_blank"><span class="dot"></span>CDC video Q&amp;A</a>
+                        <a href="#" target="_blank"><span class="dot"></span>Modern Q&amp;A</a>
+                        <a href="#" target="_blank"><span class="dot"></span>Sangam's Q&amp;A</a>
+                        <a href="${neemaQA[n]}" target="_blank"><span class="dot"></span>Neema Q&amp;A</a>
+<a href="${importantedunotesQA[n]}" target="_blank"><span class="dot"></span>Important Edu Notes Q&amp;A</a>
+                        
+                    </div>
+                </div>
+                <div class="dropdown-wrap">
+                    <button class="action-btn">🎥 Video ▾</button>
+                    <div class="dropdown-menu">
+                        <a class="sub-trigger" data-sub="nced-${n}"><span class="dot" style="background:#f87171;"></span>▶ NCED Youtube</a>
+                        <a class="sub-trigger" data-sub="ai-${n}"><span class="dot" style="background:var(--accent3);"></span>▶ AI Videos</a>
+                        <a class="sub-trigger" data-sub="other-${n}"><span class="dot" style="background:var(--accent2);"></span>▶ Other Sources</a>
+                    </div>
+                    <!-- NCED sub-menu -->
+                    <div class="sub-menu" id="nced-${n}">
+                        ${(youtubeLinks[n]||[]).length
+                            ? (youtubeLinks[n]).map(v=>`<a href="${v.url}" target="_blank"><span class="dot" style="background:#f87171;"></span>${v.title}</a>`).join('')
+                            : `<span class="sub-empty">Coming soon</span>`}
+                    </div>
+                    <!-- AI Videos sub-menu -->
+                    <div class="sub-menu" id="ai-${n}">
+                        <span class="sub-empty">Coming soon</span>
+                    </div>
+                    <!-- Other Sources sub-menu -->
+                    <div class="sub-menu" id="other-${n}">
+                        <span class="sub-empty">Coming soon</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    // ─── Search ───
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const q = this.value.trim().toLowerCase();
+        const cards = container.querySelectorAll('.lesson-card');
+        let visible = 0;
+        cards.forEach(card => {
+            const match = card.dataset.title.includes(q);
+            card.classList.toggle('hidden', !match);
+            if (match) visible++;
+        });
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+    });
+
+    // ─── Board accordion ───
+    function toggleBoard(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('open');
     }
-  ];
-  localStorage.setItem('scitech_lessons', JSON.stringify(lessons));
-}
 
-let currentSubject = 'all', currentType = 'all', currentLesson = null, currentYtId = null;
+    // ─── Two-Level Portal Dropdown System ───
 
-// RENDER
-function updateStats() {
-  document.getElementById('stat-lessons').textContent = lessons.length;
-  const total = lessons.reduce((s,l)=>s+(l.resources||[]).length,0);
-  document.getElementById('stat-resources').textContent = total;
-}
+    // Level 1 portal
+    const portal = document.createElement('div');
+    portal.id = 'dropdown-portal';
+    document.body.appendChild(portal);
 
-function getSubjectColor(s) {
-  return {physics:'#38bdf8',chemistry:'#a78bfa',biology:'#34d399',math:'#fb923c',technology:'#f472b6'}[s]||'#94a3b8';
-}
-function getSubjectIcon(s) {
-  return {physics:'⚡',chemistry:'⚗',biology:'🧬',math:'📐',technology:'💻'}[s]||'📘';
-}
-function capitalize(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+    // Level 2 sub-portal
+    const subPortal = document.createElement('div');
+    subPortal.id = 'sub-portal';
+    document.body.appendChild(subPortal);
 
-function renderLessons(target, list) {
-  const grid = document.getElementById(target);
-  if (!list.length) { grid.innerHTML='<div class="empty-state"><div class="icon">🔭</div><p>No lessons found for this filter.</p></div>'; return; }
-  grid.innerHTML = list.map(l => {
-    const res = l.resources||[];
-    const types = [...new Set(res.map(r=>r.type))];
-    const pills = types.map(t => {
-      const labels={pdf:'📄 PDF',video:'▶ Video',notes:'📝 Notes',ppt:'📊 PPT'};
-      return `<span class="resource-pill pill-${t}" onclick="event.stopPropagation();openModal(${l.id},'${t}')">${labels[t]||t} <span style="opacity:.6">${res.filter(r=>r.type===t).length}</span></span>`;
-    }).join('');
-    const color = getSubjectColor(l.subject);
-    return `
-    <div class="lesson-card" onclick="openModal(${l.id},'overview')" style="border-top:3px solid ${color}">
-      <div class="card-header">
-        <span class="card-unit">${getSubjectIcon(l.subject)} ${l.unit||capitalize(l.subject)}</span>
-        <span class="card-num">${l.grade||''}</span>
-      </div>
-      <div class="card-title">${l.title}</div>
-      <div class="card-desc">${l.desc||''}</div>
-      <div class="card-resources">${pills}</div>
-      <div class="card-footer">
-        <div class="progress-bar"><div class="progress-fill" style="width:${l.progress||0}%"></div></div>
-        <span class="card-progress-label">${l.progress||0}%</span>
-      </div>
-    </div>`;
-  }).join('');
-}
+    let activeBtn = null;
+    let activeSubTrigger = null;
 
-function filterLessons() {
-  const q = document.getElementById('globalSearch').value.toLowerCase();
-  let list = lessons.filter(l => {
-    const matchSubj = currentSubject==='all'||l.subject===currentSubject;
-    const matchType = currentType==='all'||(l.resources||[]).some(r=>r.type===currentType);
-    const matchQ = !q||l.title.toLowerCase().includes(q)||l.subject.toLowerCase().includes(q);
-    return matchSubj&&matchType&&matchQ;
-  });
-  renderLessons('lessonsGrid', list);
-  document.getElementById('count-label').textContent = `${list.length} lesson${list.length!==1?'s':''}`;
-}
+    function positionPanel(panel, refRect, panelW, panelH, openRight) {
+        // Vertical: below ref, flip up if needed
+        let top = refRect.bottom + 5;
+        if (top + panelH > window.innerHeight) top = refRect.top - 5 - panelH;
+        if (top < 4) top = 4;
 
-function filterBySubject(s, el) {
-  currentSubject = s;
-  document.querySelectorAll('.subject-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  filterLessons();
-}
+        let left;
+        if (openRight) {
+            // open to the right of the ref
+            left = refRect.right + 5;
+            if (left + panelW > window.innerWidth - 8) left = refRect.left - panelW - 5;
+        } else {
+            left = refRect.left;
+            if (left + panelW > window.innerWidth - 8) left = refRect.right - panelW;
+        }
+        if (left < 4) left = 4;
 
-function filterByType(t, el) {
-  currentType = t;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  filterLessons();
-}
-
-// MODAL
-function openModal(id, tab) {
-  currentLesson = lessons.find(l=>l.id===id);
-  if (!currentLesson) return;
-  const l = currentLesson;
-  const color = getSubjectColor(l.subject);
-  document.getElementById('modalMeta').innerHTML = `
-    <span style="font-size:.75rem;background:${color}22;color:${color};padding:3px 10px;border-radius:5px;font-weight:600">${getSubjectIcon(l.subject)} ${capitalize(l.subject)}</span>
-    <span style="font-size:.75rem;color:var(--text-muted)">${l.grade||''}</span>`;
-  document.getElementById('modalTitle').textContent = l.title;
-  const res = l.resources||[];
-  const types = [...new Set(res.map(r=>r.type))];
-  const tabDefs = [
-    {key:'overview',label:'📋 Overview'},
-    ...(res.some(r=>r.type==='pdf')?[{key:'pdf',label:'📄 PDFs'}]:[]),
-    ...(res.some(r=>r.type==='video')?[{key:'video',label:'▶ Videos'}]:[]),
-    ...(res.some(r=>r.type==='notes')?[{key:'notes',label:'📝 Notes'}]:[]),
-    ...(res.some(r=>r.type==='ppt')?[{key:'ppt',label:'📊 PPT'}]:[]),
-  ];
-  document.getElementById('modalTabs').innerHTML = tabDefs.map(t =>
-    `<button class="modal-tab${tab===t.key?' active':''}" onclick="switchTab('${t.key}',this)">${t.label}</button>`
-  ).join('');
-  renderTabContent(tab);
-  document.getElementById('lessonModal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-
-function switchTab(key, el) {
-  document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderTabContent(key);
-}
-
-function renderTabContent(key) {
-  const l = currentLesson; const res = l.resources||[];
-  let html = '';
-  if (key==='overview') {
-    const counts = {pdf:0,video:0,notes:0,ppt:0};
-    res.forEach(r=>{ if(counts[r.type]!==undefined) counts[r.type]++; });
-    html = `
-    <p style="color:var(--text-muted);line-height:1.75;margin-bottom:1.5rem">${l.desc||''}</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem">
-      ${Object.entries(counts).map(([t,n])=>n?`<div style="background:var(--surface2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:1.3rem">${{pdf:'📄',video:'▶️',notes:'📝',ppt:'📊'}[t]}</div><div style="font-size:1.3rem;font-weight:600;margin:4px 0">${n}</div><div style="font-size:.75rem;color:var(--text-muted)">${capitalize(t)}</div></div>`:'').join('')}
-    </div>
-    <div style="background:var(--surface2);border-radius:10px;padding:1rem;display:flex;align-items:center;gap:12px">
-      <span style="font-size:0.85rem;color:var(--text-muted)">Progress</span>
-      <div class="progress-bar" style="flex:1;height:6px"><div class="progress-fill" style="width:${l.progress||0}%"></div></div>
-      <input type="range" min="0" max="100" value="${l.progress||0}" style="display:none" id="prog-range">
-      <span style="font-size:0.85rem;font-weight:600;color:var(--accent)">${l.progress||0}%</span>
-      <button class="btn-ghost" style="font-size:0.78rem;padding:5px 12px" onclick="editProgress(${l.id})">Update</button>
-    </div>`;
-  } else if (key==='pdf') {
-    const pdfs = res.filter(r=>r.type==='pdf');
-    html = pdfs.map(p=>`
-    <div class="resource-item">
-      <div class="resource-icon icon-pdf">📄</div>
-      <div class="resource-info"><div class="resource-name">${p.name}</div><div class="resource-meta">${p.size||'PDF Document'}</div></div>
-      <a class="resource-btn" href="${p.url||'#'}" target="_blank">Open</a>
-    </div>`).join('')+`
-    <div class="pdf-viewer-area" style="margin-top:1rem">
-      <span style="font-size:2rem">📄</span>
-      <p style="color:var(--text-muted);font-size:0.9rem">Click "Open" on any PDF above to view it,<br>or paste a PDF URL below to embed it.</p>
-      <div style="display:flex;gap:8px;width:100%;max-width:400px">
-        <input type="text" id="pdf-url" placeholder="https://example.com/file.pdf" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
-        <button class="btn-primary" onclick="embedPDF()">Embed</button>
-      </div>
-      <div id="pdf-frame" style="width:100%;min-height:400px;display:none"></div>
-    </div>`;
-  } else if (key==='video') {
-    const vids = res.filter(r=>r.type==='video');
-    if (!currentYtId) currentYtId = vids[0]?.ytid||null;
-    html = `
-    ${currentYtId?`<div class="yt-embed-wrapper"><iframe src="https://www.youtube.com/embed/${currentYtId}?autoplay=0&rel=0" allowfullscreen></iframe></div>`:''}
-    <div class="yt-playlist">
-      ${vids.map((v,i)=>`
-      <div class="yt-item${(currentYtId||'')===(v.ytid||'')?' playing':''}" onclick="playVideo('${v.ytid||''}',this)">
-        <div class="yt-thumb"><img src="https://img.youtube.com/vi/${v.ytid||''}/mqdefault.jpg" alt="" onerror="this.style.display='none';this.parentNode.innerHTML='▶'"></div>
-        <div class="yt-info"><div class="yt-title">${v.name}</div><div class="yt-dur">${v.duration||''}</div></div>
-        ${(currentYtId||'')===(v.ytid||'')?'<span class="playing-badge">▶ Playing</span>':''}
-      </div>`).join('')}
-    </div>
-    <div style="margin-top:1rem;padding:12px;background:var(--surface2);border-radius:10px">
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px">Add a YouTube video by URL:</p>
-      <div style="display:flex;gap:8px">
-        <input type="text" id="yt-url" placeholder="https://www.youtube.com/watch?v=..." style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
-        <input type="text" id="yt-title" placeholder="Video title" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
-        <button class="btn-primary" onclick="addYoutubeVideo()">Add</button>
-      </div>
-    </div>`;
-  } else if (key==='notes') {
-    const notes = res.filter(r=>r.type==='notes');
-    html = notes.map((n,i)=>`
-    <div style="margin-bottom:1.5rem">
-      <div style="font-size:0.88rem;font-weight:600;margin-bottom:8px;color:var(--text)">${n.name}</div>
-      <textarea class="notes-editor" id="note-${i}" rows="10">${n.content||''}</textarea>
-      <div class="notes-actions">
-        <button class="btn-primary" onclick="saveNote(${l.id},${i})">Save Notes</button>
-        <button class="btn-ghost" onclick="copyNote(${i})">Copy</button>
-        <span class="notes-saved" id="saved-${i}">✓ Saved!</span>
-      </div>
-    </div>`).join('');
-    if (!notes.length) html = `<div class="empty-state"><div class="icon">📝</div><p>No notes yet. Add notes from Manage section.</p></div>`;
-  } else if (key==='ppt') {
-    const ppts = res.filter(r=>r.type==='ppt');
-    html = ppts.map(p=>`
-    <div class="resource-item">
-      <div class="resource-icon icon-ppt">📊</div>
-      <div class="resource-info"><div class="resource-name">${p.name}</div><div class="resource-meta">${p.slides||'Presentation'}</div></div>
-      <a class="resource-btn" href="${p.url||'#'}" target="_blank">Open</a>
-    </div>`).join('')+`
-    <div style="margin-top:1rem;padding:12px;background:var(--surface2);border-radius:10px">
-      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:8px">Or embed Google Slides / OneDrive PPT URL:</p>
-      <div style="display:flex;gap:8px">
-        <input type="text" id="ppt-url" placeholder="https://docs.google.com/presentation/..." style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:9px 12px;outline:none;flex:1">
-        <button class="btn-primary" onclick="embedPPT()">Embed</button>
-      </div>
-      <div id="ppt-frame" style="width:100%;min-height:400px;display:none;margin-top:10px"></div>
-    </div>`;
-  }
-  document.getElementById('modalBody').innerHTML = html;
-}
-
-function embedPDF() {
-  const url = document.getElementById('pdf-url').value.trim();
-  if (!url) return;
-  const frame = document.getElementById('pdf-frame');
-  frame.style.display='block';
-  frame.innerHTML = `<iframe src="${url}" style="width:100%;height:500px;border:none;border-radius:8px"></iframe>`;
-}
-
-function embedPPT() {
-  const url = document.getElementById('ppt-url').value.trim();
-  if (!url) return;
-  const frame = document.getElementById('ppt-frame');
-  frame.style.display='block';
-  const embedUrl = url.includes('docs.google.com') ? url.replace('/pub','/embed').replace('/edit','/embed') : url;
-  frame.innerHTML = `<iframe src="${embedUrl}" style="width:100%;height:500px;border:none;border-radius:8px" allowfullscreen></iframe>`;
-}
-
-function playVideo(ytid, el) {
-  currentYtId = ytid;
-  renderTabContent('video');
-}
-
-function addYoutubeVideo() {
-  const url = document.getElementById('yt-url').value.trim();
-  const title = document.getElementById('yt-title').value.trim()||'Untitled Video';
-  if (!url) return;
-  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  const ytid = match?match[1]:url;
-  const l = lessons.find(x=>x.id===currentLesson.id);
-  l.resources.push({type:'video',name:title,ytid,duration:''});
-  currentLesson = l;
-  saveLessons();
-  showToast('Video added!');
-  renderTabContent('video');
-}
-
-function saveNote(lessonId, noteIdx) {
-  const content = document.getElementById(`note-${noteIdx}`).value;
-  const l = lessons.find(x=>x.id===lessonId);
-  const notes = l.resources.filter(r=>r.type==='notes');
-  notes[noteIdx].content = content;
-  currentLesson = l;
-  saveLessons();
-  const el = document.getElementById(`saved-${noteIdx}`);
-  el.style.display='inline'; setTimeout(()=>{ el.style.display='none'; },2000);
-}
-
-function copyNote(i) {
-  navigator.clipboard.writeText(document.getElementById(`note-${i}`).value).then(()=>showToast('Copied!'));
-}
-
-function editProgress(id) {
-  const val = prompt('Set progress % (0-100):', lessons.find(l=>l.id===id).progress||0);
-  if (val===null) return;
-  const p = Math.min(100,Math.max(0,parseInt(val)||0));
-  lessons.find(l=>l.id===id).progress = p;
-  currentLesson = lessons.find(l=>l.id===id);
-  saveLessons();
-  renderTabContent('overview');
-  filterLessons();
-  showToast('Progress updated!');
-}
-
-function closeModal() {
-  document.getElementById('lessonModal').classList.remove('open');
-  document.body.style.overflow='';
-  currentYtId=null;
-}
-function closeModalOutside(e) { if(e.target===document.getElementById('lessonModal')) closeModal(); }
-
-// ADD MODAL
-function openAddModal() {
-  document.getElementById('f-title').value='';
-  document.getElementById('f-subject').value='';
-  document.getElementById('f-unit').value='';
-  document.getElementById('f-grade').value='';
-  document.getElementById('f-desc').value='';
-  document.getElementById('resources-list').innerHTML='';
-  document.getElementById('addModal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeAddModal() { document.getElementById('addModal').classList.remove('open'); document.body.style.overflow=''; }
-function closeAddOutside(e) { if(e.target===document.getElementById('addModal')) closeAddModal(); }
-
-let resCounter=0;
-function addResourceField(type) {
-  const id=resCounter++;
-  const labels={pdf:'PDF Link/URL',video:'YouTube URL',notes:'Notes Content',ppt:'PPT Link'};
-  const row=document.createElement('div');
-  row.style='background:var(--bg);border-radius:8px;padding:10px;margin-bottom:8px;position:relative';
-  row.id='res-'+id;
-  row.innerHTML=`
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span style="font-size:.78rem;font-weight:600;color:var(--text-muted)">${{pdf:'📄 PDF',video:'▶ Video',notes:'📝 Notes',ppt:'📊 PPT'}[type]}</span>
-    <button onclick="document.getElementById('res-${id}').remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
-  </div>
-  <input type="hidden" value="${type}" id="res-type-${id}">
-  <input type="text" placeholder="Name / Title" id="res-name-${id}" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:8px 11px;outline:none;width:100%;margin-bottom:6px">
-  ${type==='notes'
-    ?`<textarea placeholder="Notes content..." id="res-content-${id}" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:8px 11px;outline:none;width:100%;min-height:80px;resize:vertical"></textarea>`
-    :`<input type="text" placeholder="${labels[type]}" id="res-url-${id}" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;padding:8px 11px;outline:none;width:100%">`
-  }`;
-  document.getElementById('resources-list').appendChild(row);
-}
-
-function saveLesson() {
-  const title = document.getElementById('f-title').value.trim();
-  const subject = document.getElementById('f-subject').value;
-  if (!title||!subject) { showToast('Please fill in title and subject.'); return; }
-  const resources=[];
-  document.querySelectorAll('[id^="res-type-"]').forEach(el=>{
-    const id=el.id.replace('res-type-','');
-    const type=el.value;
-    const name=document.getElementById('res-name-'+id)?.value.trim()||'Untitled';
-    if (type==='notes') {
-      resources.push({type,name,content:document.getElementById('res-content-'+id)?.value||''});
-    } else {
-      const url=document.getElementById('res-url-'+id)?.value.trim()||'#';
-      const ytmatch=url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-      if(type==='video'&&ytmatch) resources.push({type,name,ytid:ytmatch[1],duration:''});
-      else resources.push({type,name,url,size:type==='pdf'?'PDF':type==='ppt'?'Presentation':''});
+        panel.style.top  = top + 'px';
+        panel.style.left = left + 'px';
+        panel.style.minWidth = panelW + 'px';
     }
-  });
-  const newLesson = {
-    id: Date.now(), title, subject,
-    unit: document.getElementById('f-unit').value.trim(),
-    grade: document.getElementById('f-grade').value.trim(),
-    desc: document.getElementById('f-desc').value.trim(),
-    progress:0, resources
-  };
-  lessons.unshift(newLesson);
-  saveLessons();
-  closeAddModal();
-  filterLessons();
-  renderAdmin();
-  updateStats();
-  showToast('Lesson saved!');
-}
 
-function saveLessons() { localStorage.setItem('scitech_lessons', JSON.stringify(lessons)); }
+    function closeSubPortal() {
+        subPortal.classList.remove('visible');
+        if (activeSubTrigger) { activeSubTrigger.style.background = ''; activeSubTrigger = null; }
+    }
 
-function deleteLesson(id) {
-  if (!confirm('Delete this lesson?')) return;
-  lessons = lessons.filter(l=>l.id!==id);
-  saveLessons(); filterLessons(); renderAdmin(); updateStats(); showToast('Deleted.');
-}
+    function closePortal() {
+        portal.classList.remove('visible');
+        closeSubPortal();
+        if (activeBtn) { activeBtn.classList.remove('active'); activeBtn = null; }
+    }
 
-function renderAdmin() {
-  const grid = document.getElementById('adminGrid');
-  grid.innerHTML = lessons.map(l=>`
-  <div class="lesson-card" style="border-top:3px solid ${getSubjectColor(l.subject)}">
-    <div class="card-header">
-      <span class="card-unit">${getSubjectIcon(l.subject)} ${l.unit||capitalize(l.subject)}</span>
-      <span class="card-num">${l.grade||''}</span>
-    </div>
-    <div class="card-title">${l.title}</div>
-    <div class="card-desc">${(l.resources||[]).length} resources</div>
-    <div class="card-resources" style="gap:8px">
-      <button class="resource-btn" onclick="openModal(${l.id},'overview')" style="font-size:.78rem">View</button>
-      <button onclick="deleteLesson(${l.id})" style="padding:6px 14px;border-radius:7px;font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(239,68,68,.4);background:rgba(239,68,68,.1);color:#f87171">Delete</button>
-    </div>
-  </div>`).join('');
-}
+    function openPortal(btn) {
+        const menu = btn.closest('.dropdown-wrap').querySelector('.dropdown-menu');
+        if (!menu) return;
 
-function showSection(s) {
-  document.getElementById('sec-home').style.display = s==='home'?'':'none';
-  document.getElementById('sec-lessons').style.display = s==='home'||s==='lessons'?'':'none';
-  document.querySelector('.filter-bar').style.display = s==='home'||s==='lessons'?'':'none';
-  document.getElementById('lessonsGrid').style.display = s==='home'||s==='lessons'?'':'none';
-  document.getElementById('sec-admin').style.display = s==='admin'?'':'none';
-  if(s==='admin') renderAdmin();
-  document.querySelectorAll('.nav-links button').forEach((b,i)=>{
-    b.classList.toggle('active',['home','lessons','admin'][i]===s);
-  });
-}
+        portal.innerHTML = menu.innerHTML;
 
-function showToast(msg) {
-  const t=document.getElementById('toast');
-  document.getElementById('toast-msg').textContent=msg;
-  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200);
-}
+        const rect = btn.getBoundingClientRect();
+        const PORTAL_W = 210;
+        const PORTAL_H = (menu.querySelectorAll('a').length * 40) + 16;
+        positionPanel(portal, rect, PORTAL_W, PORTAL_H, false);
 
-// INIT
-updateStats();
-filterLessons();
+        if (activeBtn && activeBtn !== btn) activeBtn.classList.remove('active');
+        activeBtn = btn;
+        btn.classList.add('active');
+        portal.classList.add('visible');
+        closeSubPortal();
+    }
+
+    function openSubPortal(triggerEl, subId) {
+        // Find the hidden sub-menu by ID in the DOM
+        const subMenu = document.getElementById(subId);
+        if (!subMenu) return;
+
+        subPortal.innerHTML = subMenu.innerHTML;
+
+        const rect = triggerEl.getBoundingClientRect();
+        const SUB_W = 240;
+        const itemCount = subMenu.querySelectorAll('a').length || 1;
+        const SUB_H = Math.min(itemCount * 38 + 16, 320);
+        positionPanel(subPortal, rect, SUB_W, SUB_H, true);
+
+        if (activeSubTrigger && activeSubTrigger !== triggerEl) activeSubTrigger.style.background = '';
+        activeSubTrigger = triggerEl;
+        triggerEl.style.background = 'rgba(99,179,237,0.08)';
+
+        subPortal.classList.add('visible');
+    }
+
+    // Delegated click handler
+    document.addEventListener('click', e => {
+        // Level-1 button
+        const btn = e.target.closest('.action-btn');
+        if (btn) {
+            e.stopPropagation();
+            if (activeBtn === btn && portal.classList.contains('visible')) {
+                closePortal();
+            } else {
+                openPortal(btn);
+            }
+            return;
+        }
+
+        // Sub-trigger inside level-1 portal
+        const subTrig = e.target.closest('#dropdown-portal .sub-trigger');
+        if (subTrig) {
+            e.stopPropagation();
+            const subId = subTrig.dataset.sub;
+            if (activeSubTrigger === subTrig && subPortal.classList.contains('visible')) {
+                closeSubPortal();
+            } else {
+                openSubPortal(subTrig, subId);
+            }
+            return;
+        }
+
+        // Click inside sub-portal link → navigate then close all
+        if (subPortal.contains(e.target)) {
+            setTimeout(closePortal, 80);
+            return;
+        }
+
+        // Click inside level-1 portal (non sub-trigger link)
+        if (portal.contains(e.target)) {
+            setTimeout(closePortal, 80);
+            return;
+        }
+
+        // Click outside → close everything
+        closePortal();
+    });
+
+    window.addEventListener('scroll', closePortal, { passive: true });
+    window.addEventListener('resize', closePortal, { passive: true });
 </script>
 </body>
-</html>
+</html><script>
+    // ═══════════════════════════════════════════════
+    // ─── RIGHT-CLICK DISABLE ───────────────────────
+    // ═══════════════════════════════════════════════
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showToast('Right-click is disabled on this page.');
+        return false;
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12') { e.preventDefault(); return false; }
+        if (e.ctrlKey && ['u','U','s','S'].includes(e.key)) { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.shiftKey && ['i','I','j','J','c','C'].includes(e.key)) { e.preventDefault(); return false; }
+    });
+
+    function showToast(msg) {
+        let t = document.getElementById('__rcToast');
+        if (!t) {
+            t = document.createElement('div');
+            t.id = '__rcToast';
+            t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a2744;color:#a0aec0;border:1px solid rgba(99,179,237,0.25);border-radius:8px;padding:9px 20px;font-size:0.78rem;font-family:\'DM Sans\',sans-serif;z-index:999999;box-shadow:0 8px 32px rgba(0,0,0,0.6);opacity:0;transition:opacity 0.2s;pointer-events:none;';
+            document.body.appendChild(t);
+        }
+        t.textContent = msg;
+        t.style.opacity = '1';
+        clearTimeout(t._tid);
+        t._tid = setTimeout(() => { t.style.opacity = '0'; }, 2200);
+    }
+
+    // ═══════════════════════════════════════════════
+    // ─── LINK MASKING ──────────────────────────────
+    // ═══════════════════════════════════════════════
+    function go(encoded) {
+        try {
+            const url = atob(encoded);
+            window.open(url, '_blank', 'noopener,noreferrer');
+        } catch(e) {}
+    }
+
+    function enc(url) {
+        try { return btoa(unescape(encodeURIComponent(url))); }
+        catch(e) { return btoa(url); }
+    }
+
+    function maskLinks(root) {
+        (root || document).querySelectorAll('a[href]').forEach(function(a) {
+            const href = a.getAttribute('href');
+            if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+                a.removeAttribute('href');
+                a.removeAttribute('target');
+                a.removeAttribute('rel');
+                const encoded = enc(href);
+                a.setAttribute('onclick', "go('" + encoded + "')");
+                a.style.cursor = 'pointer';
+            }
+        });
+    }
+
+    // Mask all static links on page load
+    maskLinks(document);
+
+    // Patch the portal so cloned links are also masked on injection
+    var _portal = document.getElementById('dropdown-portal');
+    var _subPortal = document.getElementById('sub-portal');
+
+    var __origInnerHTML_portal = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    var _portsToWatch = [_portal, _subPortal];
+
+    // Use MutationObserver to catch when portal content changes
+    var _observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            if (_portsToWatch.indexOf(m.target) !== -1 || _portsToWatch.indexOf(m.target.closest && m.target.closest('#dropdown-portal,#sub-portal')) !== -1) {
+                maskLinks(m.target);
+            }
+        });
+    });
+
+    _observer.observe(_portal, { childList: true, subtree: true });
+    _observer.observe(_subPortal, { childList: true, subtree: true });
+</script>
